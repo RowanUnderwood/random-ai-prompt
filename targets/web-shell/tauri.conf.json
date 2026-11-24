@@ -1,8 +1,8 @@
 {
   "$schema": "./node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "Random AI Prompt",
-  "version": "2.47.0",
-  "identifier": "io.fairyfox.randomaiprompt",
+  "productName": "Random AI Prompt Local",
+  "version": "2.60.4-local.1",
+  "identifier": "io.rowan.randomaiprompt.local",
   "build": {
     "frontendDist": "frontend",
     "beforeBuildCommand": "npm run stage",
@@ -12,7 +12,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "Random AI Prompt",
+        "title": "Random AI Prompt Local",
         "width": 1200,
         "height": 820,
         "minWidth": 480,

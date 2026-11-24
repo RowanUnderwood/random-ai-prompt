@@ -43,7 +43,7 @@ export default function KeywordsCard({ text, saved, item, settings, onSearch, on
   async function rebuild() {
     setError("");
     const key = effectiveKey(rewriteId, settings);
-    if (!key) {
+    if (getProvider(rewriteId)?.needsKey && !key) {
       setError(
         intl.formatMessage(msgs.noKey, {
           provider: getProvider(rewriteId)?.label || intl.formatMessage(msgs.providerFallback),
@@ -53,7 +53,12 @@ export default function KeywordsCard({ text, saved, item, settings, onSearch, on
     }
     setBusy(true);
     try {
-      const reply = await rewritePrompt({ providerId: rewriteId, prompt: text, key, mode: "keyword" });
+      const reply = await rewritePrompt({
+        providerId: rewriteId,
+        prompt: text,
+        key,
+        mode: "keyword",
+      });
       const keywords = normalizeKeywordList((reply || "").split(/[,\n]+/), { sort: true });
       if (!keywords.length) {
         setError(intl.formatMessage(msgs.noKeywords));

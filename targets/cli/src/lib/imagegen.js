@@ -48,7 +48,8 @@ async function applyRewrites(text, settings) {
   const useKeyword = settings.autoKeyword && hasProvider;
   if (!useFix && !useKeyword) return { text, changed: false };
   const rkey = getKey(settings.rewriteProvider);
-  if (!rkey)
+  const textProvider = await getProvider(settings.rewriteProvider);
+  if (textProvider?.needsKey && !rkey)
     throw new Error(
       "Auto-rewrite is on but the rewrite provider has no API key (prompt keys set).",
     );
@@ -147,7 +148,7 @@ export async function runProvider({ prompt, promptDpl, settings, provider }) {
   }
 
   const generate = await provider.loadGenerate();
-  const { images } = await generate({
+  const { images, imageMeta, warnings } = await generate({
     prompt: finalPrompt,
     settings: { ...flat, negativePrompt: negFinal },
     key,
@@ -163,8 +164,14 @@ export async function runProvider({ prompt, promptDpl, settings, provider }) {
     source: "cli",
   };
   const saved = [];
-  for (const img of images || []) saved.push(await ingestImage(img, meta));
-  return { copy: false, text: finalPrompt, images: saved, provider: provider.id, meta };
+  for (const [index, img] of (images || []).entries())
+    saved.push(
+      await ingestImage(img, {
+        ...meta,
+        settings: { ...meta.settings, ...imageMeta?.[index] },
+      }),
+    );
+  return { copy: false, text: finalPrompt, images: saved, provider: provider.id, meta, warnings };
 }
 
 /**

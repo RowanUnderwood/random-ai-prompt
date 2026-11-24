@@ -111,6 +111,7 @@ import openaiRewrite from "../../shared/openai/code/rewrite.js";
 import geminiRewrite from "../../shared/gemini/code/rewrite.js";
 import grokRewrite from "../../shared/grok/code/rewrite.js";
 import { systemFor } from "../../shared/_shared/rewriteSystem.js";
+import ninferRewrite from "../../shared/ninfer/code/rewrite.js";
 import { makeChatRewrite } from "../../shared/_shared/openaiCompatRewrite.js";
 import { anthropicRewrite, cohereRewrite } from "../../shared/_shared/bespokeRewrite.js";
 
@@ -121,36 +122,65 @@ import { anthropicRewrite, cohereRewrite } from "../../shared/_shared/bespokeRew
  * @type {Record<string, (args: object) => Promise<{text: string}>>}
  */
 export const rewriteAdapters = {
+  ninfer: ninferRewrite,
   openai: asFn(openaiRewrite),
   gemini: asFn(geminiRewrite),
   grok: asFn(grokRewrite),
-  deepseek: makeChatRewrite({ baseUrl: "https://api.deepseek.com", model: "deepseek-chat", label: "DeepSeek" }),
-  mistral: makeChatRewrite({ baseUrl: "https://api.mistral.ai/v1", model: "mistral-small-latest", label: "Mistral" }),
+  deepseek: makeChatRewrite({
+    baseUrl: "https://api.deepseek.com",
+    model: "deepseek-chat",
+    label: "DeepSeek",
+  }),
+  mistral: makeChatRewrite({
+    baseUrl: "https://api.mistral.ai/v1",
+    model: "mistral-small-latest",
+    label: "Mistral",
+  }),
   together: makeChatRewrite({
     baseUrl: "https://api.together.xyz/v1",
     model: "meta-llama/Llama-3.3-70B-Instruct-Turbo",
     label: "Together",
   }),
-  perplexity: makeChatRewrite({ baseUrl: "https://api.perplexity.ai", model: "sonar", label: "Perplexity" }),
+  perplexity: makeChatRewrite({
+    baseUrl: "https://api.perplexity.ai",
+    model: "sonar",
+    label: "Perplexity",
+  }),
   fireworks: makeChatRewrite({
     baseUrl: "https://api.fireworks.ai/inference/v1",
     model: "accounts/fireworks/models/llama-v3p3-70b-instruct",
     label: "Fireworks",
   }),
-  cerebras: makeChatRewrite({ baseUrl: "https://api.cerebras.ai/v1", model: "llama-3.3-70b", label: "Cerebras" }),
+  cerebras: makeChatRewrite({
+    baseUrl: "https://api.cerebras.ai/v1",
+    model: "llama-3.3-70b",
+    label: "Cerebras",
+  }),
   qwen: makeChatRewrite({
     baseUrl: "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
     model: "qwen-plus",
     label: "Qwen",
   }),
-  moonshot: makeChatRewrite({ baseUrl: "https://api.moonshot.ai/v1", model: "moonshot-v1-8k", label: "Moonshot" }),
-  ai21: makeChatRewrite({ baseUrl: "https://api.ai21.com/studio/v1", model: "jamba-large", label: "AI21" }),
+  moonshot: makeChatRewrite({
+    baseUrl: "https://api.moonshot.ai/v1",
+    model: "moonshot-v1-8k",
+    label: "Moonshot",
+  }),
+  ai21: makeChatRewrite({
+    baseUrl: "https://api.ai21.com/studio/v1",
+    model: "jamba-large",
+    label: "AI21",
+  }),
   huggingface: makeChatRewrite({
     baseUrl: "https://router.huggingface.co/v1",
     model: "meta-llama/Llama-3.3-70B-Instruct",
     label: "Hugging Face",
   }),
-  llama: makeChatRewrite({ baseUrl: "https://api.llama.com/compat/v1", model: "Llama-3.3-70B-Instruct", label: "Meta Llama" }),
+  llama: makeChatRewrite({
+    baseUrl: "https://api.llama.com/compat/v1",
+    model: "Llama-3.3-70B-Instruct",
+    label: "Meta Llama",
+  }),
   anthropic: anthropicRewrite,
   cohere: cohereRewrite,
 };
@@ -165,6 +195,6 @@ export const rewriteAdapters = {
 export async function dispatchRewrite({ providerId, prompt, key, mode }) {
   const adapter = rewriteAdapters[providerId];
   if (!adapter) throw new Error(`"${providerId}" can't rewrite prompts.`);
-  if (!key) throw new Error("Missing API key for the rewrite provider.");
+  if (!key && providerId !== "ninfer") throw new Error("Missing API key for the rewrite provider.");
   return adapter({ prompt, key, system: systemFor(mode) });
 }

@@ -166,12 +166,13 @@ export function useImageBatches({ settings, provider, flat }) {
       const useFix = settings.autoFix && hasRewriteProvider;
       const useKeyword = settings.autoKeyword && hasRewriteProvider;
       const rkey = useFix || useKeyword ? effectiveKey(settings.rewriteProvider, settings) : "";
-      if ((useFix || useKeyword) && !rkey) {
+      const rewriteReady = !!rewriteProvider && (!rewriteProvider.needsKey || !!rkey);
+      if ((useFix || useKeyword) && !rewriteReady) {
         setImgError(intl.formatMessage(msgs.rewriteNoKey));
       }
 
       // --- Main prompt: fix → keyword-translate (per the toggles), once per prompt, then cache. ---
-      if ((useFix || useKeyword) && rkey && !entry0?.original) {
+      if ((useFix || useKeyword) && rewriteReady && !entry0?.original) {
         try {
           let working = text;
           if (useFix) {
@@ -212,7 +213,7 @@ export function useImageBatches({ settings, provider, flat }) {
         // Already processed on a prior batch — reuse so we don't re-call the rewrite API.
         negRoll = entry0.negRoll;
         negAi = entry0.negAi ?? null;
-      } else if ((useFix || useKeyword) && rkey && negRoll.trim()) {
+      } else if ((useFix || useKeyword) && rewriteReady && negRoll.trim()) {
         try {
           let workingNeg = negRoll;
           if (useFix) {
@@ -242,7 +243,11 @@ export function useImageBatches({ settings, provider, flat }) {
 
       const generate = await provider.loadGenerate();
       const key = effectiveKey(provider.id, settings);
-      const { images: imgs } = await generate({
+      const {
+        images: imgs,
+        imageMeta,
+        warnings,
+      } = await generate({
         prompt: text,
         settings: { ...flat, negativePrompt: negFinal },
         key,
@@ -265,7 +270,15 @@ export function useImageBatches({ settings, provider, flat }) {
         savedAt: new Date().toISOString(),
       };
       // Funnel every provider's images into the central output folder, then display the saved copies.
-      const saved = await Promise.all((imgs || []).map((img) => ingestImage(img, meta)));
+      const saved = await Promise.all(
+        (imgs || []).map((img, index) =>
+          ingestImage(img, {
+            ...meta,
+            settings: { ...meta.settings, ...imageMeta?.[index] },
+          }),
+        ),
+      );
+      if (warnings?.length) setImgError(warnings.join("; "));
       setPrompts((ps) =>
         ps.map((x) =>
           x.id === promptId
@@ -342,7 +355,10 @@ export function useImageBatches({ settings, provider, flat }) {
 
   // Remove a single image — optionally deleting the file from disk.
   async function removeImage(promptId, batchId, img) {
-    if (isOutputFile(img) && (await dialog.confirm({ message: intl.formatMessage(msgs.confirmDeleteImage) }))) {
+    if (
+      isOutputFile(img) &&
+      (await dialog.confirm({ message: intl.formatMessage(msgs.confirmDeleteImage) }))
+    ) {
       deleteImageFile(img);
     }
     setPrompts((ps) =>
@@ -363,9 +379,14 @@ export function useImageBatches({ settings, provider, flat }) {
 
   // Remove a whole batch — optionally deleting its files from disk.
   async function removeBatch(promptId, batchId) {
-    const b = promptsRef.current.find((x) => x.id === promptId)?.batches.find((y) => y.id === batchId);
+    const b = promptsRef.current
+      .find((x) => x.id === promptId)
+      ?.batches.find((y) => y.id === batchId);
     const imgs = b?.images || [];
-    if (imgs.some(isOutputFile) && (await dialog.confirm({ message: intl.formatMessage(msgs.confirmDeleteBatch) }))) {
+    if (
+      imgs.some(isOutputFile) &&
+      (await dialog.confirm({ message: intl.formatMessage(msgs.confirmDeleteBatch) }))
+    ) {
       imgs.forEach(deleteImageFile);
     }
     setPrompts((ps) =>
@@ -377,8 +398,13 @@ export function useImageBatches({ settings, provider, flat }) {
 
   // Clear all of a prompt's images — optionally deleting from disk.
   async function clearImages(promptId) {
-    const imgs = (promptsRef.current.find((x) => x.id === promptId)?.batches || []).flatMap((b) => b.images);
-    if (imgs.some(isOutputFile) && (await dialog.confirm({ message: intl.formatMessage(msgs.confirmDeletePromptImgs) }))) {
+    const imgs = (promptsRef.current.find((x) => x.id === promptId)?.batches || []).flatMap(
+      (b) => b.images,
+    );
+    if (
+      imgs.some(isOutputFile) &&
+      (await dialog.confirm({ message: intl.formatMessage(msgs.confirmDeletePromptImgs) }))
+    ) {
       imgs.forEach(deleteImageFile);
     }
     setPrompts((ps) => ps.map((x) => (x.id === promptId ? { ...x, batches: [] } : x)));
@@ -391,7 +417,12 @@ export function useImageBatches({ settings, provider, flat }) {
   // Clear every result — optionally deleting all their image files from disk.
   async function clearAll() {
     const imgs = allImagesOf(promptsRef.current);
-    if (imgs.length && (await dialog.confirm({ message: intl.formatMessage(msgs.confirmClearAll, { count: imgs.length }) }))) {
+    if (
+      imgs.length &&
+      (await dialog.confirm({
+        message: intl.formatMessage(msgs.confirmClearAll, { count: imgs.length }),
+      }))
+    ) {
       imgs.forEach(deleteImageFile);
     }
     setPrompts([]);

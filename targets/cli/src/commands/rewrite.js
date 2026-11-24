@@ -40,7 +40,7 @@ export default function registerRewrite(program) {
         return;
       }
       const key = getKey(providerId);
-      if (!key) {
+      if (provider.needsKey && !key) {
         say(
           "err",
           `Provider "${providerId}" needs an API key. Set one with: prompt keys set ${providerId} <key>`,

@@ -387,7 +387,7 @@ export default function SingleScreen({ image, onBack, onDeleted, onUpscaled, onS
     }
     const rprov = getTextProvider(rewriteProvider);
     const key = await getKey(rewriteProvider);
-    if (!key) {
+    if (rprov?.needsKey && !key) {
       setKwErr(`Add your ${rprov?.label || "Text provider"} key in the ⋯ menu.`);
       return;
     }

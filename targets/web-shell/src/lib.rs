@@ -30,6 +30,12 @@ use std::time::Duration;
 
 use tauri::{Manager, RunEvent};
 
+#[cfg(windows)]
+mod process_job;
+
+#[cfg(windows)]
+struct ServiceJob(Mutex<Option<process_job::ProcessJob>>);
+
 /// Holds the Node child process so it can be killed when the app exits.
 struct Sidecar(Mutex<Option<Child>>);
 
@@ -66,7 +72,8 @@ fn is_portable(exe_dir: &Path) -> bool {
 /// Refresh the writable working copy from the bundled payload when the version
 /// changed (or on first run), preserving the user's own files.
 fn ensure_working_copy(res_app: &Path, work_app: &Path) -> std::io::Result<()> {
-    let bundled_ver = fs::read_to_string(res_app.join("VERSION"))
+    let bundled_ver = fs::read_to_string(res_app.join("BUILD_ID"))
+        .or_else(|_| fs::read_to_string(res_app.join("VERSION")))
         .unwrap_or_default()
         .trim()
         .to_string();
@@ -174,6 +181,8 @@ fn launch(app: &tauri::App) -> Result<(), Box<dyn std::error::Error>> {
         .current_dir(&work_app)
         .env("PORT", port.to_string())
         .env("NO_OPEN", "1")
+        .env("RAP_DESKTOP", "1")
+        .env("RAP_LOCAL_FORK", "1")
         // Stamp the edition so the backend's /api/update handler reports the right update path to the
         // check-and-notify banner (portable zip vs installed build). See notes/plans/updates-upgrades.md.
         .env("RAP_EDITION", if portable { "portable" } else { "installer" });
@@ -182,7 +191,14 @@ fn launch(app: &tauri::App) -> Result<(), Box<dyn std::error::Error>> {
         use std::os::windows::process::CommandExt;
         cmd.creation_flags(0x0800_0000); // CREATE_NO_WINDOW — no console flash
     }
-    let child = cmd.spawn()?;
+    let mut child = cmd.spawn()?;
+    #[cfg(windows)]
+    {
+        match process_job::ProcessJob::attach(&child) {
+            Ok(job) => { app.manage(ServiceJob(Mutex::new(Some(job)))); }
+            Err(error) => { let _ = child.kill(); return Err(error.into()); }
+        }
+    }
     app.manage(Sidecar(Mutex::new(Some(child))));
 
     // Poll until the server accepts connections, then navigate the WebView to it.
@@ -289,6 +305,10 @@ pub fn run() {
 
     app.run(|app_handle, event| {
         if let RunEvent::Exit = event {
+            #[cfg(windows)]
+            if let Some(job) = app_handle.try_state::<ServiceJob>() {
+                if let Ok(mut guard) = job.0.lock() { guard.take(); }
+            }
             if let Some(sc) = app_handle.try_state::<Sidecar>() {
                 if let Ok(mut guard) = sc.0.lock() {
                     if let Some(mut child) = guard.take() {

@@ -1,0 +1,38 @@
+export default {
+  defaults: {
+    use3090: true,
+    use4090: true,
+    comfyWorkflow: "krea2",
+    imageSteps: 12,
+    cfg: 1,
+    imageWidth: 1536,
+    imageHeight: 864,
+    batchSize: 1,
+    seed: -1,
+    negativePrompt: "",
+    comfyCheckpoint: "",
+    sampler: "euler",
+    scheduler: "simple",
+  },
+  fields: [
+    { key: "use3090", label: "Use RTX 3090 (8190)", type: "checkbox" },
+    { key: "use4090", label: "Use RTX 4090 (8191)", type: "checkbox" },
+    {
+      key: "comfyWorkflow",
+      label: "Workflow",
+      type: "select",
+      options: [
+        { value: "krea2", label: "Krea 2 — Jake's workflow" },
+        { value: "default", label: "Standard checkpoint" },
+      ],
+    },
+    { key: "comfyCheckpoint", label: "Checkpoint (standard workflow only)", type: "text" },
+    { key: "imageSteps", label: "Steps", type: "number", min: 1 },
+    { key: "cfg", label: "CFG", type: "number", min: 0, step: 0.5 },
+    { key: "imageWidth", label: "Width", type: "number", min: 64, step: 8 },
+    { key: "imageHeight", label: "Height", type: "number", min: 64, step: 8 },
+    { key: "batchSize", label: "Images per prompt", type: "number", min: 1 },
+    { key: "seed", label: "Seed (-1 = random)", type: "number" },
+    { key: "negativePrompt", label: "Negative prompt", type: "text" },
+  ],
+};

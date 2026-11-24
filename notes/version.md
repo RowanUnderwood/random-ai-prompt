@@ -15,6 +15,7 @@ unwieldy. This file is the index; pick a month below (newest first).
 
 | Month | Notes |
 |-------|-------|
+| [November 2026](version/2026-11.md) | Local inference fork: NInfer Qwen, dual-GPU ComfyUI, Krea, owned service lifecycle. |
 | [August 2026](version/2026-08.md) | fairyfox: first full standards compliance audit (Scorecard-floor finding), Dependabot follow-through. |
 | [July 2026](version/2026-07.md) | engine/ + targets/ restructure, mobile parity + on-device gate, fairyfox hub 0.20.2 → 1.6.1 adoption + v2.60.2. |
 | [June 2026](version/2026-06.md) | Revival: the 2.0.0 ES-module + Node 24 modernization, the React + Vite SPA migration, and the full JSDoc doc-site. |

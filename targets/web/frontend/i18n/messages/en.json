@@ -1262,6 +1262,36 @@
   "livePreview.preview": {
     "defaultMessage": "Preview"
   },
+  "localServices.desktopOnly": {
+    "defaultMessage": "Start/Stop controls require the Windows desktop app. Already-running services can still be used."
+  },
+  "localServices.external": {
+    "defaultMessage": "Already running; left open on exit"
+  },
+  "localServices.hint": {
+    "defaultMessage": "Choose NInfer Qwen as your text provider and Local GPUs as your image provider in the Providers menu. Batches are divided between ready GPUs. Only services started here stop when the desktop app closes."
+  },
+  "localServices.loading": {
+    "defaultMessage": "Starting…"
+  },
+  "localServices.occupied": {
+    "defaultMessage": "Port occupied; waiting for a compatible server"
+  },
+  "localServices.ready": {
+    "defaultMessage": "Ready"
+  },
+  "localServices.start": {
+    "defaultMessage": "Start"
+  },
+  "localServices.stop": {
+    "defaultMessage": "Stop"
+  },
+  "localServices.stopped": {
+    "defaultMessage": "Stopped"
+  },
+  "localServices.title": {
+    "defaultMessage": "Local services"
+  },
   "manage.addTo": {
     "defaultMessage": "Add to {name}"
   },

@@ -37,3 +37,6 @@ tauri-plugin-log = "2"
 # Optional: only compiled when the `updater` feature is enabled (see [features] above).
 tauri-plugin-updater = { version = "2", optional = true }
 tauri-plugin-dialog = { version = "2", optional = true }
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.61.2", features = ["Win32_Foundation", "Win32_Security", "Win32_System_JobObjects", "Win32_System_Threading"] }

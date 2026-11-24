@@ -429,7 +429,7 @@ export default function GenerateScreen({ onGenerated, onOpenImage }) {
     const rprov = canRewrite ? getTextProvider(rewriteProvider) : null;
     if (rprov && (autoFix || autoKeyword)) {
       const rkey = await getKey(rewriteProvider);
-      if (!rkey) {
+      if (rprov.needsKey && !rkey) {
         setGenMsg(`Add your ${rprov.label} key in the ⋯ menu to use auto-fix / keyword rewrite.`);
       } else {
         setGenerating(true);

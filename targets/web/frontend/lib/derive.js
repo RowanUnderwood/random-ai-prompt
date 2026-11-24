@@ -98,7 +98,7 @@ export async function deriveImage({ item, kind, source, settings, onText }) {
 
   const generate = await prov.loadGenerate();
   const key = effectiveKey(prov.id, settings);
-  const { images } = await generate({
+  const { images, imageMeta } = await generate({
     prompt: text,
     settings: { ...childSettings, negativePrompt: neg },
     key,
@@ -117,7 +117,7 @@ export async function deriveImage({ item, kind, source, settings, onText }) {
     negative: meta.negative || { dpl: null, roll: null, ai: null, final: neg || null },
     provider: meta.provider,
     providerLabel: meta.providerLabel,
-    settings: childSettings,
+    settings: { ...childSettings, ...imageMeta?.[0] },
     parent: item.name, // the ancestry link — the feed scan builds the reverse child list
     derivedKind: kind,
     derivedSource: source,

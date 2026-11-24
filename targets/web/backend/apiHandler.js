@@ -57,6 +57,8 @@ import {
   nodeLoader,
 } from "../../../engine/nodeEngine.js";
 import { presetNames, resolvePresets, applyPreset } from "../../../engine/presets.js";
+import { localServices } from "./localServices.js";
+import { generateLocalBatch } from "./localGpuPool.js";
 
 // `execFile`, never `exec`: no shell means a filename with a quote in it is a filename, not a command.
 // See osCommands.js for the whole story (CodeQL js/command-line-injection, critical).
@@ -97,11 +99,13 @@ function detectEdition() {
 /** @returns {string} The running app's version, read from the cwd `VERSION` file (or "" if absent). */
 function readLocalVersion() {
   try {
-    return fs
-      .readFileSync(path.join(process.cwd(), "VERSION"), "utf8")
-      .split("\n")
-      .map((l) => l.trim())
-      .find((l) => l && !l.startsWith("#")) || "";
+    return (
+      fs
+        .readFileSync(path.join(process.cwd(), "VERSION"), "utf8")
+        .split("\n")
+        .map((l) => l.trim())
+        .find((l) => l && !l.startsWith("#")) || ""
+    );
   } catch {
     return "";
   }
@@ -134,7 +138,11 @@ async function fetchLatestRelease() {
     const rel = await res.json();
     const version = String(rel.tag_name || "").replace(/^[vV]/, "");
     const value = version
-      ? { version, url: rel.html_url || `https://github.com/${UPDATE_REPO}/releases`, publishedAt: rel.published_at || "" }
+      ? {
+          version,
+          url: rel.html_url || `https://github.com/${UPDATE_REPO}/releases`,
+          publishedAt: rel.published_at || "",
+        }
       : null;
     latestReleaseCache = { at: Date.now(), value };
     return value;
@@ -178,12 +186,52 @@ export function createApiHandler() {
     if (!req.url) return next();
     const u = new URL(req.url, "http://localhost");
 
+    if (u.pathname === "/api/local-services") {
+      const supported = process.platform === "win32" && process.env.RAP_DESKTOP === "1";
+      if (req.method === "GET")
+        return send(res, 200, { supported, services: await localServices.status() });
+      if (req.method !== "POST") return send(res, 405, { error: "Method not allowed" });
+      const origin = req.headers.origin;
+      const remote = req.socket?.remoteAddress || "";
+      if (
+        !supported ||
+        !["127.0.0.1", "::1", "::ffff:127.0.0.1"].includes(remote) ||
+        (origin && origin !== `http://${req.headers.host}`)
+      ) {
+        return send(res, 403, { error: "Service controls require this Windows desktop app." });
+      }
+      try {
+        const { id, action } = await readJson(req);
+        if (!["start", "stop"].includes(action))
+          return send(res, 400, { error: "Unknown service action" });
+        await localServices[action](id);
+        return send(res, 200, { services: await localServices.status() });
+      } catch (e) {
+        return send(res, 400, { error: e.message });
+      }
+    }
+
+    if (u.pathname === "/api/local-generate" && req.method === "POST") {
+      const ctrl = new AbortController();
+      res.once("close", () => {
+        if (!res.writableEnded) ctrl.abort();
+      });
+      try {
+        const { prompt, settings } = await readJson(req);
+        if (typeof prompt !== "string" || !prompt.trim())
+          return send(res, 400, { error: "Missing prompt" });
+        return send(res, 200, await generateLocalBatch({ prompt, settings, signal: ctrl.signal }));
+      } catch (e) {
+        return send(res, 502, { error: e.message });
+      }
+    }
+
     // --- Update check (check-and-notify): edition + the latest GitHub release ---
     // The client compares `latest.version` to its own built-in version and, if older, shows a
     // dismissible banner (see gui/src/lib/updateCheck.js). GitHub is fetched server-side + cached,
     // so the browser opens no new connection. See notes/plans/updates-upgrades.md.
     if (u.pathname === "/api/update" && req.method === "GET") {
-      const latest = await fetchLatestRelease();
+      const latest = process.env.RAP_LOCAL_FORK === "1" ? null : await fetchLatestRelease();
       const edition = detectEdition();
       return send(res, 200, {
         currentVersion: readLocalVersion(),
@@ -375,8 +423,7 @@ export function createApiHandler() {
             });
           }
           const up = await fetch(src);
-          if (!up.ok)
-            return send(res, up.status, { error: `Image fetch failed (${up.status})` });
+          if (!up.ok) return send(res, up.status, { error: `Image fetch failed (${up.status})` });
           ext = ((up.headers.get("content-type") || "image/png").split("/")[1] || "png").split(
             "+",
           )[0];
@@ -543,7 +590,12 @@ export function createApiHandler() {
           fs.writeFileSync(
             path.join(OUTPUT_DIR, name.replace(/\.[^.]+$/, ".json")),
             JSON.stringify(
-              { ...meta, file: name, image: `/api/output/${name}`, savedAt: meta.savedAt || new Date().toISOString() },
+              {
+                ...meta,
+                file: name,
+                image: `/api/output/${name}`,
+                savedAt: meta.savedAt || new Date().toISOString(),
+              },
               null,
               2,
             ),
@@ -633,7 +685,7 @@ export function createApiHandler() {
       try {
         return send(res, 200, {
           lists: buildManageTree(MANAGE_ROOTS.lists),
-          "blocks": buildManageTree(MANAGE_ROOTS["blocks"]),
+          blocks: buildManageTree(MANAGE_ROOTS["blocks"]),
           "user-lists": buildManageTree(MANAGE_ROOTS["user-lists"]),
           "user-blocks": buildManageTree(MANAGE_ROOTS["user-blocks"]),
         });

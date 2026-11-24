@@ -3,8 +3,13 @@
  * submits it to `/prompt`, polls `/history/{id}`, and returns `/view` image URLs.
  * @module gui/providers/comfyui/code/generate
  */
-import { postJson, getJson, normalizeBase } from "../../_shared/transport/localDirect.js";
-import workflow from "../data/default-workflow.json";
+import {
+  postJson as defaultPost,
+  getJson as defaultGet,
+  normalizeBase,
+} from "../../_shared/transport/localDirect.js";
+import workflow from "../data/default-workflow.json" with { type: "json" };
+import kreaWorkflow from "../data/krea2-workflow.json" with { type: "json" };
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -15,54 +20,98 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
  * @param {AbortSignal} [args.signal] Optional abort signal.
  * @returns {Promise<{images: string[]}>}
  */
-export default async function generate({ prompt, settings, signal }) {
+export default async function generate({ prompt, settings, signal, transport }) {
+  const getJson = transport?.getJson || defaultGet;
+  const postJson = transport?.postJson || defaultPost;
   const base = normalizeBase(settings.comfyUrl, "http://127.0.0.1:8188");
-
-  // Clone the template and inject the prompt + params into the known node ids.
-  const g = JSON.parse(JSON.stringify(workflow));
-  g["6"].inputs.text = prompt;
-  g["7"].inputs.text = settings.negativePrompt || "";
-  g["5"].inputs.width = settings.imageWidth ?? 512;
-  g["5"].inputs.height = settings.imageHeight ?? 512;
-  g["5"].inputs.batch_size = settings.batchSize ?? 1;
-  g["3"].inputs.seed =
+  const krea = settings.comfyWorkflow === "krea2";
+  const seed =
     settings.seed != null && settings.seed >= 0 ? settings.seed : Math.floor(Math.random() * 1e15);
-  g["3"].inputs.steps = settings.imageSteps ?? 20;
-  g["3"].inputs.cfg = settings.cfg ?? 7;
-  g["3"].inputs.sampler_name = settings.sampler || "euler";
-  g["3"].inputs.scheduler = settings.scheduler || "normal";
 
-  // Resolve checkpoint + sampler + scheduler against what THIS ComfyUI actually accepts, so a
-  // missing/blank/stale or SD-style value (e.g. "Euler" vs ComfyUI's "euler") self-heals instead
-  // of failing validation.
-  const pick = (list, value, fallback) => {
-    if (!list || !list.length) return value || fallback;
-    if (list.includes(value)) return value;
-    const ci = list.find((x) => String(x).toLowerCase() === String(value || "").toLowerCase());
-    if (ci) return ci;
-    return list.includes(fallback) ? fallback : list[0];
-  };
-  let ckpt = settings.comfyCheckpoint;
-  try {
-    const [ckptInfo, ksInfo] = await Promise.all([
-      getJson(`${base}/object_info/CheckpointLoaderSimple`, signal),
-      getJson(`${base}/object_info/KSampler`, signal),
-    ]);
-    const ckptList = ckptInfo?.CheckpointLoaderSimple?.input?.required?.ckpt_name?.[0] || [];
-    const samplerList = ksInfo?.KSampler?.input?.required?.sampler_name?.[0] || [];
-    const schedList = ksInfo?.KSampler?.input?.required?.scheduler?.[0] || [];
-    if (!ckpt || !ckptList.includes(ckpt)) ckpt = ckptList[0];
-    if (!ckpt) {
-      throw new Error(
-        "ComfyUI has no checkpoint models installed — add one to ComfyUI/models/checkpoints.",
-      );
+  let g;
+  if (krea) {
+    g = structuredClone(kreaWorkflow);
+    g["104"].inputs.text = prompt;
+    g["17"].inputs.text = settings.negativePrompt || "";
+    Object.assign(g["138"].inputs, {
+      seed,
+      steps: settings.imageSteps ?? 12,
+      cfg: settings.cfg ?? 1,
+      sampler_name: "euler",
+      scheduler: "simple",
+    });
+    const latent = g["106:10"].inputs;
+    latent.batch_size = settings.batchSize ?? 1;
+    if (settings.imageWidth && settings.imageHeight) {
+      latent.width = settings.imageWidth;
+      latent.height = settings.imageHeight;
+      delete g["166"];
     }
-    g["3"].inputs.sampler_name = pick(samplerList, settings.sampler, "euler");
-    g["3"].inputs.scheduler = pick(schedList, settings.scheduler, "normal");
-  } catch (e) {
-    if (!ckpt) throw e; // only fatal if there's also no configured fallback to try
+    const info = await getJson(`${base}/object_info`, signal);
+    for (const node of Object.values(g)) {
+      if (!info[node.class_type])
+        throw new Error(
+          `Krea 2 needs the ${node.class_type} node on ${base}. Install its custom nodes first.`,
+        );
+      for (const key of ["unet_name", "clip_name", "vae_name"]) {
+        const choices = info[node.class_type]?.input?.required?.[key]?.[0];
+        if (node.inputs[key] && Array.isArray(choices) && !choices.includes(node.inputs[key])) {
+          throw new Error(`Krea 2 model missing on ${base}: ${node.inputs[key]}`);
+        }
+      }
+    }
+  } else {
+    // Clone the template and inject the prompt + params into the known node ids.
+    g = JSON.parse(JSON.stringify(workflow));
+    g["6"].inputs.text = prompt;
+    g["7"].inputs.text = settings.negativePrompt || "";
+    g["5"].inputs.width = settings.imageWidth ?? 512;
+    g["5"].inputs.height = settings.imageHeight ?? 512;
+    g["5"].inputs.batch_size = settings.batchSize ?? 1;
+    g["3"].inputs.seed = seed;
+    g["3"].inputs.steps = settings.imageSteps ?? 20;
+    g["3"].inputs.cfg = settings.cfg ?? 7;
+    g["3"].inputs.sampler_name = settings.sampler || "euler";
+    g["3"].inputs.scheduler = settings.scheduler || "normal";
+
+    // Resolve checkpoint + sampler + scheduler against what THIS ComfyUI actually accepts, so a
+    // missing/blank/stale or SD-style value (e.g. "Euler" vs ComfyUI's "euler") self-heals instead
+    // of failing validation.
+    const pick = (list, value, fallback) => {
+      if (!list || !list.length) return value || fallback;
+      if (list.includes(value)) return value;
+      const ci = list.find((x) => String(x).toLowerCase() === String(value || "").toLowerCase());
+      if (ci) return ci;
+      return list.includes(fallback) ? fallback : list[0];
+    };
+    let ckpt = settings.comfyCheckpoint;
+    try {
+      const [ckptInfo, ksInfo] = await Promise.all([
+        getJson(`${base}/object_info/CheckpointLoaderSimple`, signal),
+        getJson(`${base}/object_info/KSampler`, signal),
+      ]);
+      const ckptList = ckptInfo?.CheckpointLoaderSimple?.input?.required?.ckpt_name?.[0] || [];
+      const samplerList = ksInfo?.KSampler?.input?.required?.sampler_name?.[0] || [];
+      const schedList = ksInfo?.KSampler?.input?.required?.scheduler?.[0] || [];
+      if (!ckpt || !ckptList.includes(ckpt)) ckpt = ckptList[0];
+      if (!ckpt) {
+        throw new Error(
+          "ComfyUI has no checkpoint models installed — add one to ComfyUI/models/checkpoints.",
+        );
+      }
+      g["3"].inputs.sampler_name = pick(samplerList, settings.sampler, "euler");
+      g["3"].inputs.scheduler = pick(schedList, settings.scheduler, "normal");
+    } catch (e) {
+      if (!ckpt) throw e; // only fatal if there's also no configured fallback to try
+    }
+    g["4"].inputs.ckpt_name = ckpt;
   }
-  g["4"].inputs.ckpt_name = ckpt;
+
+  // The instances share an output directory. UUID prefixes prevent concurrent jobs overwriting files.
+  const unique = crypto.randomUUID();
+  for (const node of Object.values(g)) {
+    if (node.class_type === "SaveImage") node.inputs.filename_prefix = `RandomPrompt/${unique}`;
+  }
 
   const clientId =
     (typeof crypto !== "undefined" && crypto.randomUUID && crypto.randomUUID()) ||
@@ -72,11 +121,16 @@ export default async function generate({ prompt, settings, signal }) {
   const promptId = submitted.prompt_id;
   if (!promptId) throw new Error("ComfyUI did not return a prompt id.");
 
-  const deadline = Date.now() + 180000;
+  const deadline = Date.now() + 900000;
   // eslint-disable-next-line no-constant-condition
   while (true) {
-    const hist = await getJson(`${base}/history/${promptId}`, signal).catch(() => ({}));
+    signal?.throwIfAborted();
+    const hist = await getJson(`${base}/history/${promptId}`, signal);
     const entry = hist?.[promptId];
+    if (entry?.status?.status_str === "error") {
+      const failure = entry.status.messages?.find(([type]) => type === "execution_error")?.[1];
+      throw new Error(failure?.exception_message || "ComfyUI workflow execution failed.");
+    }
     if (entry?.outputs) {
       const images = [];
       for (const node of Object.values(entry.outputs)) {
@@ -89,7 +143,23 @@ export default async function generate({ prompt, settings, signal }) {
           images.push(`${base}/view?${q.toString()}`);
         }
       }
-      if (images.length) return { images };
+      if (images.length)
+        return {
+          images,
+          imageMeta: images.map(() => ({
+            comfyUrl: base,
+            comfyWorkflow: krea ? "krea2" : "default",
+            seed,
+            imageSteps: (krea ? g["138"] : g["3"]).inputs.steps,
+            cfg: (krea ? g["138"] : g["3"]).inputs.cfg,
+            sampler: (krea ? g["138"] : g["3"]).inputs.sampler_name,
+            scheduler: (krea ? g["138"] : g["3"]).inputs.scheduler,
+            ...(krea
+              ? { kreaModel: g["106:1"].inputs.unet_name }
+              : { comfyCheckpoint: g["4"].inputs.ckpt_name }),
+          })),
+        };
+      if (entry.status?.completed) throw new Error("ComfyUI finished without an image.");
     }
     if (Date.now() > deadline) throw new Error("ComfyUI generation timed out.");
     await sleep(1200);

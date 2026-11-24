@@ -42,6 +42,7 @@ targets/web/user-settings/
 targets/web/user-settings.migrated/
 /user/settings/*
 !/user/settings/.gitkeep
+/user/logs/
 
 # Local Netlify folder
 .netlify

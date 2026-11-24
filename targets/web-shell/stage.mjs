@@ -25,6 +25,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { randomUUID } from "node:crypto";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url)); // targets/web-shell
 const repoRoot = path.resolve(scriptDir, "..", ".."); // targets/web-shell is two below the repo root
@@ -86,6 +87,8 @@ const version = fs
   .find((l) => l && !l.startsWith("#"));
 if (!version) throw new Error("stage: could not parse a version from VERSION");
 fs.writeFileSync(path.join(stageDir, "VERSION"), `${version}\n`);
+// Rebuilding a local fork at the same version must refresh the writable code copy too.
+fs.writeFileSync(path.join(stageDir, "BUILD_ID"), `${version}:${randomUUID()}\n`);
 
 // Minimal package.json for the staged tree: marks it ESM and pins the two runtime
 // deps (no scripts, so `postinstall` etc. don't run in the sandbox; no devDeps).

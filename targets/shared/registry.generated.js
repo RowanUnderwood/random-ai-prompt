@@ -16,6 +16,7 @@ import cerebras from "./cerebras/config.js";
 import claid from "./claid/config.js";
 import clipdrop from "./clipdrop/config.js";
 import cohere from "./cohere/config.js";
+import comfy_local from "./comfy-local/config.js";
 import comfyui from "./comfyui/config.js";
 import deepai from "./deepai/config.js";
 import deepimage from "./deepimage/config.js";
@@ -34,6 +35,7 @@ import midjourney from "./midjourney/config.js";
 import mistral from "./mistral/config.js";
 import moonshot from "./moonshot/config.js";
 import neurallove from "./neurallove/config.js";
+import ninfer from "./ninfer/config.js";
 import novelai from "./novelai/config.js";
 import openai from "./openai/config.js";
 import openrouter from "./openrouter/config.js";
@@ -60,6 +62,7 @@ export const PROVIDER_CONFIGS = [
   claid,
   clipdrop,
   cohere,
+  comfy_local,
   comfyui,
   deepai,
   deepimage,
@@ -78,6 +81,7 @@ export const PROVIDER_CONFIGS = [
   mistral,
   moonshot,
   neurallove,
+  ninfer,
   novelai,
   openai,
   openrouter,

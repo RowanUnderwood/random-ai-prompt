@@ -3,7 +3,19 @@
 _Current state only._ For the chronological history of what changed each session and why, see
 [`sessions/`](sessions/README.md). For the commit-by-commit changelog see [`version.md`](version.md).
 
-## Health (2026-07-12, 2.60.0)
+## Local fork (2026-11-24, 2.60.4-local.1)
+
+Optional native Windows integration: NInfer on the 5090, ComfyUI workers on 3090/4090, and
+Jake's Krea 2 workflow. Batches divide between workers; external services remain open on exit.
+See [local inference](systems/local-inference.md) and the [session](sessions/2026-11/2026-11-24.md).
+Build with `npm run desktop:build:local`; run `launch-desktop.bat`.
+
+Verified: 387 Node tests, 433 web tests, mobile parity, lint, production UI/native builds,
+live Qwen rewrite, simultaneous Krea images on both GPUs, external-instance preservation,
+and app-owned shutdown. Test images are in the portable gallery; test services are stopped.
+Full `npm test` passed, including 122 mobile tests (942 tests total).
+
+## Upstream health (2026-07-12, 2.60.0)
 
 Green, and — new as of 2.58.0 — **actually gated in CI**, which it wasn't before: the mobile app, its
 parity/gating/no-caps checks and the metro engine-parity check had never run in CI at all.

@@ -10,6 +10,7 @@ import { Num, Text, Toggle, Select, Group } from "./Field.jsx";
 import { getListNames } from "../lib/promptEngine.js";
 import { defaultSettings } from "../lib/settings.js";
 import { dialog } from "../lib/dialog.js";
+import LocalServices from "./LocalServices.jsx";
 
 const msgs = defineMessages({
   resetBtn: { id: "settings.reset", defaultMessage: "Reset to defaults" },
@@ -26,7 +27,8 @@ const msgs = defineMessages({
   },
   seedHintPinned: {
     id: "settings.seedHintPinned",
-    defaultMessage: "Pinned: every roll reuses this seed and reproduces the same prompt. Any text works — numbers, words, or a phrase.",
+    defaultMessage:
+      "Pinned: every roll reuses this seed and reproduces the same prompt. Any text works — numbers, words, or a phrase.",
   },
   groupVocabulary: { id: "settings.group.vocabulary", defaultMessage: "Vocabulary" },
   fullyRandom: {
@@ -104,6 +106,7 @@ export default function Settings({ settings, setSettings }) {
         </button>
       </div>
 
+      {!import.meta.env.VITE_ONLINE && <LocalServices />}
       <Group title={intl.formatMessage(msgs.groupSeed)}>
         <Toggle
           label={intl.formatMessage(msgs.seedRandom)}

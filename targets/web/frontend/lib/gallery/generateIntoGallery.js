@@ -96,6 +96,8 @@ export async function generateIntoGallery({
   const useFix = !!settings.autoFix && hasRewriteProvider;
   const useKeyword = !!settings.autoKeyword && hasRewriteProvider;
   const rkey = useFix || useKeyword ? effectiveKey(settings.rewriteProvider, settings) : "";
+  const textProvider = hasRewriteProvider ? getProvider(settings.rewriteProvider) : null;
+  const rewriteReady = !!textProvider && (!textProvider.needsKey || !!rkey);
 
   // Two limiters, each sized to its provider's "Batch chunk size" — the image limiter bounds how
   // many batches render at once; the rewrite limiter bounds the prompt-rewrite calls.
@@ -122,7 +124,7 @@ export async function generateIntoGallery({
         let promptRoll = p.text;
         let promptAi = null;
         let finalText = p.text;
-        if ((useFix || useKeyword) && rkey) {
+        if ((useFix || useKeyword) && rewriteReady) {
           const working = await rewriteBoth({
             providerId: settings.rewriteProvider,
             text: p.text,
@@ -142,7 +144,7 @@ export async function generateIntoGallery({
         const negDpl = flat.negativePrompt || "";
         let negRoll = negDpl ? expandPromptSeeded(negDpl, { ...settings, mode: flat.mode }) : "";
         let negAi = null;
-        if ((useFix || useKeyword) && rkey && negRoll.trim()) {
+        if ((useFix || useKeyword) && rewriteReady && negRoll.trim()) {
           try {
             const workingNeg = await rewriteBoth({
               providerId: settings.rewriteProvider,
@@ -160,7 +162,7 @@ export async function generateIntoGallery({
         const negFinal = negAi || negRoll;
 
         const generate = await provider.loadGenerate();
-        const { images } = await generate({
+        const { images, imageMeta, warnings } = await generate({
           prompt: finalText,
           settings: { ...flat, negativePrompt: negFinal },
           key,
@@ -178,7 +180,15 @@ export async function generateIntoGallery({
           settings: cleanSnapshot({ ...flat, negativePrompt: negFinal }),
           savedAt: new Date().toISOString(),
         };
-        await Promise.all((images || []).map((img) => ingest(img, meta)));
+        await Promise.all(
+          (images || []).map((img, index) =>
+            ingest(img, {
+              ...meta,
+              settings: { ...meta.settings, ...imageMeta?.[index] },
+            }),
+          ),
+        );
+        if (warnings?.length && !firstError) firstError = new Error(warnings.join("; "));
         saved += (images || []).length;
       } catch (e) {
         if (!firstError) firstError = e;

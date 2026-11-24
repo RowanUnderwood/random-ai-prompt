@@ -6580,6 +6580,146 @@
       "value": "]"
     }
   ],
+  "localServices.desktopOnly": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Şŧȧȧřŧ/Şŧǿǿƥ ƈǿǿƞŧřǿǿŀş řḗḗɋŭŭīřḗḗ ŧħḗḗ Ẇīƞḓǿǿẇş ḓḗḗşķŧǿǿƥ ȧȧƥƥ. Ȧŀřḗḗȧȧḓẏ-řŭŭƞƞīƞɠ şḗḗřṽīƈḗḗş ƈȧȧƞ şŧīŀŀ ƀḗḗ ŭŭşḗḗḓ."
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "localServices.external": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ȧŀřḗḗȧȧḓẏ řŭŭƞƞīƞɠ; ŀḗḗƒŧ ǿǿƥḗḗƞ ǿǿƞ ḗḗẋīŧ"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "localServices.hint": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ƈħǿǿǿǿşḗḗ ȠĪƞƒḗḗř Ɋẇḗḗƞ ȧȧş ẏǿǿŭŭř ŧḗḗẋŧ ƥřǿǿṽīḓḗḗř ȧȧƞḓ Ŀǿǿƈȧȧŀ ƓƤŬş ȧȧş ẏǿǿŭŭř īḿȧȧɠḗḗ ƥřǿǿṽīḓḗḗř īƞ ŧħḗḗ Ƥřǿǿṽīḓḗḗřş ḿḗḗƞŭŭ. Ɓȧȧŧƈħḗḗş ȧȧřḗḗ ḓīṽīḓḗḗḓ ƀḗḗŧẇḗḗḗḗƞ řḗḗȧȧḓẏ ƓƤŬş. Ǿƞŀẏ şḗḗřṽīƈḗḗş şŧȧȧřŧḗḗḓ ħḗḗřḗḗ şŧǿǿƥ ẇħḗḗƞ ŧħḗḗ ḓḗḗşķŧǿǿƥ ȧȧƥƥ ƈŀǿǿşḗḗş."
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "localServices.loading": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Şŧȧȧřŧīƞɠ…"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "localServices.occupied": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ƥǿǿřŧ ǿǿƈƈŭŭƥīḗḗḓ; ẇȧȧīŧīƞɠ ƒǿǿř ȧȧ ƈǿǿḿƥȧȧŧīƀŀḗḗ şḗḗřṽḗḗř"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "localServices.ready": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Řḗḗȧȧḓẏ"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "localServices.start": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Şŧȧȧřŧ"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "localServices.stop": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Şŧǿǿƥ"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "localServices.stopped": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Şŧǿǿƥƥḗḗḓ"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "localServices.title": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ŀǿǿƈȧȧŀ şḗḗřṽīƈḗḗş"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
   "manage.addTo": [
     {
       "type": 0,
