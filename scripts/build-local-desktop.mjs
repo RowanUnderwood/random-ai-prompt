@@ -25,10 +25,25 @@ run("cargo", [
 ]);
 const destination = path.join(root, "output", "desktop");
 fs.mkdirSync(destination, { recursive: true });
-fs.copyFileSync(
-  path.join(root, "targets/web-shell/target/release/random-ai-prompt.exe"),
-  path.join(destination, "Random AI Prompt Local.exe"),
-);
+const executable = path.join(destination, "Random AI Prompt Local.exe");
+const pendingExecutable = path.join(destination, "Random AI Prompt Local.next.exe");
+try {
+  fs.copyFileSync(
+    path.join(root, "targets/web-shell/target/release/random-ai-prompt.exe"),
+    executable,
+  );
+  fs.rmSync(pendingExecutable, { force: true });
+} catch (error) {
+  if (!["EBUSY", "EPERM", "EACCES"].includes(error.code)) throw error;
+  // Windows locks a running executable. Stage its replacement without stopping the user's app.
+  fs.copyFileSync(
+    path.join(root, "targets/web-shell/target/release/random-ai-prompt.exe"),
+    pendingExecutable,
+  );
+  console.log(
+    "The desktop app is running. Close it and use launch-desktop.bat to apply this update.",
+  );
+}
 fs.cpSync(path.join(root, "targets/web-shell/app"), path.join(destination, "app"), {
   recursive: true,
 });

@@ -13,6 +13,19 @@ seeds increment by image index. Sidecars record actual seeds, workflow, endpoint
 sampler settings. Ready workers remain usable when another worker is offline. Partial failures
 save successes and report errors without automatically retrying submitted images.
 
+Readiness uses ComfyUI's lightweight `/queue` endpoint with a ten-second response timeout.
+Both empty and busy queues are ready; the probe validates both queue arrays. Concurrent UI and
+batch probes share one in-flight request per service. Do not use `/system_stats` for readiness:
+this local installation synchronously queries memory on every visible GPU there, which can stall
+under load. An open port with a failed probe is reported as starting/busy or incompatible rather
+than telling the user to start another instance.
+
+After a worker is verified, an admitted pool render keeps it ready as long as its TCP port is
+still listening; readiness checks skip HTTP while that render is active. A recent successful
+check also covers transient HTTP failures for up to 60 seconds, helping when another client
+submits work. A closed TCP port or explicit incompatible response invalidates remembered
+readiness immediately. An unverified startup is never accepted just because its port is open.
+
 ## Workflows
 
 The pool offers **Krea 2 — Jake's workflow** and a standard checkpoint workflow. Selecting the
@@ -64,6 +77,12 @@ upstream update suggestions are disabled for this fork's native shell.
 The stager writes a unique `BUILD_ID` each time. The shell compares it with the working copy's
 `.staged-version`, so rebuilding at the same version refreshes code while preserving user data.
 The service controls are inside the prompt box's **Prompt settings** gear → **Local services**.
+
+When rebuilding while the portable app is open, Windows locks its executable. The builder stages
+`Random AI Prompt Local.next.exe` instead and refreshes the bundled payload, leaving the running
+working copy and services alone. Close the old app and run `launch-desktop.bat`; it replaces the
+executable before launch. If the old app is still open, the launcher asks for it to be closed and
+does not start an extra copy. User settings and images stay in the same portable data directory.
 
 Node 25 requires `NODE_OPTIONS=--no-experimental-webstorage` for the existing jsdom suite;
 otherwise native localStorage shadows test storage. Node HTTP integration tests need loopback

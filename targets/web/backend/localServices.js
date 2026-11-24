@@ -27,8 +27,35 @@ export const LOCAL_SERVICES = [
   },
 ].map((s) => ({ ...s, url: `http://127.0.0.1:${s.port}` }));
 
-export async function probeService(service) {
-  let occupied = await new Promise((resolve) => {
+const pendingProbes = new Map();
+const verifiedServices = new Map();
+const activeServices = new Map();
+const RECENT_READY_MS = 60000;
+
+/** A render already admitted by the pool is proof of activity, not a reason to probe its GPU. */
+export async function runWithServiceActivity(url, run) {
+  activeServices.set(url, (activeServices.get(url) || 0) + 1);
+  try {
+    return await run();
+  } finally {
+    const remaining = activeServices.get(url) - 1;
+    if (remaining) activeServices.set(url, remaining);
+    else activeServices.delete(url);
+  }
+}
+
+/** Share concurrent UI/batch checks so a batch does not flood the same server with probes. */
+export function probeService(service) {
+  const key = `${service.id}:${service.url}:${service.port}`;
+  if (!pendingProbes.has(key)) {
+    const pending = probeServiceNow(service, key).finally(() => pendingProbes.delete(key));
+    pendingProbes.set(key, pending);
+  }
+  return pendingProbes.get(key);
+}
+
+async function probeServiceNow(service, key) {
+  const occupied = await new Promise((resolve) => {
     const socket = net.connect({ host: "127.0.0.1", port: service.port });
     socket.setTimeout(1000);
     const done = (result) => {
@@ -39,12 +66,22 @@ export async function probeService(service) {
     socket.once("timeout", () => done(false));
     socket.once("error", () => done(false));
   });
-  if (!occupied) return { ready: false, occupied: false };
+  if (!occupied) {
+    verifiedServices.delete(key);
+    return { ready: false, occupied: false, reason: "Port is not listening" };
+  }
+  const verifiedAt = verifiedServices.get(key);
+  if (verifiedAt !== undefined && activeServices.has(service.url)) {
+    return { ready: true, occupied: true, busy: true, reason: "" };
+  }
   try {
+    // /system_stats synchronously queries CUDA memory on every visible GPU in this install.
+    // Under load that can stall or time out even while ComfyUI is serving generation requests.
+    // /queue only reads the prompt queue; non-empty queues mean busy, not unavailable.
     const response = await fetch(
-      `${service.url}/${service.id === "ninfer" ? "v1/models" : "system_stats"}`,
+      `${service.url}/${service.id === "ninfer" ? "v1/models" : "queue"}`,
       {
-        signal: AbortSignal.timeout(2000),
+        signal: AbortSignal.timeout(10000),
       },
     );
     const data = await response.json();
@@ -52,10 +89,41 @@ export async function probeService(service) {
       response.ok &&
       (service.id === "ninfer"
         ? data.data?.some((m) => m.id === "qwen3.8-27b")
-        : Array.isArray(data.devices) && !!data.system);
-    return { ready: !!ready, occupied: true, device: data.devices?.[0]?.name || "" };
-  } catch {
-    return { ready: false, occupied: true };
+        : Array.isArray(data.queue_running) && Array.isArray(data.queue_pending));
+    if (ready) verifiedServices.set(key, Date.now());
+    else verifiedServices.delete(key);
+    return {
+      ready: !!ready,
+      occupied: true,
+      reason: ready
+        ? ""
+        : response.ok
+          ? "Unexpected readiness response"
+          : `HTTP ${response.status}`,
+    };
+  } catch (error) {
+    // ComfyUI can also stall on model loading or another client's synchronous GPU-stat query.
+    // Retain recent verified readiness only for transient transport errors and an open TCP port.
+    if (
+      error.name !== "SyntaxError" &&
+      verifiedAt !== undefined &&
+      Date.now() - verifiedAt < RECENT_READY_MS
+    ) {
+      return {
+        ready: true,
+        occupied: true,
+        busy: true,
+        reason: "Using recent readiness while the server is slow",
+      };
+    }
+    if (error.name === "SyntaxError") verifiedServices.delete(key);
+    return {
+      ready: false,
+      occupied: true,
+      reason: ["TimeoutError", "AbortError"].includes(error.name)
+        ? "Readiness check timed out"
+        : "Readiness request failed",
+    };
   }
 }
 

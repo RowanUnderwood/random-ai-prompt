@@ -2,6 +2,16 @@
 
 Quick table of errors hit and how they were resolved. Add a row whenever you fix something reusable.
 
+**Local ComfyUI says "No selected instance is ready" while the service panel later shows Ready:**
+the old two-second `/system_stats` check could time out on synchronous CUDA memory queries.
+Probe `/queue` instead, allow ten seconds, validate both queue arrays, and share concurrent checks.
+A non-empty queue is busy and ready. Track admitted renders: verified workers keep readiness while
+their TCP port is open without further HTTP probes. Use bounded recent-success fallback for other
+clients' transient stalls; invalidate on closed TCP or incompatible responses. Distinguish an
+open/unresponsive port from a stopped server.
+Regression proof: `tests/regression/localServiceReadiness.test.js` failed both busy-stats and
+slow-response cases before the fix and passes afterward.
+
 | Error / symptom | Cause | Fix |
 |-----------------|-------|-----|
 | `ERR_MODULE_NOT_FOUND` for a local import | ESM relative import without a file extension | Add `.js`: `import x from "./foo.js"`. |

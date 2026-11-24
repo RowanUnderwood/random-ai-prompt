@@ -1,5 +1,5 @@
 import generateComfy from "../../shared/comfyui/code/generate.js";
-import { LOCAL_SERVICES, probeService } from "./localServices.js";
+import { LOCAL_SERVICES, probeService, runWithServiceActivity } from "./localServices.js";
 
 /** One running job per endpoint, shared across all callers. Faster workers take the next job. */
 export function createGpuQueue() {
@@ -86,13 +86,23 @@ export async function generateLocalBatch({ prompt, settings = {}, signal }, deps
       (s.id === "comfy4090" && settings.use4090 !== false),
   );
   if (!selected.length) throw new Error("Select at least one image GPU in the provider settings.");
-  const ready = (
-    await Promise.all(selected.map(async (s) => ((await probe(s)).ready ? s : null)))
-  ).filter(Boolean);
-  if (!ready.length)
+  const checked = await Promise.all(
+    selected.map(async (service) => ({ service, state: await probe(service) })),
+  );
+  const ready = checked.filter(({ state }) => state.ready).map(({ service }) => service);
+  if (!ready.length) {
+    if (checked.some(({ state }) => state.occupied)) {
+      const details = checked
+        .map(({ service, state }) => `${service.label}: ${state.reason || "not ready"}`)
+        .join("; ");
+      throw new Error(
+        `Selected ComfyUI instances are listening but not responding as ready. They may still be starting or busy; wait and retry. ${details}`,
+      );
+    }
     throw new Error(
       "No selected ComfyUI instance is ready. Start one in Settings → Local services.",
     );
+  }
   const count = Number(settings.batchSize ?? 1);
   if (!Number.isSafeInteger(count) || count < 1)
     throw new Error("Images per prompt must be a positive integer.");
@@ -105,17 +115,19 @@ export async function generateLocalBatch({ prompt, settings = {}, signal }, deps
         async (url) => {
           signal?.throwIfAborted();
           const service = ready.find((s) => s.url === url);
-          const result = await generate({
-            prompt,
-            settings: {
-              ...settings,
-              comfyUrl: url,
-              batchSize: 1,
-              seed: fixedSeed >= 0 ? (fixedSeed + index) % Number.MAX_SAFE_INTEGER : -1,
-            },
-            signal,
-            transport,
-          });
+          const result = await runWithServiceActivity(url, () =>
+            generate({
+              prompt,
+              settings: {
+                ...settings,
+                comfyUrl: url,
+                batchSize: 1,
+                seed: fixedSeed >= 0 ? (fixedSeed + index) % Number.MAX_SAFE_INTEGER : -1,
+              },
+              signal,
+              transport,
+            }),
+          );
           return {
             ...result,
             imageMeta: result.images.map((_, i) => ({

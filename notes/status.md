@@ -3,7 +3,7 @@
 _Current state only._ For the chronological history of what changed each session and why, see
 [`sessions/`](sessions/README.md). For the commit-by-commit changelog see [`version.md`](version.md).
 
-## Local fork (2026-11-24, 2.60.4-local.1)
+## Local fork (2026-11-24, 2.60.4-local.2)
 
 Optional native Windows integration: NInfer on the 5090, ComfyUI workers on 3090/4090, and
 Jake's Krea 2 workflow. Batches divide between workers; external services remain open on exit.
@@ -12,8 +12,16 @@ Build with `npm run desktop:build:local`; run `launch-desktop.bat`.
 
 Verified: 387 Node tests, 433 web tests, mobile parity, lint, production UI/native builds,
 live Qwen rewrite, simultaneous Krea images on both GPUs, external-instance preservation,
-and app-owned shutdown. Test images are in the portable gallery; test services are stopped.
+and app-owned shutdown. Initial test images are in the portable gallery.
 Full `npm test` passed, including 122 mobile tests (942 tests total).
+
+Readiness fix: use `/queue` instead of synchronous GPU memory stats, allow ten seconds for
+responses, share concurrent probes, and preserve verified readiness during active pool renders
+or brief external stalls. Ten new regressions pass; full gate now covers
+952 tests (397 Node, 433 web, 122 mobile). Four live renders and 302 readiness samples passed
+with no false offline results. The user's current app/services remain running; the fixed update
+is staged. Running desktop apps are not closed during updates;
+use `launch-desktop.bat` after closing the old app to apply a staged `.next.exe`.
 
 ## Upstream health (2026-07-12, 2.60.0)
 
