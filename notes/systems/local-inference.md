@@ -39,6 +39,19 @@ nodes and model names are checked before submission. UI dimensions override the 
 1.4 MP resolution selector. UUID output prefixes prevent collisions in the shared output folder.
 For a standard checkpoint, select its name and adjust steps/CFG for that model.
 
+The provider gear's **Diffusion model (UNET)** dropdown queries each enabled instance's
+`/object_info/UNETLoader` choices, just as ComfyUI's own UNET loader does. It offers the common
+filenames across reachable selected GPUs. Standard workflows show a **Checkpoint** dropdown
+from `CheckpointLoaderSimple` instead. Refresh models reloads the current server catalogs;
+changing enabled GPUs reloads them automatically. Unreachable workers are reported, and a saved
+filename missing from the catalog stays visible with an availability message until changed.
+
+The selected `kreaModel` replaces the workflow's UNET filename and is recorded in image sidecars.
+Existing settings default to the original `krea2_turbo_fp8.safetensors`. The encoder, VAE and LoRA
+stack remain those of the Krea workflow: listing a diffusion model does not make another model
+architecture compatible with this graph. Explicit standard-pool checkpoint selections are also
+validated without silently substituting another checkpoint. See [model selection plan](../plans/local-model-selector.md).
+
 ## Launch and ownership
 
 Settings → **Local services** shows readiness and Start/Stop buttons for fixed profiles:

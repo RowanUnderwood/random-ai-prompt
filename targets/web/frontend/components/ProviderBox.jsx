@@ -12,6 +12,7 @@ import { Text, Num, Toggle, Select } from "./Field.jsx";
 import { getProvider } from "../lib/providers/index.js";
 import { useProviderSettings } from "../lib/useProvider.js";
 import { infoFor } from "../../../shared/_shared/fieldInfo.js";
+import ComfyModelSelect from "./ComfyModelSelect.jsx";
 
 const msgs = defineMessages({
   noSettings: {
@@ -48,6 +49,16 @@ function ProviderField({ f, params, setParam, optionData }) {
       <InfoTip text={infoFor(f)} />
     </>
   );
+  if (f.type === "comfy-model")
+    return (
+      <ComfyModelSelect
+        label={label}
+        value={v}
+        kind={f.modelKind}
+        params={params}
+        onChange={(value) => setParam(f.key, value)}
+      />
+    );
   if (f.type === "checkbox")
     return <Toggle label={label} value={v} onChange={(x) => setParam(f.key, x)} />;
   if (f.type === "select") {
@@ -132,7 +143,10 @@ export default function ProviderBox({ settings, setSettings, providerId }) {
     "imageHeight",
   ];
   const fields = (schema?.fields || []).filter(
-    (f) => f.key !== "negativePrompt" && !inlineKeys.includes(f.key),
+    (f) =>
+      f.key !== "negativePrompt" &&
+      !inlineKeys.includes(f.key) &&
+      (!f.workflow || f.workflow === (params.comfyWorkflow || schema.defaults.comfyWorkflow)),
   );
   if (!fields.length)
     return (
@@ -144,13 +158,7 @@ export default function ProviderBox({ settings, setSettings, providerId }) {
   return (
     <div className="provider-controls group-body">
       {fields.map((f) => (
-        <ProviderField
-          key={f.key}
-          f={f}
-          params={params}
-          setParam={setParam}
-          optionData={options}
-        />
+        <ProviderField key={f.key} f={f} params={params} setParam={setParam} optionData={options} />
       ))}
     </div>
   );

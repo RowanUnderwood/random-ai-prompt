@@ -59,6 +59,7 @@ import {
 import { presetNames, resolvePresets, applyPreset } from "../../../engine/presets.js";
 import { localServices } from "./localServices.js";
 import { generateLocalBatch } from "./localGpuPool.js";
+import { listLocalModels } from "./localModelCatalog.js";
 
 // `execFile`, never `exec`: no shell means a filename with a quote in it is a filename, not a command.
 // See osCommands.js for the whole story (CodeQL js/command-line-injection, critical).
@@ -208,6 +209,27 @@ export function createApiHandler() {
         return send(res, 200, { services: await localServices.status() });
       } catch (e) {
         return send(res, 400, { error: e.message });
+      }
+    }
+
+    if (u.pathname === "/api/local-models" && req.method === "GET") {
+      const controller = new AbortController();
+      res.once("close", () => {
+        if (!res.writableEnded) controller.abort();
+      });
+      try {
+        return send(
+          res,
+          200,
+          await listLocalModels({
+            kind: u.searchParams.get("kind") || "diffusion",
+            use3090: u.searchParams.get("use3090") !== "false",
+            use4090: u.searchParams.get("use4090") !== "false",
+            signal: controller.signal,
+          }),
+        );
+      } catch (error) {
+        return send(res, 400, { error: error.message });
       }
     }
 

@@ -31,6 +31,7 @@ export default async function generate({ prompt, settings, signal, transport }) 
   let g;
   if (krea) {
     g = structuredClone(kreaWorkflow);
+    g["106:1"].inputs.unet_name = settings.kreaModel || g["106:1"].inputs.unet_name;
     g["104"].inputs.text = prompt;
     g["17"].inputs.text = settings.negativePrompt || "";
     Object.assign(g["138"].inputs, {
@@ -93,6 +94,9 @@ export default async function generate({ prompt, settings, signal, transport }) 
       const ckptList = ckptInfo?.CheckpointLoaderSimple?.input?.required?.ckpt_name?.[0] || [];
       const samplerList = ksInfo?.KSampler?.input?.required?.sampler_name?.[0] || [];
       const schedList = ksInfo?.KSampler?.input?.required?.scheduler?.[0] || [];
+      if (settings.comfyStrictModel && ckpt && !ckptList.includes(ckpt)) {
+        throw new Error(`ComfyUI checkpoint missing on ${base}: ${ckpt}`);
+      }
       if (!ckpt || !ckptList.includes(ckpt)) ckpt = ckptList[0];
       if (!ckpt) {
         throw new Error(
@@ -102,7 +106,7 @@ export default async function generate({ prompt, settings, signal, transport }) 
       g["3"].inputs.sampler_name = pick(samplerList, settings.sampler, "euler");
       g["3"].inputs.scheduler = pick(schedList, settings.scheduler, "normal");
     } catch (e) {
-      if (!ckpt) throw e; // only fatal if there's also no configured fallback to try
+      if (!ckpt || settings.comfyStrictModel) throw e;
     }
     g["4"].inputs.ckpt_name = ckpt;
   }

@@ -177,6 +177,27 @@
   "blockEd.tabJs": {
     "defaultMessage": "JS sidecar"
   },
+  "comfyModels.auto": {
+    "defaultMessage": "Automatic (first installed checkpoint)"
+  },
+  "comfyModels.choose": {
+    "defaultMessage": "Choose a diffusion model"
+  },
+  "comfyModels.empty": {
+    "defaultMessage": "No shared models found. Start the selected ComfyUI instances and refresh."
+  },
+  "comfyModels.loading": {
+    "defaultMessage": "Loading models…"
+  },
+  "comfyModels.refresh": {
+    "defaultMessage": "Refresh models"
+  },
+  "comfyModels.unavailable": {
+    "defaultMessage": "The saved model is not available on every reachable selected GPU. Choose another model or refresh after starting the instances."
+  },
+  "comfyModels.workflowHint": {
+    "defaultMessage": "ComfyUI's diffusion models are listed. Choose a Krea 2 model for this workflow; its text encoder and VAE stay unchanged."
+  },
   "dialog.cancel": {
     "defaultMessage": "Cancel"
   },

@@ -121,6 +121,7 @@ export async function generateLocalBatch({ prompt, settings = {}, signal }, deps
               settings: {
                 ...settings,
                 comfyUrl: url,
+                comfyStrictModel: true,
                 batchSize: 1,
                 seed: fixedSeed >= 0 ? (fixedSeed + index) % Number.MAX_SAFE_INTEGER : -1,
               },
