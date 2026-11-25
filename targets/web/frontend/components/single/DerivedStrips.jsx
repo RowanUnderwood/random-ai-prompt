@@ -7,7 +7,7 @@
  * @module gui/components/single/DerivedStrips
  */
 import { useIntl } from "react-intl";
-import { msgs } from "./messages.js";
+import { msgs, upscaleStateMsg } from "./messages.js";
 
 // Render order + the colour-coded kind metadata (label message + CSS modifier).
 const KINDS = [
@@ -21,16 +21,28 @@ const KINDS = [
  * @param {object} props
  * @param {object} props.item The current gallery item (its `children`).
  * @param {object[]} props.items The feed (to resolve child items).
- * @param {object[]} props.derivations In-flight derivations `{ parentPath, kind }`.
+ * @param {object[]} props.derivations In-flight derivations `{ parentPath, kind, job? }`; an upscale
+ *   `job` also gets a progress line and a Cancel button.
  * @param {Function} props.onNavigate `(item)` — open a child image.
+ * @param {Function} [props.onCancelUpscale] `(jobId)` — cancel an upscale.
  * @returns {JSX.Element|null}
  */
-export default function DerivedStrips({ item, items, derivations, onNavigate }) {
+export default function DerivedStrips({
+  item,
+  items,
+  derivations,
+  onNavigate,
+  onCancelUpscale,
+}) {
   const intl = useIntl();
   const groups = { reroll: [], variation: [], resize: [] };
   for (const c of item.children || []) if (groups[c.kind]) groups[c.kind].push(c);
   const pendingOf = (kind) =>
     derivations.filter((d) => d.parentPath === item.path && d.kind === kind).length;
+
+  const upscaleJobs = derivations
+    .filter((d) => d.job && d.parentPath === item.path)
+    .map((d) => d.job);
 
   const total =
     KINDS.reduce((n, k) => n + groups[k.kind].length + pendingOf(k.kind), 0);
@@ -88,6 +100,30 @@ export default function DerivedStrips({ item, items, derivations, onNavigate }) 
         })}
       </div>
       <div className="derived-grid-row">{cells}</div>
+      {upscaleJobs.length > 0 && (
+        <ul className="dv-jobs">
+          {upscaleJobs.map((job) => (
+            <li key={job.id} className="dv-job">
+              <span role="status">
+                {intl.formatMessage(
+                  job.cancelling ? msgs.upscaleCancelling : upscaleStateMsg[job.state],
+                  { ahead: job.ahead },
+                )}
+              </span>
+              {onCancelUpscale && (
+                <button
+                  type="button"
+                  className="link-btn"
+                  disabled={job.cancelling || job.state === "saving"}
+                  onClick={() => onCancelUpscale(job.id)}
+                >
+                  {intl.formatMessage(msgs.cancelUpscale)}
+                </button>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

@@ -163,12 +163,41 @@ export const msgs = defineMessages({
     defaultMessage: "Resizing needs ImageMagick installed — it isn't, so this is locked",
   },
   aiUpscale: { id: "single.aiUpscale", defaultMessage: "AI Upscale · {provider}" },
+  aiUpscaleTarget: {
+    id: "single.aiUpscaleTarget",
+    defaultMessage: "AI Upscale · {provider} · {target}px",
+  },
+  aiUpscaleTooLarge: {
+    id: "single.aiUpscaleTooLarge",
+    defaultMessage: "{provider} — already {size}px (target {target}px)",
+    description: "Locked upscale option: the image is already at or above the target size",
+  },
+  upscaleQueued: {
+    id: "single.upscaleQueued",
+    defaultMessage:
+      "Waiting for the RTX 4090{ahead, plural, =0 {} other { · # ahead}}",
+  },
+  upscaleStarting: { id: "single.upscaleStarting", defaultMessage: "Preparing upscale…" },
+  upscaleWaiting: { id: "single.upscaleWaiting", defaultMessage: "Waiting in ComfyUI…" },
+  upscaleRunning: { id: "single.upscaleRunning", defaultMessage: "Upscaling…" },
+  upscaleSaving: { id: "single.upscaleSaving", defaultMessage: "Saving upscaled image…" },
+  upscaleCancelling: { id: "single.upscaleCancelling", defaultMessage: "Cancelling…" },
+  cancelUpscale: { id: "single.cancelUpscale", defaultMessage: "Cancel upscale" },
   aiNeedsKey: { id: "single.aiNeedsKey", defaultMessage: "{provider} — add a key to use" },
   aiUpscaleNone: {
     id: "single.aiUpscaleNone",
     defaultMessage: "AI Upscale — no provider added yet",
   },
 });
+
+// Progress label (a `msgs` entry) for an upscale job's state.
+export const upscaleStateMsg = {
+  queued: msgs.upscaleQueued,
+  starting: msgs.upscaleStarting,
+  waiting: msgs.upscaleWaiting,
+  running: msgs.upscaleRunning,
+  saving: msgs.upscaleSaving,
+};
 
 // Human label (a `msgs` entry) for a derive source layer.
 export const layerMsg = {

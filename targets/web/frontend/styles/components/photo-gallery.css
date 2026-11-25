@@ -198,6 +198,17 @@
   background: var(--bg-2);
 }
 
+.g-upscales {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.75rem;
+  max-width: var(--g-col);
+  margin: 0 auto 0.9rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
 .g-select-bar .grow {
   flex: 1;
 }

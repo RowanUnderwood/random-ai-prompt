@@ -79,6 +79,7 @@ export default {
   applies: (provider) =>
     !!(
       provider &&
+      !provider.upscaleJobs && // the backend's GPU queue already runs these one at a time
       (provider.tier === "api" || provider.loadRewrite || provider.rewrite || provider.loadUpscale)
     ),
   /**

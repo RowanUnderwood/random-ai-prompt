@@ -2,6 +2,9 @@
 
 Ordered, roughly by priority. Update as items are done or added.
 
+Completed 2026-11-25: SeedVR2 upscaling on the 4090 through the shared GPU queue, with progress,
+cancel and Gallery bulk upscale. See [the plan](seedvr2-upscale.md).
+
 Completed 2026-11-25: Krea 2 identity/style blocks with separate bands and shared model-aware
 visibility for SD selections. See [Krea content](../systems/krea2-content.md).
 

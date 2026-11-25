@@ -30,6 +30,7 @@
   margin: 0 0 0.7rem;
   color: var(--fg-soft);
   line-height: 1.45;
+  white-space: pre-line;
 }
 
 .modal .modal-note {

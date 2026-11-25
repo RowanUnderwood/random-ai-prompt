@@ -75,7 +75,7 @@ const msgs = defineMessages({
   delete: { id: "gallery.delete", defaultMessage: "Delete image" },
   // Multi-select
   select: { id: "gallery.select", defaultMessage: "Select" },
-  selectTitle: { id: "gallery.selectTitle", defaultMessage: "Select multiple images to delete" },
+  selectTitle: { id: "gallery.selectTitle", defaultMessage: "Select multiple images to upscale or delete" },
   done: { id: "gallery.done", defaultMessage: "Done" },
   doneSelecting: { id: "gallery.doneSelecting", defaultMessage: "Exit selection" },
   selectAll: { id: "gallery.selectAll", defaultMessage: "Select all" },
@@ -84,6 +84,15 @@ const msgs = defineMessages({
     id: "gallery.selectedCount",
     defaultMessage: "{count, plural, =0 {None selected} one {# selected} other {# selected}}",
   },
+  upscaleSelected: {
+    id: "gallery.upscaleSelected",
+    defaultMessage: "{count, plural, one {Upscale # image} other {Upscale # images}}",
+  },
+  upscalesActive: {
+    id: "gallery.upscalesActive",
+    defaultMessage: "{count, plural, one {# upscale in progress} other {# upscales in progress}}",
+  },
+  cancelUpscales: { id: "gallery.cancelUpscales", defaultMessage: "Cancel all" },
   deleteSelected: {
     id: "gallery.deleteSelected",
     defaultMessage: "{count, plural, one {Delete # image} other {Delete # images}}",
@@ -182,6 +191,10 @@ function PlaceholderCell({ label }) {
  * @param {Function} props.onRefresh Re-scan the output folder.
  * @param {Function} [props.onDelete] `(item)` — delete an image (+ sidecar) from disk.
  * @param {Function} [props.onDeleteMany] `(paths)` — mass-delete images (+ sidecars) from disk.
+ * @param {Function} [props.onUpscaleMany] `(paths)` — queue upscales; resolves false if declined.
+ * @param {object[]} [props.upscaleJobs] Unfinished upscale jobs.
+ * @param {string} [props.upscaleError] The last upscale failure.
+ * @param {Function} [props.onCancelUpscales] `(ids)` — cancel upscale jobs.
  * @param {object[]} [props.pending] Live placeholder descriptors `{ id, label }` for in-flight gens.
  * @param {import('react').ReactNode} [props.composer] A slot rendered above the header (the box).
  * @returns {JSX.Element}
@@ -195,6 +208,10 @@ export default function Gallery({
   onRefresh,
   onDelete,
   onDeleteMany,
+  onUpscaleMany,
+  upscaleJobs = [],
+  upscaleError,
+  onCancelUpscales,
   pending = [],
   composer = null,
 }) {
@@ -243,6 +260,12 @@ export default function Gallery({
     setSelected(new Set());
   }
 
+  async function upscaleSelected() {
+    const paths = [...selected];
+    if (!paths.length || (await onUpscaleMany(paths)) === false) return;
+    setSelected(new Set());
+  }
+
   const scrollerRef = useRef(null);
   const gridRef = useRef(null);
   // Live scroll/size metrics that drive the window. `gridTop` is where the grid begins within the
@@ -288,7 +311,7 @@ export default function Gallery({
     if (gridRef.current) ro.observe(gridRef.current);
     return () => ro.disconnect();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filtered.length, pending.length, selectMode]);
+  }, [filtered.length, pending.length, selectMode, upscaleJobs.length > 0, upscaleError]);
 
   // rAF-throttle scroll so a fast fling doesn't dispatch a setState per scroll event.
   const rafRef = useRef(0);
@@ -389,6 +412,11 @@ export default function Gallery({
             <button className="link-btn" onClick={clearSelection} disabled={selected.size === 0}>
               {intl.formatMessage(msgs.clearSelection)}
             </button>
+            {onUpscaleMany && (
+              <button className="ghost" onClick={upscaleSelected} disabled={selected.size === 0}>
+                {intl.formatMessage(msgs.upscaleSelected, { count: selected.size })}
+              </button>
+            )}
             <button
               className="btn-destructive"
               onClick={deleteSelected}
@@ -399,6 +427,29 @@ export default function Gallery({
             <button className="link-btn" onClick={exitSelect} title={intl.formatMessage(msgs.doneSelecting)}>
               {intl.formatMessage(msgs.done)}
             </button>
+          </div>
+        )}
+
+        {(upscaleJobs.length > 0 || upscaleError) && (
+          <div className="g-upscales">
+            {upscaleJobs.length > 0 && (
+              <>
+                <span role="status">
+                  {intl.formatMessage(msgs.upscalesActive, { count: upscaleJobs.length })}
+                </span>
+                <button
+                  className="link-btn"
+                  onClick={() => onCancelUpscales(upscaleJobs.map((job) => job.id))}
+                >
+                  {intl.formatMessage(msgs.cancelUpscales)}
+                </button>
+              </>
+            )}
+            {upscaleError && (
+              <span className="g-card-err" role="alert">
+                {upscaleError}
+              </span>
+            )}
           </div>
         )}
 

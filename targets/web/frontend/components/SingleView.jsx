@@ -96,6 +96,7 @@ const REST_DROP = new Set([
  * @param {Function} [props.onDerive] `(item, kind, source, promptEdits?)` — re-roll / vary into a new image.
  * @param {Function} [props.onResize] `(item, scale)` — resize into a new image (ImageMagick).
  * @param {object[]} [props.derivations] In-flight derivations `{ id, parentPath, kind }`.
+ * @param {Function} [props.onCancelUpscale] `(jobId)` — cancel an in-progress upscale.
  * @param {string} [props.deriveError] The last re-roll / variation / resize failure, if any.
  * @returns {JSX.Element}
  */
@@ -115,6 +116,7 @@ export default function SingleView({
   onResize,
   onUpscale,
   derivations = [],
+  onCancelUpscale,
   deriveError,
 }) {
   const intl = useIntl();
@@ -122,6 +124,7 @@ export default function SingleView({
   const [copyOpen, setCopyOpen] = useState(false);
   const [imageOnly, setImageOnly] = useState(false);
   const [renderSource, setRenderSource] = useState(null);
+  const [loaded, setLoaded] = useState({ path: null, size: 0 }); // the shown image's longest edge
   const index = current ? items.findIndex((it) => it.path === current.path) : -1;
   const total = items.length;
   const hasPrev = index > 0;
@@ -312,11 +315,27 @@ export default function SingleView({
   // Providers that ship an AI upscale adapter; a key-gated one is offered but disabled until keyed.
   const upscalers = providers
     .filter((pp) => pp.capabilities?.upscale && pp.loadUpscale)
-    .map((pp) => ({
-      id: pp.id,
-      label: pp.label,
-      ready: !pp.needsKey || !!effectiveKey(pp.id, settings),
-    }));
+    .map((pp) => {
+      const target = pp.upscaleTarget?.(settings.providerParams?.[pp.id]);
+      const size = loaded.path === item.path ? loaded.size : 0;
+      const tooLarge = !!target && size >= target;
+      const keyed = !pp.needsKey || !!effectiveKey(pp.id, settings);
+      const label = !keyed
+        ? intl.formatMessage(msgs.aiNeedsKey, { provider: pp.label })
+        : tooLarge
+          ? intl.formatMessage(msgs.aiUpscaleTooLarge, {
+              provider: pp.label,
+              size: String(size),
+              target: String(target),
+            })
+          : target
+            ? intl.formatMessage(msgs.aiUpscaleTarget, {
+                provider: pp.label,
+                target: String(target),
+              })
+            : intl.formatMessage(msgs.aiUpscale, { provider: pp.label });
+      return { id: pp.id, label, ready: keyed && !tooLarge };
+    });
   const hasUpscalers = upscalers.length > 0;
   const onResizePick = (e) => {
     const val = e.target.value;
@@ -391,7 +410,16 @@ export default function SingleView({
                   aria-label={intl.formatMessage(msgs.enterImageOnly)}
                   onClick={() => setImageOnly(true)}
                 >
-                  <img src={item.path} alt={promptText(item) || item.file} />
+                  <img
+                    src={item.path}
+                    alt={promptText(item) || item.file}
+                    onLoad={({ currentTarget: img }) =>
+                      setLoaded({
+                        path: item.path,
+                        size: Math.max(img.naturalWidth, img.naturalHeight),
+                      })
+                    }
+                  />
                 </button>
                 {/* Overlay actions, top-right — mirrors the gallery thumbnails. Download is the
                     extra (thumbnails don't have it); open / reveal / delete need the local file. */}
@@ -444,6 +472,7 @@ export default function SingleView({
                 items={items}
                 derivations={derivations}
                 onNavigate={onNavigate}
+                onCancelUpscale={onCancelUpscale}
               />
             </div>
 
@@ -532,9 +561,7 @@ export default function SingleView({
                           {hasUpscalers ? (
                             upscalers.map((u) => (
                               <option key={u.id} value={`ai:${u.id}`} disabled={!u.ready}>
-                                {u.ready
-                                  ? intl.formatMessage(msgs.aiUpscale, { provider: u.label })
-                                  : intl.formatMessage(msgs.aiNeedsKey, { provider: u.label })}
+                                {u.label}
                               </option>
                             ))
                           ) : (

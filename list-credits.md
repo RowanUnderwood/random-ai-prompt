@@ -19,6 +19,12 @@ retains its source authors' rights and is excluded from the internal public-doma
 neither reviewed source declares an explicit content license. Curation/tooling by OpenAI Codex.
 See [exact sources and regeneration](engine/data/sources/krea2/README.md).
 
+The SeedVR2 upscaler runs **SeedVR2** (ByteDance Seed) through
+[ComfyUI-SeedVR2_VideoUpscaler](https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler) and
+[ComfyUI-Easy-Use](https://github.com/yolain/ComfyUI-Easy-Use), both installed separately in the
+user's own ComfyUI. The workflow was supplied by the fork's owner; integration implemented with
+Claude (Anthropic).
+
 The `activity/*` lists backing `{#action}` are adapted from **Kinetics-700-2020**,
 created by the Google DeepMind Kinetics team and distributed by the
 [Common Visual Data Foundation](https://github.com/cvdfoundation/kinetics-dataset).

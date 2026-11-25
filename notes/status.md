@@ -3,7 +3,14 @@
 _Current state only._ For the chronological history of what changed each session and why, see
 [`sessions/`](sessions/README.md). For the commit-by-commit changelog see [`version.md`](version.md).
 
-## Local fork (2026-11-25, 2.60.4-local.6)
+## Local fork (2026-11-25, 2.60.4-local.7)
+
+SeedVR2 upscaling on the 4090: Resize menu and Gallery bulk action, sharing the GPU queue with
+renders, with progress, cancel and an adjustable 4000px target. See [the plan](plans/seedvr2-upscale.md).
+Also fixes the existing ComfyUI upscaler, which could never run without a key. Full gate passes:
+1,040 tests (452 Node, 466 web, 122 mobile). Verified live on the 4090 with output pixel-identical
+to the supplied workflow. Native .7 is staged; close the running app and use `launch-desktop.bat`.
+Not run live: the CLI upscale path. Jobs do not persist across an app restart.
 
 Krea 2 content: Subject `{#krea2-actors}` with 1,010 identities, separate 53-band list, and Style
 `{#krea2-style-library}` with 288 descriptors. Shared model-aware visibility hides these under SD

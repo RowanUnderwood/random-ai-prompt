@@ -192,6 +192,23 @@ export async function upscaleImage({ providerId, image, params }) {
       `Provider "${providerId}" needs an API key. Set one with: prompt keys set ${providerId} <key>`,
     );
   }
+  if (provider.upscaleJobs) {
+    // The backend queues the job and saves its result to the gallery; don't ingest it twice.
+    const upscale = await provider.loadUpscale();
+    const { images, saved } = await upscale({
+      image,
+      settings: { ...store.read(`providers/${provider.id}`), ...params },
+    });
+    if (saved) return images;
+    const out = [];
+    for (const src of images) {
+      const result = await fetch(src);
+      if (!result.ok) throw new Error(`Could not read the upscaled image (${result.status}).`);
+      const bytes = Buffer.from(await result.arrayBuffer());
+      out.push(await ingestImage(`data:image/png;base64,${bytes.toString("base64")}`, null));
+    }
+    return out;
+  }
   const res = await fetch("/api/upscale", {
     method: "POST",
     headers: { "Content-Type": "application/json" },

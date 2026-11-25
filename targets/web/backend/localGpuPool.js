@@ -1,7 +1,11 @@
 import generateComfy from "../../shared/comfyui/code/generate.js";
 import { LOCAL_SERVICES, probeService, runWithServiceActivity } from "./localServices.js";
 
-/** One running job per endpoint, shared across all callers. Faster workers take the next job. */
+/**
+ * One running job per endpoint, shared across all callers. Faster workers take the next job.
+ * A higher-priority job goes ahead of lower-priority ones still waiting; it never interrupts a
+ * running job, and jobs of equal priority keep their arrival order.
+ */
 export function createGpuQueue() {
   const busy = new Set();
   const waiting = [];
@@ -32,7 +36,18 @@ export function createGpuQueue() {
     }
   };
   return {
-    run(endpoints, run, signal) {
+    /** How many jobs stand between a waiting job and its endpoint (0 once it is running or unknown). */
+    ahead(id) {
+      const index = waiting.findIndex((job) => job.id !== undefined && job.id === id);
+      if (index < 0) return 0;
+      const { endpoints } = waiting[index];
+      const shares = (job) => job.endpoints.some((e) => endpoints.includes(e));
+      return (
+        waiting.slice(0, index).filter(shares).length +
+        (endpoints.every((e) => busy.has(e)) ? 1 : 0)
+      );
+    },
+    run(endpoints, run, signal, { priority = 0, id } = {}) {
       if (!endpoints.length) return Promise.reject(new Error("Select at least one image GPU."));
       return new Promise((resolve, reject) => {
         const onAbort = () => pump();
@@ -40,11 +55,14 @@ export function createGpuQueue() {
           endpoints,
           run,
           signal,
+          priority,
+          id,
           resolve,
           reject,
           cleanup: () => signal?.removeEventListener("abort", onAbort),
         };
-        waiting.push(job);
+        const behind = waiting.findIndex((other) => other.priority < priority);
+        waiting.splice(behind < 0 ? waiting.length : behind, 0, job);
         signal?.addEventListener("abort", onAbort, { once: true });
         pump();
       });
@@ -52,8 +70,9 @@ export function createGpuQueue() {
   };
 }
 
-const queue = createGpuQueue();
-const directJson = async (url, body, signal) => {
+/** The one queue every local GPU job goes through: image batches and upscales alike. */
+export const gpuQueue = createGpuQueue();
+export const directJson = async (url, body, signal) => {
   const res = await fetch(url, {
     method: body ? "POST" : "GET",
     signal: signal
@@ -79,7 +98,7 @@ const transport = {
 export async function generateLocalBatch({ prompt, settings = {}, signal }, deps = {}) {
   const probe = deps.probe || probeService;
   const generate = deps.generate || generateComfy;
-  const workers = deps.queue || queue;
+  const workers = deps.queue || gpuQueue;
   const selected = LOCAL_SERVICES.filter(
     (s) =>
       (s.id === "comfy3090" && settings.use3090 !== false) ||

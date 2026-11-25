@@ -105,6 +105,21 @@
   "app.tab.single.desc": {
     "defaultMessage": "View one image up close — details, re-rolls, and resizes"
   },
+  "app.upscaleAction": {
+    "defaultMessage": "Upscale"
+  },
+  "app.upscaleFailed": {
+    "defaultMessage": "{file}: {error}",
+    "description": "An upscale failure, naming the source image"
+  },
+  "app.upscaleManyConfirm": {
+    "defaultMessage": "Upscale {count, plural, one {# image} other {# images}} to {target}px with {provider}? They run one at a time, alongside your renders.",
+    "description": "Confirm dialog before queueing the selected gallery images for upscaling"
+  },
+  "app.upscaleManySkipped": {
+    "defaultMessage": "{queued, plural, =0 {No images queued} one {# image queued} other {# images queued}}. {skipped, plural, one {# skipped} other {# skipped}}:",
+    "description": "Summary after a bulk upscale when some images could not be queued"
+  },
   "blockEd.ariaDpl": {
     "defaultMessage": "Generator DPL"
   },
@@ -822,6 +837,9 @@
   "folderEd.saving": {
     "defaultMessage": "Saving…"
   },
+  "gallery.cancelUpscales": {
+    "defaultMessage": "Cancel all"
+  },
   "gallery.clearSelection": {
     "defaultMessage": "Clear"
   },
@@ -891,7 +909,7 @@
     "description": "aria-label on a gallery thumbnail while in multi-select mode"
   },
   "gallery.selectTitle": {
-    "defaultMessage": "Select multiple images to delete"
+    "defaultMessage": "Select multiple images to upscale or delete"
   },
   "gallery.selectedCount": {
     "defaultMessage": "{count, plural, =0 {None selected} one {# selected} other {# selected}}"
@@ -901,6 +919,12 @@
   },
   "gallery.title": {
     "defaultMessage": "Photo gallery"
+  },
+  "gallery.upscaleSelected": {
+    "defaultMessage": "{count, plural, one {Upscale # image} other {Upscale # images}}"
+  },
+  "gallery.upscalesActive": {
+    "defaultMessage": "{count, plural, one {# upscale in progress} other {# upscales in progress}}"
   },
   "home.aiFallback": {
     "defaultMessage": "AI"
@@ -1811,6 +1835,13 @@
   "single.aiUpscaleNone": {
     "defaultMessage": "AI Upscale — no provider added yet"
   },
+  "single.aiUpscaleTarget": {
+    "defaultMessage": "AI Upscale · {provider} · {target}px"
+  },
+  "single.aiUpscaleTooLarge": {
+    "defaultMessage": "{provider} — already {size}px (target {target}px)",
+    "description": "Locked upscale option: the image is already at or above the target size"
+  },
   "single.allSettings": {
     "defaultMessage": "All settings ({count})"
   },
@@ -1819,6 +1850,9 @@
   },
   "single.backTitle": {
     "defaultMessage": "Back (Esc)"
+  },
+  "single.cancelUpscale": {
+    "defaultMessage": "Cancel upscale"
   },
   "single.confirmReroll": {
     "defaultMessage": "Re-roll from the DPL recipe? A new image is generated with a new seed."
@@ -2107,6 +2141,24 @@
   },
   "single.typeVariation": {
     "defaultMessage": "Variation"
+  },
+  "single.upscaleCancelling": {
+    "defaultMessage": "Cancelling…"
+  },
+  "single.upscaleQueued": {
+    "defaultMessage": "Waiting for the RTX 4090{ahead, plural, =0 {} other { · # ahead}}"
+  },
+  "single.upscaleRunning": {
+    "defaultMessage": "Upscaling…"
+  },
+  "single.upscaleSaving": {
+    "defaultMessage": "Saving upscaled image…"
+  },
+  "single.upscaleStarting": {
+    "defaultMessage": "Preparing upscale…"
+  },
+  "single.upscaleWaiting": {
+    "defaultMessage": "Waiting in ComfyUI…"
   },
   "single.varyAction": {
     "defaultMessage": "vary"

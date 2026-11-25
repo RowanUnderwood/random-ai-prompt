@@ -131,6 +131,24 @@
   opacity: 1;
 }
 
+/* Progress + Cancel for upscales still on their way. */
+.dv-jobs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.dv-job {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.75rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
 /* Locked tool controls (convert / resize): visible but greyed with a 🔒, like the online locks */
 .g-tool {
   position: relative;

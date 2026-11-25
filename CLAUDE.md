@@ -90,6 +90,14 @@ from prompt dialect. See [Krea content](notes/systems/krea2-content.md) for sour
   enabled ready GPUs rather than duplicated. Faster workers take the next waiting image.
   Sidecars record the actual model, seed, workflow, GPU, and endpoint. Keep partial successes
   and report failed jobs; do not automatically retry submitted work and risk duplicate images.
+- **SeedVR2 upscaling:** `targets/shared/seedvr2-local/` (provider, cleaned workflow) and
+  `targets/web/backend/localUpscale.js` (jobs) upscale on the 4090 only, through the same
+  `gpuQueue`. Single-view jobs have priority over waiting renders; Gallery bulk jobs use normal
+  order; nothing preempts. Clients submit and poll `/api/local-upscale` instead of holding requests
+  open (browsers allow six per host). Time in ComfyUI's own queue never times out, cancellation
+  targets only the job's own prompt id, the GPU slot is held until ComfyUI stops, and nothing is
+  resubmitted. The backend saves the image and sidecar itself. Sources already at the target size
+  are refused because the workflow would shrink them. See [local inference](notes/systems/local-inference.md).
 - **Single view:** Render another opens a positive/negative prompt editor, reuses the source's
   saved provider/model/dimensions/settings, and queues one linked variation with a fresh seed.
   Edited text is sent directly without rerolling or rewriting. Clicking the image opens a

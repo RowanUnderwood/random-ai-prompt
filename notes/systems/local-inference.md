@@ -68,6 +68,43 @@ click or Escape returns to Single. Prompt editing and other modal/text controls 
 events. Components live under `frontend/components/single/`, with shared modal setup in
 `frontend/lib/useModalDialog.js`. See [the feature plan](../plans/single-view-render-and-focus.md).
 
+## SeedVR2 upscaling (RTX 4090)
+
+Single view's **Resize** menu offers **AI Upscale · SeedVR2 (RTX 4090)**, and the Gallery's selection
+bar offers **Upscale N images**. The default target is a 4000px longest edge. To change it or the
+seed, choose SeedVR2 as the Upscaler in the Providers menu and open its settings gear.
+
+`targets/shared/seedvr2-local/data/seedvr2-workflow.json` derives from the supplied
+`seedvr2 upscaling slow good (1).json`: 7B fp16, 35 swapped blocks, 1024px VAE tiles, LAB colour
+correction, seed 4105349922. Removed: the before/after comparer, the unconnected folder loader and
+two Clear Cache All nodes that repeat what Clean VRAM Used already does. `sageattn_3` became
+`sageattn_2`, which the node was already falling back to on this card. Output is pixel-identical to
+the original workflow for the same source and seed. SeedVR2 device `cuda:0` is the 4090 because
+its launcher exposes only that GPU.
+
+**Queueing.** `backend/localUpscale.js` runs jobs through `gpuQueue`, restricted to port 8191, so they
+never overlap this app's renders there; waiting renders that allow the 3090 continue on it.
+Single-view jobs go ahead of waiting renders; bulk jobs keep arrival order. A running job is never
+interrupted for another. Other programs' work is serialized by ComfyUI, and time spent in its queue
+does not count as a timeout. The 4090 switch in Local GPUs settings governs renders, not upscales. Jobs run
+by a separate CLI process have their own app queue; ComfyUI still serializes them.
+
+**Jobs.** States: queued, starting, waiting (in ComfyUI), running, saving, then done, error or
+cancelled. Clients poll one list instead of holding a request per job: Chromium allows six
+connections per host, so several waiting upscales would otherwise stall the interface. Jobs survive a
+page reload, not an app restart. Cancelling deletes or interrupts only the job's own prompt id and
+keeps the GPU slot until ComfyUI stops; SeedVR2 reacts between its phases, about 11 seconds in
+testing. Brief poll failures are tolerated; lost jobs are reported and never resubmitted.
+
+**Results.** The backend downloads the image and writes the sidecar first. `settings` stays the
+parent's recipe so Render another still works; the `upscale` block records model, target, seed,
+result size, GPU, endpoint and duration. Sources already at the target are refused because this
+workflow would shrink them. Each source and result also leaves a copy in ComfyUI's `input/`
+(named by content) and `output/` folders. Never upload to `temp`: the instances share it and
+clear it on startup. SeedVR2 unloads Krea from the 4090; the next render there reloads it (about
+3.6 seconds extra). Mobile gets the upscaler through its Backend URL; queue position, cancel and
+bulk are web/desktop only. See [the plan](../plans/seedvr2-upscale.md).
+
 ## Launch and ownership
 
 Settings → **Local services** shows readiness and Start/Stop buttons for fixed profiles:

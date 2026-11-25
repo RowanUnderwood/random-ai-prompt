@@ -27,6 +27,7 @@ import { readSharedSettings } from "./lib/share.js";
 import { fetchGallery, linkAncestry } from "./lib/gallery.js";
 import { fetchMagick } from "./lib/magick.js";
 import { deleteImageFile, ingestImage } from "./lib/output.js";
+import { useUpscaleJobs } from "./lib/useUpscaleJobs.js";
 import { deriveImage as runDerive, resizeImage as runResize } from "./lib/derive.js";
 import { softLockedForNsfw } from "./lib/contentPolicy.js";
 import { effectiveKey } from "./lib/sessionKeys.js";
@@ -148,6 +149,24 @@ const msgs = defineMessages({
     id: "app.nsfwProceed",
     defaultMessage: "NSFW mode is on. Continue with {provider} anyway?",
     description: "Soft confirm before using a safe-for-work-only provider while NSFW mode is on",
+  },
+  upscaleFailed: {
+    id: "app.upscaleFailed",
+    defaultMessage: "{file}: {error}",
+    description: "An upscale failure, naming the source image",
+  },
+  upscaleManyConfirm: {
+    id: "app.upscaleManyConfirm",
+    defaultMessage:
+      "Upscale {count, plural, one {# image} other {# images}} to {target}px with {provider}? They run one at a time, alongside your renders.",
+    description: "Confirm dialog before queueing the selected gallery images for upscaling",
+  },
+  upscaleAction: { id: "app.upscaleAction", defaultMessage: "Upscale" },
+  upscaleManySkipped: {
+    id: "app.upscaleManySkipped",
+    defaultMessage:
+      "{queued, plural, =0 {No images queued} one {# image queued} other {# images queued}}. {skipped, plural, one {# skipped} other {# skipped}}:",
+    description: "Summary after a bulk upscale when some images could not be queued",
   },
   footer: {
     id: "app.footer",
@@ -410,6 +429,24 @@ function AppShell({ settings, setSettings }) {
     return fresh;
   }
 
+  // Upscale jobs live in the backend, so they outlast a reload and never hold a connection open.
+  const [upscaleError, setUpscaleError] = useState("");
+  const upscales = useUpscaleJobs({
+    enabled: !ONLINE,
+    onDone: () => refreshAndResync(),
+    onError: (job, error) =>
+      setUpscaleError(
+        intl.formatMessage(msgs.upscaleFailed, {
+          file: job.image?.split("/").pop() || "upscale",
+          error,
+        }),
+      ),
+  });
+  const allDerivations = [
+    ...derivations,
+    ...upscales.jobs.map((job) => ({ id: job.id, parentPath: job.image, kind: "resize", job })),
+  ];
+
   // Re-roll / vary the open image: generate a NEW image from a chosen prompt layer. We deliberately
   // DON'T navigate away — a live placeholder appears in the matching strip below the image (via the
   // `derivations` list), and the finished child slots into that strip once the feed refreshes.
@@ -445,6 +482,23 @@ function AppShell({ settings, setSettings }) {
     const prov = getProvider(providerId);
     if (!prov?.loadUpscale) return;
     if (!(await nsfwOkFor(prov))) return;
+    if (prov.upscaleJobs) {
+      setUpscaleError("");
+      const id = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+      setDerivations((d) => [...d, { id, parentPath: item.path, kind: "resize" }]);
+      try {
+        await upscales.submit({
+          image: item.path,
+          settings: settings.providerParams?.[prov.id] || {},
+          priority: 1, // next on the GPU, ahead of renders still waiting
+        });
+      } catch (e) {
+        setDeriveError(e.message || String(e));
+      } finally {
+        setDerivations((d) => d.filter((x) => x.id !== id));
+      }
+      return;
+    }
     const id = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
     setDerivations((d) => [...d, { id, parentPath: item.path, kind: "resize" }]);
     try {
@@ -474,6 +528,50 @@ function AppShell({ settings, setSettings }) {
     } finally {
       setDerivations((d) => d.filter((x) => x.id !== id));
     }
+  }
+
+  // Gallery multi-select: queue an upscale per image, in normal order so a long batch does not hold
+  // the GPU ahead of renders. Returns false when cancelled, so the caller keeps the selection.
+  async function upscaleManyItems(paths) {
+    const prov = getProvider("seedvr2-local");
+    const params = settings.providerParams?.[prov.id] || {};
+    if (
+      !(await dialog.confirm({
+        message: intl.formatMessage(msgs.upscaleManyConfirm, {
+          count: paths.length,
+          target: prov.upscaleTarget(params),
+          provider: prov.label,
+        }),
+        confirmLabel: intl.formatMessage(msgs.upscaleAction),
+      }))
+    )
+      return false;
+    if (!(await nsfwOkFor(prov))) return false;
+    setUpscaleError("");
+    const problems = [];
+    for (const path of paths) {
+      try {
+        await upscales.submit({ image: path, settings: params, priority: 0 });
+      } catch (e) {
+        problems.push(`${path.split("/").pop()}: ${e.message || e}`);
+      }
+    }
+    if (problems.length) {
+      const summary = intl.formatMessage(msgs.upscaleManySkipped, {
+        queued: paths.length - problems.length,
+        skipped: problems.length,
+      });
+      const shown = problems.slice(0, 8);
+      if (problems.length > shown.length) shown.push(`… +${problems.length - shown.length}`);
+      await dialog.alert({ message: `${summary}\n${shown.join("\n")}` });
+    }
+    return true;
+  }
+
+  async function cancelUpscales(ids) {
+    const results = await Promise.allSettled(ids.map((id) => upscales.cancel(id)));
+    const failed = results.find((r) => r.status === "rejected");
+    if (failed) setUpscaleError(failed.reason?.message || String(failed.reason));
   }
 
   // Resize (downscale / upscale via ImageMagick) the open image into a new tracked child — same
@@ -688,6 +786,10 @@ function AppShell({ settings, setSettings }) {
                 onRefresh={loadFeed}
                 onDelete={deleteItem}
                 onDeleteMany={deleteManyItems}
+                onUpscaleMany={upscaleManyItems}
+                upscaleJobs={upscales.jobs}
+                upscaleError={upscaleError}
+                onCancelUpscales={cancelUpscales}
                 pending={galleryPending}
                 composer={
                   <div className="g-composer">
@@ -727,8 +829,9 @@ function AppShell({ settings, setSettings }) {
                 onDerive={deriveImage}
                 onResize={resizeImage}
                 onUpscale={upscaleImage}
-                derivations={derivations}
-                deriveError={deriveError}
+                derivations={allDerivations}
+                onCancelUpscale={(id) => cancelUpscales([id])}
+                deriveError={deriveError || upscaleError}
               />
             </Suspense>
           </div>

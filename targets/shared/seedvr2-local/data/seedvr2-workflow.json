@@ -1,0 +1,113 @@
+{
+  "20": {
+    "inputs": {
+      "model": "seedvr2_ema_7b_fp16.safetensors",
+      "device": "cuda:0",
+      "blocks_to_swap": 35,
+      "swap_io_components": false,
+      "offload_device": "cpu",
+      "cache_model": false,
+      "attention_mode": "sageattn_2"
+    },
+    "class_type": "SeedVR2LoadDiTModel",
+    "_meta": {
+      "title": "SeedVR2 (Down)Load DiT Model",
+      "cnr_id": "seedvr2_videoupscaler",
+      "aux_id": "ainvfx/ComfyUI-SeedVR2_VideoUpscaler",
+      "ver": "690cc39379c1481159ddd451368dbf2295930fc6"
+    }
+  },
+  "22": {
+    "inputs": {
+      "anything": ["26", 0]
+    },
+    "class_type": "easy cleanGpuUsed",
+    "_meta": {
+      "title": "Clean VRAM Used",
+      "cnr_id": "comfyui-easy-use",
+      "ver": "125b3a4905ac9367f7aae5c2df67e2282f0a3d37"
+    }
+  },
+  "23": {
+    "inputs": {
+      "anything": ["33", 0]
+    },
+    "class_type": "easy cleanGpuUsed",
+    "_meta": {
+      "title": "Clean VRAM Used",
+      "cnr_id": "comfyui-easy-use",
+      "ver": "125b3a4905ac9367f7aae5c2df67e2282f0a3d37"
+    }
+  },
+  "24": {
+    "inputs": {
+      "filename_prefix": "RandomPrompt/upscale",
+      "images": ["33", 0]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image",
+      "cnr_id": "comfy-core",
+      "ver": "0.3.76"
+    }
+  },
+  "26": {
+    "inputs": {
+      "image": ""
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image",
+      "cnr_id": "comfy-core",
+      "ver": "0.3.76"
+    }
+  },
+  "29": {
+    "inputs": {
+      "model": "ema_vae_fp16.safetensors",
+      "device": "cuda:0",
+      "encode_tiled": true,
+      "encode_tile_size": 1024,
+      "encode_tile_overlap": 128,
+      "decode_tiled": true,
+      "decode_tile_size": 1024,
+      "decode_tile_overlap": 128,
+      "tile_debug": "false",
+      "offload_device": "cpu",
+      "cache_model": false
+    },
+    "class_type": "SeedVR2LoadVAEModel",
+    "_meta": {
+      "title": "SeedVR2 (Down)Load VAE Model",
+      "cnr_id": "seedvr2_videoupscaler",
+      "aux_id": "ainvfx/ComfyUI-SeedVR2_VideoUpscaler",
+      "ver": "690cc39379c1481159ddd451368dbf2295930fc6"
+    }
+  },
+  "33": {
+    "inputs": {
+      "seed": 4105349922,
+      "resolution": 4000,
+      "max_resolution": 4000,
+      "batch_size": 1,
+      "uniform_batch_size": false,
+      "color_correction": "lab",
+      "temporal_overlap": 16,
+      "prepend_frames": 0,
+      "input_noise_scale": 0,
+      "latent_noise_scale": 0,
+      "offload_device": "cpu",
+      "enable_debug": false,
+      "image": ["22", 0],
+      "dit": ["20", 0],
+      "vae": ["29", 0]
+    },
+    "class_type": "SeedVR2VideoUpscaler",
+    "_meta": {
+      "title": "SeedVR2 Video Upscaler (v2.5.22)",
+      "cnr_id": "seedvr2_videoupscaler",
+      "aux_id": "ainvfx/ComfyUI-SeedVR2_VideoUpscaler",
+      "ver": "690cc39379c1481159ddd451368dbf2295930fc6"
+    }
+  }
+}

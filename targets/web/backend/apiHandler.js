@@ -60,6 +60,7 @@ import { presetNames, resolvePresets, applyPreset } from "../../../engine/preset
 import { localServices } from "./localServices.js";
 import { generateLocalBatch } from "./localGpuPool.js";
 import { listLocalModels } from "./localModelCatalog.js";
+import { localUpscaler } from "./localUpscale.js";
 
 // `execFile`, never `exec`: no shell means a filename with a quote in it is a filename, not a command.
 // See osCommands.js for the whole story (CodeQL js/command-line-injection, critical).
@@ -243,6 +244,35 @@ export function createApiHandler() {
         if (typeof prompt !== "string" || !prompt.trim())
           return send(res, 400, { error: "Missing prompt" });
         return send(res, 200, await generateLocalBatch({ prompt, settings, signal: ctrl.signal }));
+      } catch (e) {
+        return send(res, 502, { error: e.message });
+      }
+    }
+
+    // --- SeedVR2 upscale jobs on the 4090: submit / follow / cancel (see localUpscale.js) ---
+    if (u.pathname === "/api/local-upscale") {
+      if (req.method === "GET") return send(res, 200, { jobs: localUpscaler.list() });
+      if (req.method !== "POST") return send(res, 405, { error: "Method not allowed" });
+      try {
+        return send(res, 202, { job: await localUpscaler.submit(await readJson(req)) });
+      } catch (e) {
+        return send(res, e.status || 502, { error: e.message });
+      }
+    }
+    const upscaleJob = u.pathname.match(/^\/api\/local-upscale\/([\w-]+)(\/image)?$/);
+    if (upscaleJob && !upscaleJob[2] && req.method === "DELETE") {
+      const job = localUpscaler.cancel(upscaleJob[1]);
+      return job ? send(res, 200, { job }) : send(res, 404, { error: "Unknown upscale job" });
+    }
+    if (upscaleJob?.[2] && req.method === "GET") {
+      const url = localUpscaler.resultUrl(upscaleJob[1]);
+      if (!url) return send(res, 404, { error: "No upscaled image for this job" });
+      try {
+        const up = await fetch(url);
+        if (!up.ok) return send(res, 502, { error: `Image fetch failed (${up.status})` });
+        res.statusCode = 200;
+        res.setHeader("Content-Type", up.headers.get("content-type") || "image/png");
+        return res.end(Buffer.from(await up.arrayBuffer()));
       } catch (e) {
         return send(res, 502, { error: e.message });
       }

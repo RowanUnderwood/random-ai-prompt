@@ -40,6 +40,12 @@ export default function LineageHead({ item, items, onNavigate }) {
             {intl.formatMessage(msgs.fromLayer, { layer: intl.formatMessage(srcMsg) })}
           </span>
         )}
+        {m.derivedKind === "resize" && m.upscale?.width && (
+          <span className="g-lineage-from">
+            {" "}
+            ({m.upscale.width}×{m.upscale.height})
+          </span>
+        )}
         {m.derivedKind === "resize" && m.resizeScale && (
           <span className="g-lineage-from"> ({m.resizeScale}×)</span>
         )}

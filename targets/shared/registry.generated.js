@@ -45,6 +45,7 @@ import plain from "./plain/config.js";
 import qwen from "./qwen/config.js";
 import replicate from "./replicate/config.js";
 import sdnext from "./sdnext/config.js";
+import seedvr2_local from "./seedvr2-local/config.js";
 import segmind from "./segmind/config.js";
 import stability from "./stability/config.js";
 import together from "./together/config.js";
@@ -91,6 +92,7 @@ export const PROVIDER_CONFIGS = [
   qwen,
   replicate,
   sdnext,
+  seedvr2_local,
   segmind,
   stability,
   together,

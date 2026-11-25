@@ -51,6 +51,40 @@ describe("Gallery multi-select", () => {
     expect(onDeleteMany).toHaveBeenCalledWith(["/api/output/a.png"]);
   });
 
+  it("queues the selected images for upscaling and clears the selection", async () => {
+    const onUpscaleMany = vi.fn(async () => true);
+    renderGallery({ onDeleteMany: vi.fn(), onUpscaleMany });
+    fireEvent.click(screen.getByRole("button", { name: "Select" }));
+    expect(screen.getByRole("button", { name: "Upscale 0 images" }).disabled).toBe(true);
+    fireEvent.click(screen.getByRole("button", { name: "Select all" }));
+    fireEvent.click(screen.getByRole("button", { name: "Upscale 2 images" }));
+    expect(onUpscaleMany).toHaveBeenCalledExactlyOnceWith(["/api/output/a.png", "/api/output/b.png"]);
+    expect(await screen.findByText("None selected")).toBeTruthy();
+  });
+
+  it("keeps the selection when the bulk upscale is declined", async () => {
+    const onUpscaleMany = vi.fn(async () => false);
+    renderGallery({ onDeleteMany: vi.fn(), onUpscaleMany });
+    fireEvent.click(screen.getByRole("button", { name: "Select" }));
+    fireEvent.click(screen.getByRole("button", { name: "Select: a fox" }));
+    fireEvent.click(screen.getByRole("button", { name: "Upscale 1 image" }));
+    await Promise.resolve();
+    expect(screen.getByText("1 selected")).toBeTruthy();
+  });
+
+  it("shows upscale progress, cancels every job, and surfaces the last failure", () => {
+    const onCancelUpscales = vi.fn();
+    renderGallery({
+      upscaleJobs: [{ id: "one" }, { id: "two" }],
+      upscaleError: "a.png: out of memory",
+      onCancelUpscales,
+    });
+    expect(screen.getByRole("status").textContent).toBe("2 upscales in progress");
+    expect(screen.getByRole("alert").textContent).toBe("a.png: out of memory");
+    fireEvent.click(screen.getByRole("button", { name: "Cancel all" }));
+    expect(onCancelUpscales).toHaveBeenCalledExactlyOnceWith(["one", "two"]);
+  });
+
   it("keeps the selection when the mass delete is cancelled", async () => {
     const onDeleteMany = vi.fn(() => false); // App returns false on a cancelled confirm
     renderGallery({ onDeleteMany });
