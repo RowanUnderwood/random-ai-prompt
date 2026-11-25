@@ -26,8 +26,8 @@ export default async function upscaleServer({ image, params = {} }) {
 
   // 1) upload the source image to ComfyUI's input folder.
   const fd = new FormData();
-  fd.append("image", new Blob([buf], { type: m[1] }), "rap-upscale.png");
-  fd.append("overwrite", "true");
+  // A unique name: a shared one let simultaneous upscales overwrite each other's source.
+  fd.append("image", new Blob([buf], { type: m[1] }), `rap-upscale-${crypto.randomUUID()}.png`);
   const upRes = await fetch(`${base}/upload/image`, { method: "POST", body: fd });
   const upData = await upRes.json().catch(() => ({}));
   if (!upRes.ok || !upData?.name) {
@@ -72,10 +72,15 @@ export default async function upscaleServer({ image, params = {} }) {
   const promptId = sub.prompt_id;
 
   // 4) poll /history until the SaveImage output appears.
-  const deadline = Date.now() + 180000;
+  // The limit starts once the job leaves ComfyUI's pending queue: waiting behind other work is not a hang.
+  let deadline = Date.now() + 180000;
   for (;;) {
     const hist = await (await fetch(`${base}/history/${promptId}`)).json().catch(() => ({}));
     const entry = hist?.[promptId];
+    if (entry?.status?.status_str === "error") {
+      const failure = entry.status.messages?.find(([type]) => type === "execution_error")?.[1];
+      throw new Error(failure?.exception_message || "ComfyUI upscale failed.");
+    }
     if (entry?.outputs) {
       const images = [];
       for (const node of Object.values(entry.outputs)) {
@@ -90,6 +95,8 @@ export default async function upscaleServer({ image, params = {} }) {
       }
       if (images.length) return { images };
     }
+    const queued = await (await fetch(`${base}/queue`)).json().catch(() => ({}));
+    if (queued.queue_pending?.some((job) => job[1] === promptId)) deadline = Date.now() + 180000;
     if (Date.now() > deadline) throw new Error("ComfyUI upscale timed out.");
     await sleep(1200);
   }

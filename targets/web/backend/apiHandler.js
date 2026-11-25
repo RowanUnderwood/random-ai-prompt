@@ -19,7 +19,7 @@ import os from "node:os";
 import path from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-import { dispatch, dispatchRewrite, dispatchUpscale } from "./dispatch.js";
+import { dispatch, dispatchRewrite, dispatchUpscale, KEYLESS_UPSCALERS } from "./dispatch.js";
 import {
   resolveManagePath,
   buildManageSnapshot,
@@ -284,7 +284,8 @@ export function createApiHandler() {
     if (u.pathname === "/api/upscale" && req.method === "POST") {
       const body = await readJson(req);
       const { providerId, image, key, params } = body || {};
-      if (!providerId || !key) return send(res, 400, { error: "Missing providerId or key" });
+      if (!providerId || (!key && !KEYLESS_UPSCALERS.has(providerId)))
+        return send(res, 400, { error: "Missing providerId or key" });
       let imageDataUri;
       if (typeof image === "string" && image.startsWith("data:")) {
         imageDataUri = image;

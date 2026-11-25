@@ -93,6 +93,9 @@ export const upscaleAdapters = {
   vanceai: asFn(vanceaiUpscaleServer),
 };
 
+/** Upscalers that run on the user's own machine, so there is no API key to send. */
+export const KEYLESS_UPSCALERS = new Set(["comfyui"]);
+
 /**
  * Dispatch an AI-upscale request to a provider's server-side upscale adapter.
  * @param {object} req `{ providerId, image (data URI), key, params }`.
@@ -102,7 +105,7 @@ export const upscaleAdapters = {
 export async function dispatchUpscale({ providerId, image, key, params }) {
   const adapter = upscaleAdapters[providerId];
   if (!adapter) throw new Error(`No upscale adapter for provider "${providerId}".`);
-  if (!key) throw new Error("Missing API key.");
+  if (!key && !KEYLESS_UPSCALERS.has(providerId)) throw new Error("Missing API key.");
   if (!image) throw new Error("Missing source image.");
   return adapter({ image, key, params });
 }

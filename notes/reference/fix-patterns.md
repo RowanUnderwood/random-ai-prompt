@@ -6,6 +6,13 @@ Reset list-store state when the SD-visibility context changes, and separate load
 by the same context. The Krea-content direct-expand regression fails without this reset and passes
 with it; wildcard/group resolution also receives the context recursively.
 
+**"AI Upscale · ComfyUI" always fails with "Missing providerId or key":** ComfyUI has no key, but both
+`/api/upscale` and `dispatchUpscale` required one. `KEYLESS_UPSCALERS` in `dispatch.js` is now the
+single exception list. The adapter also uploaded every source under one fixed name with
+`overwrite` (parallel jobs could swap images), ignored execution errors, and counted time in
+ComfyUI's queue against its 180-second limit. Proof: all five cases in
+`tests/regression/comfyUpscale.test.js` failed before the fix.
+
 Quick table of errors hit and how they were resolved. Add a row whenever you fix something reusable.
 
 **Single-view arrows navigate while editing a prompt, or Escape leaves Single before closing a modal:**
