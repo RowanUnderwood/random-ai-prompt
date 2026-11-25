@@ -28,6 +28,13 @@ Both cases in `tests/integration/manageFs.test.js` fail on the old code.
 **A list sometimes yields nothing:** the newline ending a file became an entry (43 of 83 files).
 `resolveListLines` now drops blank lines for every loader and for user lists.
 
+**A JavaScript block ignores its own options, or `{#entity}` only ever names its subject:** blocks are called
+with the intensity and focus dials as their fourth and fifth arguments, so a truthiness check on an extra
+parameter sees `50`. Compare strictly (`=== true`). `contentQuality.test.js` covers `{#entity}`.
+
+**The engine hangs on an `N of` choice with decks:** its loop ran until it had N different cards, so a deck
+returning a repeat spun forever. The real deck never did, but the loop is now bounded; `decks.test.js`.
+
 Quick table of errors hit and how they were resolved. Add a row whenever you fix something reusable.
 
 **Single-view arrows navigate while editing a prompt, or Escape leaves Single before closing a modal:**

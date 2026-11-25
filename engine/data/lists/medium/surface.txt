@@ -1,0 +1,30 @@
+rough paper texture
+toothy canvas texture
+smooth vellum
+torn edges
+visible brushstrokes
+visible pencil construction lines
+ink bleed
+halftone dots
+screentone shading
+grainy texture
+craquelure
+worn varnish
+gold-leaf accents
+metallic ink accents
+embossed relief
+matte finish
+high-gloss finish
+velvety finish
+fingerprints in the material
+misregistered color layers
+faded and foxed
+crisp vector edges
+soft airbrushed gradients
+bold black outlines
+thin even outlines
+no outlines, shape only
+heavy shadow shapes
+flat areas of color
+dense patterning
+generous empty space

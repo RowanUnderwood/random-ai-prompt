@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { createEngine } from "../../engine/core/engine.js";
 import { createDecks, usesDecks } from "../../engine/core/decks.js";
 import { createPromptRun } from "../../engine/promptRun.js";
+import { withAmbientDecks } from "../../engine/helpers/random.js";
 import { makeFakeLoader } from "../helpers/fakeLoader.js";
 
 afterEach(() => vi.restoreAllMocks());
@@ -150,6 +151,15 @@ describe("engine with shuffled decks", () => {
     expect(roll(engine, "{#weighted i100%}", 60).filter((v) => v === "a").length).toBeGreaterThan(
       45,
     );
+  });
+
+  it("cannot hang when a deck keeps returning the same card (regression)", () => {
+    const stuck = { draw: (_key, options) => options[0] };
+    const loader = makeFakeLoader({ dpl });
+    const text = withAmbientDecks(stuck, () =>
+      loader.loadBlock("pair").default({}, {}, {}, 100, 50),
+    );
+    expect(text).toBe("a");
   });
 
   it("deals the keyword randomizers' entries too", () => {

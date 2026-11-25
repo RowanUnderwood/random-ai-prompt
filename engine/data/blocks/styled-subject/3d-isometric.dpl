@@ -1,0 +1,25 @@
+---
+description: Tiny cute isometric entity render
+---
+
+Start
+===
+one of:
+    - tiny cute isometric {#entity}
+    - miniature isometric figure on a small plinth, {#entity}
+    - chunky isometric {#entity}
+    - isometric game asset, {#entity}
+2 to 4 of:
+    - {medium/lighting}
+    - {medium/palette}
+    - {medium/backdrop}
+    - {look/lens}
+    - centered
+    - soft edges
+    - modular construction
+    - tiny matching props
+    - rounded shapes
+
+Auto End
+===
+3d blender render, physically based rendering

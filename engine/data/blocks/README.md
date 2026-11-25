@@ -64,7 +64,8 @@ generator from it:
 | `people/` | Adults only — `person`, `everyday-person`, `occupation`, `historical-figure`, `fantasy-role`, `scifi-role`, `pair`, `group`, … Use `{#people}` with `{#action}` |
 | `helper/` | Pieces used inside other blocks (`color`, `glow`, `neon`, `portrait`, `entity-name`, `living-entity`); usable by name, never picked by a group |
 | `fragment/` | Partial modifiers / garnishes composed into fulls — `weather`, `water`, `nature`, `camera`, … |
-| `style/` | Art-style & product-render templates (mostly publicprompts.art) — the `3d-*` set, `comic`, `sticker`, `funko-3d-print`, … |
+| `style/` | Pure looks with no subject of their own — `photography`, `painting`, `printmaking`, `craft-look`, six `krea2-*` category blocks, … |
+| `styled-subject/` | Looks that bring their own subject (mostly publicprompts.art) — the `3d-*` set, `comic`, `sticker`, `funko-3d-print`, … Use alone |
 | `prompt/` | Whole-prompt builders & tag streams (force-prefixed → `{#prompt/…}`) — `random` (composite), `random-words`, `simple-random`, `extra-random`, `artists`, `fx`, `d` (danbooru) |
 | `expansion/` | Reusable lighting / detail accents referenced from other generators (`{#rays}`, `{#dap}`, …); not listed as pickable chips |
 | `user/` | Community-submitted generators (`{#user-name}`) |
@@ -76,8 +77,8 @@ some social actions explicitly include another person. `{action}` remains the or
 poses/activities list. See [action content](../../../notes/systems/action-content.md).
 
 `{#krea2-actors}` under People emits one identity without the source's portrait framing;
-bands are separate in `{krea2/bands}`. `{#krea2-style-library}` under Style emits one full
-descriptor. Both participate in normal category groups, and Krea-specific names are excluded
+bands are separate in `{krea2/bands}`. `{#krea2-style-library}` under Helper emits one full
+descriptor from all 288; the six `style/krea2-*` blocks split them by category. Both participate in normal category groups, and Krea-specific names are excluded
 when Stable Diffusion is selected. See [Krea content](../../../notes/systems/krea2-content.md).
 
 ## Keeping a generator out of suggestions

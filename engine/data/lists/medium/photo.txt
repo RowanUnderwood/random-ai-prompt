@@ -1,0 +1,40 @@
+documentary photograph
+street photograph
+editorial fashion photograph
+environmental portrait photograph
+photojournalistic photograph
+fine-art photograph
+studio photograph
+travel photograph
+architectural photograph
+landscape photograph
+wildlife photograph
+sports photograph
+concert photograph
+candid snapshot
+disposable-camera snapshot
+polaroid photograph
+wet-plate collodion photograph
+daguerreotype
+cyanotype photograph
+albumen print photograph
+tintype photograph
+hand-tinted photograph
+infrared photograph
+aerial photograph
+underwater photograph
+night photograph
+long-exposure photograph
+double-exposure photograph
+photogram
+paparazzi flash photograph
+yearbook photograph
+passport-booth photograph
+security-camera still
+thermal-camera image
+medium-format photograph
+large-format view-camera photograph
+35mm photograph
+110 pocket-camera photograph
+early digital camera photograph
+smartphone photograph

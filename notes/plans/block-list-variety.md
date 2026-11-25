@@ -11,11 +11,11 @@ blocks is deliberate.
 
 ## Before (owner's settings, `scripts/variety-report.mjs`)
 
-| Measure | Before | Target |
-|---|---|---|
-| `{#fragment}` empty | 17–21% | ≤5% |
-| `{#prompt}` empty | 14–17% | ≤5% |
-| `{#subject}` with "portrait" | 37% | <20% |
-| "soft smooth lighting" in full prompts | 26% | <5% |
-| Krea descriptors in `{#style}` | 5% | 30–36% |
-| `{#style}` blocks over 60% fixed text | 11 | 0 |
+| Measure | Before | Target | After |
+|---|---|---|---|
+| `{#fragment}` empty | 17–21% | ≤5% | 0% |
+| `{#prompt}` empty | 14–17% | ≤5% | 0% |
+| `{#subject}` with "portrait" | 37% | <20% | 13–15% |
+| "soft smooth lighting" in full prompts | 26% | <5% | 0% |
+| Krea descriptors in `{#style}` | 5% | 30–36% | 33% |
+| `{#style}` blocks over 60% fixed text | 11 | 0 | 0 |

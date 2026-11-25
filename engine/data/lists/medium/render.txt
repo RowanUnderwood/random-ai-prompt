@@ -1,0 +1,28 @@
+ray-traced studio render
+path-traced interior render
+soft clay render
+glossy plastic render
+subsurface wax render
+frosted-glass render
+chrome render
+iridescent render
+toon-shaded render
+cel-shaded game render
+early 1990s CGI render
+PlayStation-era low-poly render
+modern game-engine render
+architectural visualization render
+product visualization render
+miniature tilt-shift render
+knitted-texture render
+inflatable balloon render
+origami paper render
+marble sculpture render
+bronze sculpture render
+wood-block toy render
+liquid-metal render
+holographic wireframe render
+point-cloud render
+volumetric smoke render
+claymation-style render
+diorama render

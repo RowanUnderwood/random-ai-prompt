@@ -254,7 +254,7 @@ function dealN(node, opts, n, decks) {
   const key = choiceKeys.get(node);
   const indexes = opts.map((_o, i) => i);
   const taken = new Set();
-  while (taken.size < n) taken.add(decks.draw(key, indexes, taken));
+  for (let i = 0; i < n; i++) taken.add(decks.draw(key, indexes, taken)); // bounded, never a spin
   return [...taken].map((i) => opts[i]);
 }
 

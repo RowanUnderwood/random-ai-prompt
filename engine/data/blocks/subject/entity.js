@@ -34,7 +34,8 @@ function describedAdult() {
 export default function (settings, imageSettings, upscaleSettings, specificEntity, nameOnly) {
   let prompt = "";
   let clothes = "{clothes}";
-  if (nameOnly == undefined) nameOnly = false;
+  // Called as a block, these two arguments are the intensity and focus dials, not options.
+  nameOnly = nameOnly === true;
 
   let emotion = false;
   let human = false;

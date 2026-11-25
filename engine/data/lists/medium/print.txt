@@ -1,0 +1,32 @@
+ukiyo-e woodblock print
+white-line woodcut
+German expressionist woodcut
+linocut print
+reduction linocut
+wood engraving
+copperplate engraving
+etching with plate tone
+drypoint print
+aquatint print
+mezzotint print
+monotype print
+stone lithograph
+chromolithograph
+collotype print
+screen print
+halftone screen print
+risograph print
+letterpress print
+cyanotype contact print
+gum bichromate print
+potato-stamp print
+gyotaku print
+block-printed textile
+batik print
+stencil print
+wheat-paste poster print
+mimeograph zine page
+xerox collage
+newspaper halftone
+postage-stamp engraving
+banknote engraving

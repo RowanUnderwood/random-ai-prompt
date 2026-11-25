@@ -1,0 +1,21 @@
+---
+description: Kawaii low-poly isometric entity
+---
+
+Start
+===
+one of:
+    - kawaii low poly {#entity}
+    - faceted low poly {#entity}
+    - papercraft low poly {#entity}
+    - crystalline low poly {#entity}
+2 to 4 of:
+    - {medium/lighting}
+    - {medium/palette}
+    - {medium/backdrop}
+    - {look/lens}
+    - isometric view
+    - ambient occlusion
+    - flat-shaded facets
+    - floating base
+    - game engine render

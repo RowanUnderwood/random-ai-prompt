@@ -1,0 +1,23 @@
+---
+description: Gold vector pendant of an entity
+---
+
+Start
+===
+one of:
+    - gold pendant, {#entity-name}
+    - silver brooch, {#entity-name}
+    - enameled locket, {#entity-name}
+    - jade amulet, {#entity-name}
+    - bronze medallion, {#entity-name}
+2 to 4 of:
+    - {medium/backdrop}
+    - {medium/lighting}
+    - cutout shape
+    - filigree detail
+    - set with small gems
+    - geometric lines
+    - hanging from a fine chain
+    - hammered texture
+    - product studio shot
+    - macro detail

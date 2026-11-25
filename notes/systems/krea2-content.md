@@ -5,7 +5,9 @@ Two normal catalog blocks extend the shared content pool:
 - **People → `{#krea2-actors}`** (part of `{#subject}`) emits one identity from 1,010 deduplicated source names.
   It includes all individual/source identities, not just actors. It adds no portrait framing,
   background, clothing or action. Example: `{#krea2-actors}, {#action}`.
-- **Style → `{#krea2-style-library}`** emits `Style: ` followed by one complete descriptor
+- **Style → six `krea2-*` category blocks** (photo, illustration, painting, anime, design, craft) split the
+  288 descriptors, each in exactly one list built by `build-krea2-content.mjs`. They are a third of `{#style}`.
+- **Helper → `{#krea2-style-library}`** emits `Style: ` followed by one complete descriptor
   from matplinta's 288-entry Krea 2 Style Library. It never combines unrelated descriptor clauses.
 - **`{krea2/bands}`** separately selects one of 53 band/collective names; bands do not appear
   in the actors block; `{#krea2-bands}` draws on them. `{krea2/people}` and `{krea2/styles}` can be inserted directly too.

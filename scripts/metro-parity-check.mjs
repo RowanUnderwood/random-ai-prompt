@@ -50,7 +50,7 @@ const mEng = createEngine(metroLoader);
 const prompts = [
   "{#random-words}",
   "{#scene}",
-  "{#style/anime-realism}",
+  "{#styled-subject/anime-realism}",
   "a {look/color} {nature/flower} in {place/city}",
   "{#people/person}, {#helper/glow}",
   baseSettings.prompt,

@@ -147,6 +147,7 @@ Slurs, minor-sexualizing, and extreme shock/gore content are removed by
 | `place/` | city, place (countries/regions/landmarks) |
 | `lore/` | mythology, astronomy, religion, history, work, people-group |
 | `people/` | Adults: occupation, historical, fantasy, scifi, pair, group, plus age, noun, heritage, build, feature, outfit. Force-prefixed; no union (the parts do not mix). Not raw `name/` or `lore/` words. |
+| `medium/` | Photo, film, cinema, lighting, palette, painting, ink, print, comic, anime, poster, digital, render, craft, surface and backdrop terms for style blocks. No artists. Force-prefixed; no union. |
 | `thing/` | still-life, food, machine, setting. Force-prefixed; no union. |
 | `nature/` | animal, animal-behavior, flower, tree, planet, water, mythological-creature |
 | `look/` | color, size, hair, clothes, weather, time, mood, emotion, view, image-effect, instrument, action (poses/activities), shot (framing), lens, calendar (months, weekdays, holidays), focus (vocabulary of the focus dial, not camera focus); expression is an SFW/NSFW pair; `clothes-nsfw` (gated lingerie/fetish) |

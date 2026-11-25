@@ -7,6 +7,9 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { nodeLoader } from "../../engine/core/nodeLoader.js";
 import { createEngine } from "../../engine/core/engine.js";
+import { createDecks } from "../../engine/core/decks.js";
+import { makeBlockStage } from "../../engine/core/stages/block.js";
+import { withAmbientDecks } from "../../engine/helpers/random.js";
 import { metroLoader } from "../../engine/core/metroLoader.js";
 import { classifyRemoval } from "../../engine/contentSafety.js";
 import { resolveListLines, resolveName } from "../../engine/listManifest.js";
@@ -49,10 +52,10 @@ describe("lists", () => {
     ...["view", "weather", "time", "calendar", "mood", "expression", "shot", "lens"].map(
       (n) => `look/${n}`,
     ),
-    ...lists.filter((n) => /^(people|thing|activity)\//.test(n)),
+    ...lists.filter((n) => /^(people|thing|activity|medium)\//.test(n)),
   ];
   it("offer enough variety in the curated lists", () => {
-    const short = ["people/noun", "people/age", "people/build"];
+    const short = ["people/noun", "people/age", "people/build", "medium/backdrop"];
     for (const name of curated.filter((n) => !short.includes(n)))
       expect([name, nodeLoader.readListLines(name, true).length >= 25]).toEqual([name, true]);
   });
@@ -120,6 +123,56 @@ describe("blocks", () => {
       expect(resolveName(name, blocks)).toBe(`helper/${name}`);
   });
 
+  it("keep {#style} to pure looks, a third of them Krea, and move subject-bearing looks out", () => {
+    const styles = direct("style");
+    expect(styles).toHaveLength(18);
+    expect(styles.filter((n) => n.startsWith("krea2-"))).toHaveLength(6);
+    expect(direct("styled-subject")).toHaveLength(19);
+    for (const name of ["sticker", "comic", "plushie", "3d-print", "retro-poster", "silhouette"])
+      expect(resolveName(name, blocks)).toBe(`styled-subject/${name}`);
+    const subject = /\{#(entity|living-entity|animal|person|entity-name|subject|people)\b/;
+    for (const [file, text] of sources)
+      if (/^style[\\/]/.test(file)) expect([file, subject.test(text)]).toEqual([file, false]);
+  });
+
+  it("put every Krea style in exactly one category list", () => {
+    const all = nodeLoader.readListLines("krea2/styles", false);
+    const split = lists
+      .filter((n) => n.startsWith("krea2/style-"))
+      .flatMap((n) => nodeLoader.readListLines(n, false));
+    expect(split).toHaveLength(288);
+    expect([...split].sort()).toEqual([...all].sort());
+  });
+
+  it("hide the Krea styles for Stable Diffusion, leaving the other looks", () => {
+    const texts = outputs("{#style}", { provider: "forge" }, 200);
+    expect(texts.filter((t) => !t || /^style:/i.test(t))).toEqual([]);
+  });
+
+  it("deals every member of the style, people and subject groups once per cycle", () => {
+    for (const group of ["style", "people", "subject"]) {
+      const include = nodeLoader.readBlockMeta(group)?.include || [];
+      const members = [group, ...include].flatMap((d) =>
+        blocks.filter((n) => path.posix.dirname(n) === d),
+      );
+      const drawn = [];
+      const decks = createDecks();
+      const spy = {
+        draw: (key, options, exclude) => {
+          const card = decks.session().draw(key, options, exclude);
+          if (key === `blocks:${group}`) drawn.push(card);
+          return card;
+        },
+      };
+      const stage = makeBlockStage(nodeLoader);
+      for (let i = 0; i < members.length; i++)
+        withAmbientDecks(spy, () =>
+          stage(`{#${group}}`, { provider: "comfy-local", includeAdult: true }, {}, {}),
+        );
+      expect([...drawn].sort()).toEqual([...members].sort());
+    }
+  });
+
   it("offer only human subjects under {#people}", () => {
     expect(direct("people").sort()).toEqual([
       "everyday-person",
@@ -155,6 +208,13 @@ describe("blocks", () => {
     for (const name of lists.filter((n) => n.startsWith("people/")))
       expect(nodeLoader.readListLines(name, true).filter((l) => young.test(l))).toEqual([]);
     expect(outputs("{#portrait-princess}").filter((t) => /\bgirl\b/.test(t))).toEqual([]);
+  });
+
+  it("{#entity} describes its subject instead of only naming it (regression)", () => {
+    const ages = nodeLoader.readListLines("people/age", false);
+    const aged = (texts) => texts.filter((t) => ages.some((age) => t.startsWith(`${age} `)));
+    expect(aged(outputs("{#entity}", {}, 300)).length).toBeGreaterThan(10);
+    expect(aged(outputs("{#entity-name}", {}, 100))).toEqual([]);
   });
 
   it("dress anime characters from the SFW clothes only", () => {

@@ -54,12 +54,28 @@ for (const style of styles) {
   ids.add(style.id);
   descriptors.add(text);
 }
+// Each style belongs to exactly one family: the first rule any of its source categories matches.
+const FAMILIES = [
+  ["craft", ["3D & Render", "Craft & Material", "Gaming"]],
+  ["photo", ["Photography", "Cinema & Lighting", "Commercial & Editorial"]],
+  ["anime", ["Anime & Manga", "Cartoon & Animation"]],
+  ["design", ["Comics & Graphic Novels", "Design & Posters"]],
+  ["painting", ["Painting & Fine Art", "Drawing & Sketch", "Printmaking & Graphic Art"]],
+  ["illustration", ["Illustration", "Character & Concept"]],
+];
+const families = new Map(FAMILIES.map(([id]) => [id, []]));
+for (const style of styles) {
+  const family = FAMILIES.find(([, names]) => names.some((n) => style.categories.includes(n)));
+  if (!family) throw new Error(`Style without a known category: ${style.id}`);
+  families.get(family[0]).push(style.descriptor.replace(/[()]/g, "").replace(/\s+/g, " ").trim());
+}
 const outputs = new Map([
   ["_force-prefix", ""],
   ["_disable-group-list", ""], // Avoid a union mixing people, bands and style paragraphs.
   ["people.txt", [...people].join("\n")],
   ["bands.txt", [...groups].join("\n")],
   ["styles.txt", [...descriptors].join("\n")],
+  ...[...families].map(([id, lines]) => [`style-${id}.txt`, lines.join("\n")]),
 ]);
 const descriptions = {
   people:
@@ -69,6 +85,9 @@ const descriptions = {
   styles:
     "One intact descriptor from the 288-entry Krea 2 Style Library; names and categories remain in the source catalog.",
 };
+for (const [id, names] of FAMILIES)
+  descriptions[`style-${id}`] =
+    `Krea 2 Style Library descriptors: ${names.join(", ")}. Each style is in exactly one of these lists.`;
 for (const [name, description] of Object.entries(descriptions))
   outputs.set(`${name}.json`, `${JSON.stringify({ description }, null, 2)}\n`);
 const auditPath = path.join(source, "identity-audit.json");

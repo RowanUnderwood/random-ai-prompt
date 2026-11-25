@@ -25,7 +25,7 @@ The SeedVR2 upscaler runs **SeedVR2** (ByteDance Seed) through
 user's own ComfyUI. The workflow was supplied by the fork's owner; integration implemented with
 Claude (Anthropic).
 
-The `people/*`, `thing/*`, `look/shot`, `look/lens`, `nature/water` and `nature/animal-behavior` lists, and
+The `people/*`, `thing/*`, `medium/*`, `look/shot`, `look/lens`, `nature/water` and `nature/animal-behavior` lists, and
 the expanded look/style lists, were written for this fork by Claude (Anthropic).
 
 The `activity/*` lists backing `{#action}` are adapted from **Kinetics-700-2020**,
