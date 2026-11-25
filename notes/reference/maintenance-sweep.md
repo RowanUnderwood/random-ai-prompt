@@ -72,9 +72,9 @@ Follow [`git-workflow.md`](git-workflow.md) exactly — this runbook does not re
 - Keep `VERSION` + `package.json` in sync; bump per SemVer level **only if** the change warrants it.
   Docs/notes/test/CI-only changes (including a dev-dependency-only bump) **do not move the number** —
   in that case `main` simply advances with no new tag, which is correct.
-- PATCH: PR `dev → main`; MINOR/MAJOR: via a `release/X.Y.0` branch. Merge with `gh pr merge <#> --merge`
-  (a merge commit — never squash/rebase). Do **not** hand-tag; `release.yml` derives and applies the tag.
-- **After the merge, back-merge so `dev` contains `main`:**
+- With the owner's go-ahead, fast-forward `main` with a direct push (MINOR/MAJOR via a `release/X.Y.0`
+  branch). No pull request in this fork. Do **not** hand-tag; `release.yml` derives and applies the tag.
+- **After the push, if `dev` is in use, catch it up so `dev` contains `main`:**
   `git fetch origin && git switch dev && git merge --ff-only origin/main && git push origin dev`.
   Skipping this is what once left `dev` many commits behind `main`.
 

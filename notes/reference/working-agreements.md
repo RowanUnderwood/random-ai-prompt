@@ -72,6 +72,11 @@ access, available every turn.
   describing a shell-injection payload actually **ran** it (spawned `calc`) — the very bug the commit was
   fixing, one layer up. Use `git commit -F <utf8 file>`; for scripts, a real `.mjs` file, never `node -e`.
 
+### A1a. This fork's `main` takes direct pushes — no pull request.
+(Owner, 2026-11-25: *"in our fork remove the rule for main takes changes only through a pull request."*)
+Each push still needs the owner's explicit go-ahead, a green `npm test`, and a fast-forward. See
+[`git-workflow.md`](git-workflow.md).
+
 ### A2. Build the solution — don't offload the design decision.
 When a defect/problem is found, **design and build the fix**. Do NOT use AskUserQuestion to ask *how* to
 solve a technical problem — that reads as offloading. (The owner: *"that was your job… unprofessional and
@@ -194,9 +199,9 @@ stated reason. Treat metric preservation as part of "done."
 ## F. Project facts worth keeping
 
 - **Release gates:** SonarCloud is scoped to `src/` only (the SPA is excluded — its JS security sensor
-  hangs); Codecov ingests both Node + SPA lcov. `main` has `required_conversation_resolution`, so **every**
-  review thread (incl. CodeRabbit's) must be resolved or `gh pr merge` fails as BLOCKED even with all checks
-  green. Owner wants new-code coverage ≥85% and zero total Sonar debt.
+  hangs); Codecov ingests both Node + SPA lcov. Upstream's `main` has `required_conversation_resolution`, so
+  **every** review thread (incl. CodeRabbit's) must be resolved there or `gh pr merge` fails as BLOCKED
+  even with all checks green. Owner wants new-code coverage ≥85% and zero total Sonar debt.
 - **Legal docs:** three self-hosted pages (`targets/web/public/legal/{privacy,terms,cookies}.html`),
   contact `fairy@fairyfox.io`, 18+. Keep them **code-accurate by default** whenever data practices change
   (same change, bump "Last updated"). Fonts are self-hosted, so there's no IP-to-Google transfer.

@@ -6,7 +6,7 @@ _Current state only._ For the chronological history of what changed each session
 ## Local fork (2026-11-25, 2.60.4-local.8)
 
 Prompt settings has an **Auto-add FX** checkbox (`autoAddFx`), with a hint when the active wrapper adds
-`{#fx}` itself. The built-in Default wrapper does. Auto-added extras no longer reach negative prompts.
+`{#fx}` itself. The built-in Default wrapper does (so it overrides the checkbox). Auto-added extras no longer reach negative prompts.
 
 SeedVR2 upscaling on the 4090: Resize menu and Gallery bulk action, sharing the GPU queue with
 renders, with progress, cancel and an adjustable 4000px target. See [the plan](plans/seedvr2-upscale.md).
@@ -261,7 +261,8 @@ released to `main`**. As of the **2026-07-09 maintenance sweep** the repo carrie
 `main` and `dev` — on both the local checkout and GitHub, with no open pull requests; all prior
 `feature/*` and dependabot branches have been merged and deleted.
 
-**`main` is branch-protected (2026-07-02):** releases now run **through a pull request** (`gh pr merge
+**Upstream's `main` is branch-protected (2026-07-02); this fork's is not (2026-11-25) and takes direct
+fast-forward pushes on the owner's go-ahead.** Upstream releases run **through a pull request** (`gh pr merge
 --merge`), not a local `git push origin main`. PR-required with 0 approvals (solo self-merge), strict
 status checks, enforce-admins, force-push/deletion blocked, linear history off. The OpenSSF Scorecard
 was hardened from 4.2 the same day. See [`reference/git-workflow.md`](reference/git-workflow.md) and

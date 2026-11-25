@@ -45,7 +45,7 @@ shock material. Contributions that add disallowed content cannot be accepted.
 
 The project uses a git-flow model with two long-lived branches:
 
-- `main` is the released code. It is protected: it does not accept direct pushes, and each commit on
+- `main` is the released code. Upstream protects it: it does not accept direct pushes there, and each commit on
   it is a tagged release made by the maintainer.
 - `dev` is the integration branch, where finished work lands first.
 

@@ -95,7 +95,7 @@ A pass to raise the Scorecard from 4.2, addressing the high-weight failing check
   2.x→3.x in July 2026 and broke signing (3.x dropped the classic detached `--output-signature` /
   `--output-certificate` outputs in favour of `--bundle`), which is why v2.41.0 first published without a
   signature — the fix migrated to the 3.x bundle format and pinned the binary.
-- **Branch-Protection** — `main` is protected (PR-required, 0 approvals, strict status checks,
+- **Branch-Protection** — upstream's `main` (not this fork's) is protected (PR-required, 0 approvals, strict status checks,
   enforce-admins, no force-push/deletion). A local scan with an admin token scores this **4/10** (the
   remaining points need review approvals — the solo self-approval wall, so 4 is the ceiling). **But the
   CI badge reads 0**, because Scorecard's default `GITHUB_TOKEN` can't read branch-protection settings.
@@ -169,9 +169,9 @@ silent — cosmetic, deferred.
 
 ### The version gate
 
-Trigger: **push to `main`** (every commit on `main` is a tagged release reached by a **PR merge commit**
-from green `dev` or a `release/`/`hotfix/` branch — `main` is branch-protected, so it lands via
-`gh pr merge --merge`, always all-green). Gate: the tag **`v<VERSION>` must not already exist** — i.e.
+Trigger: **push to `main`** (in this fork a direct fast-forward of locally verified work — see
+[`git-workflow.md`](git-workflow.md); workflows are registered here but none has run yet, so no
+release has been cut). Gate: the tag **`v<VERSION>` must not already exist** — i.e.
 `VERSION` was bumped since the last release. So:
 
 - Bump `VERSION` (+ `package.json`, same commit; see [`versioning.md`](versioning.md)) → the next time

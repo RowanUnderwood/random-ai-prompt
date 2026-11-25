@@ -381,32 +381,18 @@ After making changes, run this loop without being asked:
    **PATCH** for a fix/small change, **MINOR** for a feature; never **MAJOR** automatically. Docs / notes
    / test / CI-only commits don't move the number. The release path follows the SemVer level (step 5).
    See `reference/versioning.md`.
-5. **Release when green (on go-ahead) — via a PR into `main`, path set by SemVer level.** `main` is the
-   stable branch and is **branch-protected**: it accepts changes **only through a pull request** with
-   the required CI checks green. Approvals are set to **0**, so you self-merge (there's no second
-   reviewer) — but admins are **not** exempt (`enforce_admins`), and force-push + branch-deletion are
-   blocked. **Never commit on `main` directly** (the protection now enforces this). Every commit on
-   `main` is a **tagged release** reached by a **merge-commit** PR merge (the `--no-ff` equivalent;
-   linear history is intentionally off so these merge commits are allowed). A **PATCH** goes
-   `dev → main`; a **MINOR/MAJOR** goes through a `release/X.Y.0` branch → `main`
-   (see `reference/git-workflow.md`). With the owner's go-ahead, confirm `dev` (or the release branch)
-   is green (`gh run list --branch dev -L 1`), then:
-   `gh pr create --base main --head dev --title "Release v<VERSION>" --fill` →
-   `gh pr checks <#> --watch` (wait for the required checks) →
-   `gh pr merge <#> --merge` (a **merge** commit — never `--squash`/`--rebase`; that preserves the
-   changelog history and the merge commit `release.yml` keys on).
-   **After every release `dev` must CONTAIN `main`** — once the PR is merged, catch `dev` up to the
-   merge commit: `git fetch origin && git switch dev && git merge --ff-only origin/main && git push origin dev`
-   (`dev` is unprotected, so this push is fine). Skipping this back-merge is what once left `dev` 32
-   commits behind `main` (with `main`-only README/docs). A MINOR/MAJOR ends the same way: fast-forward
-   `dev` up to `main` after the `release/X.Y.0` PR merges (don't merge the release branch into `dev`
-   separately). A scheduled `branch-sync` workflow fails if `main` ever has commits not in `dev`. See
-   `reference/git-workflow.md`.
+5. **Push to `main` when green (on go-ahead) — directly, no pull request.** This fork does not use
+   upstream's pull-request rule and its `main` is not branch-protected (owner, 2026-11-25). Still
+   required: the owner's **explicit go-ahead** for that push, `npm test` green, everything committed
+   (`check:committed`), and a **fast-forward** — `git fetch origin`, confirm
+   `git merge-base --is-ancestor origin/main HEAD`, then `git push origin HEAD:main`. If `main` has
+   commits the branch lacks, merge them in and re-test; never force. Push the working branch too.
    **Do not tag by hand.** `release.yml` derives `v<VERSION>` and creates the tag itself, gated on that
-   tag not already existing — a hand-pushed tag makes the gated run find the tag present and **skip
-   itself (a silent no-op release)**. The merge to `main` *is* the release act; CI applies the tag. A
-   push to `main` that bumped `VERSION` cuts a GitHub Release (`release.yml`, tag-gated) and refreshes
-   the Pages docs (`pages.yml`); watch them with `gh run watch`. See `reference/deployment.md`.
+   tag not already existing. GitHub lists this fork's workflows as active, but none
+   had ever run as of 2026-11-25. If they start running, a push to `main` with an untagged `VERSION`
+   publishes a public GitHub Release and deploys Pages. Unless the owner asked for a release, put
+   `[skip ci]` in the tip commit's message. The local gate is the only check until CI runs. If the fork keeps a `dev` branch, it must contain `main` after each push.
+   See `reference/git-workflow.md` and `reference/deployment.md`.
 6. **Regenerate the docs after shipping (by default).** After releasing to `main`, run `npm run docs` so
    the generated `docs/jsdoc/` (git-ignored) tracks `main`; CI also rebuilds + deploys it to Pages.
 

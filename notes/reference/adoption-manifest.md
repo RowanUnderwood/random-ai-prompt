@@ -44,7 +44,7 @@ result. `Evidence` = a link/path to the proof.
 
 | Standard | State | Adopted @ | Last Verify | Evidence |
 |----------|-------|-----------|-------------|----------|
-| git-workflow | implemented | 1.6.1 / 2d614f0 | 2026-08-02 pass (main protected: enforce_admins + strict + required-conversation-resolution; v2.60.2 cut as a merge-commit tagged release; no `master`) | branch protection API; `.github/workflows/*`; [git-workflow.md](git-workflow.md). Note: 3 core required contexts (lint/format/smoke/unit · SPA build · Detox on-device) — not literally every CI job |
+| git-workflow | implemented | 1.6.1 / 2d614f0 | 2026-08-02 upstream pass; **this fork diverges since 2026-11-25: direct fast-forward pushes, no PR rule** (upstream main protected: enforce_admins + strict + required-conversation-resolution; v2.60.2 cut as a merge-commit tagged release; no `master`) | branch protection API; `.github/workflows/*`; [git-workflow.md](git-workflow.md). Note: 3 core required contexts (lint/format/smoke/unit · SPA build · Detox on-device) — not literally every CI job |
 | versioning | implemented | 1.6.1 / 2d614f0 | 2026-08-02 pass (`VERSION` 2.60.2 == tag `v2.60.2` == `package.json`) | [versioning.md](versioning.md) |
 | notes-system | implemented | 1.6.1 / 2d614f0 | 2026-08-02 pass (notes tree present; `status.md` current; inline changelog; this manifest exists) | [`../README.md`](../README.md) |
 | ai-context | implemented | 1.6.1 / 2d614f0 | 2026-08-02 pass (CLAUDE.md: identity · start-here · landmines · build/run · Default Workflow incl. phase-by-default · notes-maintenance) | repo-root `CLAUDE.md` |
