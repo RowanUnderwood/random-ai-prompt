@@ -36,6 +36,22 @@ across assistants. It has three halves, and skipping any one of them breaks the 
 The test: *an assistant (or human) opening this repo cold reads the notes and is fully oriented —
 nothing trapped in one session's head, nothing lost between sessions.*
 
+<a id="heading-a0a"></a>
+
+### A0a. Keep CLAUDE.md current in the same change.
+
+(Owner, 2026-11-25: "update claude.md and create yourself a rule to keep it up to date in future.")
+For every future feature, bug fix, configuration change, or workflow change, review the root
+`CLAUDE.md` before declaring the task complete. Update its relevant feature/architecture overview,
+entry points, build/run/test commands, configuration, service ownership, operational caveats, or
+agent rules in the **same commit** as the change. Detailed notes remain the system of record,
+but updating them alone does not maintain the agent's entry point. Prefer concise summaries
+and links over duplicating the detailed notes or copying a chronological changelog into it.
+
+If no context edit is warranted, record that `CLAUDE.md` was reviewed and explain why in the
+session log. This rule is also in repo-root [AGENTS.md](../../AGENTS.md), so Codex discovers it
+on future tasks. Durable rules belong in repository files, not private agent memory.
+
 ### A1. PowerShell is the shell — EXECUTE, never hand off. Never touch the bash sandbox.
 `mcp__Windows-MCP__PowerShell` is a real shell on the owner's machine with full git / npm / node / build
 access, available every turn.

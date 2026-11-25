@@ -55,6 +55,58 @@ git history and as a read-only reference clone at `assets/references/og-pre-revi
 Note: the dev server (`npm run web`) is a **development-only** tool. End users run the built local
 **desktop** target (the production local edition) or the hosted **web** build — never the dev server.
 
+## Rowan's local inference fork
+
+This checkout is the [RowanUnderwood/random-ai-prompt fork](https://github.com/RowanUnderwood/random-ai-prompt).
+Its native Windows desktop additions are opt-in providers built on the same shared engine and app
+layer. See [local inference](notes/systems/local-inference.md) and the
+[model selector plan](notes/plans/local-model-selector.md) for detailed behavior and file maps.
+
+| Optional service | GPU | Endpoint | Provider |
+|---|---|---|---|
+| NInfer Qwen | RTX 5090 | `http://127.0.0.1:1234` | `ninfer` — keyless text features |
+| ComfyUI images | RTX 3090 | `http://127.0.0.1:8190` | `comfy-local` image pool |
+| ComfyUI images | RTX 4090 | `http://127.0.0.1:8191` | `comfy-local` image pool |
+
+- **Text rewriting:** `targets/shared/ninfer/` uses the local backend and Qwen's OpenAI-compatible
+  API, model id `qwen3.8-27b`, reasoning effort `medium`. It supports the existing auto-fix,
+  keyword, expansion, and Manage AI actions. The shared instructions are in
+  `targets/shared/_shared/rewriteSystem.js`. Auto-fix cleans up the expanded prompt; keyword
+  translation explicitly produces tags. If both are enabled, keyword translation runs last.
+  There is currently no Krea-specific descriptive rewrite mode.
+- **Image batches:** `targets/web/backend/localGpuPool.js` shares one worker per endpoint across
+  Home and Gallery. Batches, including multiple images for one prompt, are divided between
+  enabled ready GPUs rather than duplicated. Faster workers take the next waiting image.
+  Sidecars record the actual model, seed, workflow, GPU, and endpoint. Keep partial successes
+  and report failed jobs; do not automatically retry submitted work and risk duplicate images.
+- **Workflows/models:** `targets/shared/comfy-local/` offers Jake's Krea 2 workflow and standard
+  checkpoints. Krea uses the flattened API export in
+  `targets/shared/comfyui/data/krea2-workflow.json`, with 12 steps, CFG 1, Euler/simple.
+  `localModelCatalog.js` and `ComfyModelSelect.jsx` populate workflow-specific dropdowns from
+  ComfyUI loader definitions, offering filenames common to reachable selected workers. The
+  chosen `kreaModel` changes the UNET loader, not the encoder or VAE; architecture compatibility
+  is still required. Preserve saved choices and validate exact filenames before submission.
+- **Service controls:** Prompt settings gear → Local services uses fixed external `.bat` profiles
+  in `targets/web/backend/localServices.js`. Launch controls require the native Windows shell.
+  Detect and reuse existing instances without adopting ownership. The shell's private Windows
+  Job Object terminates only its backend and launched descendants on exit; external instances
+  stay running. Managed NInfer launch requires `BACKEND=windows`; manually started compatible
+  WSL instances may be reused. Never accept executable paths or commands from HTTP clients.
+- **Readiness:** probe ComfyUI's lightweight `/queue`, not synchronous GPU memory statistics.
+  A busy queue is ready. Share concurrent probes; keep verified workers ready during admitted
+  renders while their TCP listener remains open. A recent successful check covers transient
+  external stalls for up to 60 seconds. Closed ports and incompatible responses invalidate it.
+- **Build/run:** `npm run desktop:build:local` explicitly selects Rust 1.88.0 and produces
+  `output/desktop/Random AI Prompt Local.exe`; start it with repo-root `launch-desktop.bat`.
+  Portable data lives in `output/desktop/data/app/`. Staging writes `BUILD_ID` so same-version
+  rebuilds refresh code while preserving user data. A locked running executable is staged as
+  `.next.exe` and applied by the launcher after the old app closes. Do not close the user's app
+  or its services just to apply an update. The local shell has a separate application identifier
+  and suppresses upstream update suggestions.
+- **Validation:** run the normal repository gate. On this machine's Node 25, set
+  `NODE_OPTIONS=--no-experimental-webstorage` for jsdom tests; HTTP integration tests require
+  loopback access. Keep live test evidence and current counts in `notes/`, not this overview.
+
 ## Start Here — the notes are the system of record (READ THEM FIRST, EVERY SESSION)
 
 **This is a hard rule, not a suggestion** (owner, 2026-07-12: *"look in the notes please — use them by
@@ -387,6 +439,14 @@ changes recommend a real review.) Fonts are now self-hosted (`targets/web/public
 or any other third-party request, update the docs to disclose it.
 
 ## Maintaining the Notes — Your Responsibility
+
+**Keep this file current too (owner, 2026-11-25).** Review `CLAUDE.md` for every feature, bug fix,
+configuration change, or workflow change. Update its relevant overview, commands, caveats, or
+rules in the **same commit** whenever the change affects how an agent understands or works on
+the project. Updating detailed notes alone is insufficient. Keep this file concise and link to
+the detailed system notes. If no context edit is needed, record the review and its reason in the
+session log. This standing rule also lives in [AGENTS.md](AGENTS.md) and
+[working agreements](notes/reference/working-agreements.md#heading-a0a).
 
 **Notes are the project's memory — use them by default, and prefer them over any private/AI/"project"
 memory.** The `notes/` system (sessions, changelog, systems, reference, decisions, plans) is the single

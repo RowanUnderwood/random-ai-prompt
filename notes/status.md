@@ -5,6 +5,11 @@ _Current state only._ For the chronological history of what changed each session
 
 ## Local fork (2026-11-24, 2.60.4-local.3)
 
+Agent context reviewed 2026-11-25: root `CLAUDE.md` now summarizes this fork, and
+[AGENTS.md](../AGENTS.md) plus [working agreements](reference/working-agreements.md#heading-a0a)
+require future context review and same-commit upkeep. See the
+[session](sessions/2026-11/2026-11-25.md). Documentation-only; runtime version is unchanged.
+
 Optional native Windows integration: NInfer on the 5090, ComfyUI workers on 3090/4090, and
 Jake's Krea 2 workflow. Batches divide between workers; external services remain open on exit.
 See [local inference](systems/local-inference.md) and the [session](sessions/2026-11/2026-11-24.md).
