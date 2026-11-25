@@ -105,5 +105,10 @@ fs.writeFileSync(`${dDir}/general-sfw.txt`, general.filter((l) => !isNsfw(l)).jo
 fs.writeFileSync(`${dDir}/general-nsfw.txt`, general.filter((l) => isNsfw(l)).join("\n"));
 fs.writeFileSync(`${dDir}/artist.txt`, artistKeywords.join("\n"));
 fs.writeFileSync(`${dDir}/character-c.txt`, copyrightKeywords.join("\n"));
-fs.writeFileSync(`${dDir}/character-nc.txt`, characterKeywords.join("\n"));
+// Outfit variants of characters are left out; each character's own name stays.
+const outfitVariant = /\b(swimsuit|bunny|summer|bikini)\b/;
+fs.writeFileSync(
+  `${dDir}/character-nc.txt`,
+  characterKeywords.filter((l) => !outfitVariant.test(l)).join("\n"),
+);
 fs.writeFileSync(`${dDir}/meta.txt`, metaKeywords.join("\n"));

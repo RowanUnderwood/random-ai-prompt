@@ -74,8 +74,9 @@ const D = {
 
   // ---- subject ----
   "subject/entity":
-    "Polymorphic subject — picks an animal, character, flower, instrument, creature, tree, or person.",
+    "Polymorphic subject — picks an animal, flower, instrument, creature, tree, or person.",
   "helper/entity-name": "Just the name/label of a random entity (no descriptors).",
+  "subject/anime-character": "A named anime character in everyday clothes.",
   "subject/animal": "A random animal subject (entity specialized to animals).",
   "people/person": "A random person subject (entity specialized to humans).",
   "helper/living-entity": "A random living subject (entity specialized to living things).",
@@ -132,7 +133,7 @@ const D = {
   "prompt/extra-random": "A total-random prompt drawing from every list.",
   "prompt/artists": "Auto-appended artist tags.",
   "prompt/fx": "Auto-appended visual-effect / quality tags.",
-  "prompt/d": "Danbooru anime tag stream (general / character / meta).",
+  "prompt/d": "Danbooru anime tag stream (general / meta).",
 
   // ---- user ----
   "user/beach-merk": "Community beach scene by Merk (composes siblings as direct imports).",

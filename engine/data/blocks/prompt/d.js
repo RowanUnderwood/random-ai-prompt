@@ -1,9 +1,10 @@
 /**
  * @file
- * @brief JS sidecar for d.dpl — danbooru anime tag stream ({d/general} + {d/character} + {d/meta}).
+ * @brief JS sidecar for d.dpl — danbooru anime tag stream ({d/general-nsfw} + {d/meta}). Adult
+ *        tags are never combined with named characters.
  */
 
-import { randomInt, randomFloat } from "../../../helpers/random.js";
+import { randomInt } from "../../../helpers/random.js";
 import { keywordRepeater } from "../../../helpers/keywordRepeater.js";
 
 /**
@@ -13,12 +14,10 @@ import { keywordRepeater } from "../../../helpers/keywordRepeater.js";
  */
 export default function (settings) {
   const metaCount = randomInt(0, 2);
-  const characterCount = randomInt(0, 2);
 
   const str = [];
   str.push(keywordRepeater("d/general-nsfw", false, settings));
 
-  if (randomFloat() < 0.2) for (let i = 0; i < characterCount; i++) str.push(`{d/character}`);
   for (let i = 0; i < metaCount; i++) str.push(`{d/meta}`);
 
   return str.join(", ");

@@ -41,6 +41,7 @@ const D = {
   // look
   "look/action": "Poses, gestures, and activities.",
   "look/clothes-sfw": "Clothing and outfits.",
+  "look/clothes-everyday": "Everyday and formal outfits with full coverage.",
   "look/clothes-nsfw": "Lingerie, fetish, and revealing wear (adult-gated).",
   "look/color": "Colors and color descriptions.",
   "look/emotion": "Emotional states.",

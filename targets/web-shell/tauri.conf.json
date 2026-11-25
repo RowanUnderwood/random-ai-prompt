@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "Random AI Prompt Local",
-  "version": "2.60.4-local.14",
+  "version": "2.60.4-local.15",
   "identifier": "io.rowan.randomaiprompt.local",
   "build": {
     "frontendDist": "frontend",

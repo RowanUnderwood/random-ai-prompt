@@ -534,7 +534,6 @@ isokaze kancolle
 sunny milk
 emiya kiritsugu
 tachibana arisu
-asuna bunny blue archive
 kallen stadtfeld
 yorigami shion
 miyafuji yoshika
@@ -643,7 +642,6 @@ reisalin stout
 atlanta kancolle
 akagi azur lane
 aida mana
-jeanne d'arc alter swimsuit berserker fate
 blue oak
 enoshima junko
 takanashi rikka
@@ -663,7 +661,6 @@ akari pokemon
 kagari atsuko
 mayuzumi fuyuko
 bb fate extra
-nero claudius swimsuit caster fate
 ia vocaloid
 hilbert pokemon
 eren yeager
@@ -685,7 +682,6 @@ akaza akari
 ise kancolle
 shiroko blue archive
 raising heart
-tamamo no mae swimsuit lancer fate
 hoshizora miyuki
 senjougahara hitagi
 jun'you kancolle
@@ -714,7 +710,6 @@ pola kancolle
 ryougi shiki
 octoling
 piplup
-bb swimsuit mooncancer fate
 sangonomiya kokomi
 yu mei-ren fate
 la+ darknesss
@@ -742,7 +737,6 @@ neptune neptune series
 nachi kancolle
 charizard
 w arknights
-meltryllis swimsuit lancer fate
 p-head producer
 ibaraki douji fate
 vivio
@@ -928,7 +922,6 @@ oshida girls und panzer
 kawakaze kancolle
 ceres fauna
 kagura gintama
-artoria pendragon alter swimsuit rider fate
 monkey d. luffy
 power chainsaw man
 skyla pokemon
@@ -954,7 +947,6 @@ leonardo da vinci fate
 yang guifei fate
 kishibe rohan
 kashuu kiyomitsu
-karin bunny blue archive
 shirase sakuya
 chibi usa
 ashiya douman fate
@@ -965,7 +957,6 @@ ymir shingeki no kyojin
 palutena
 martha fate
 katori kancolle
-artoria pendragon swimsuit ruler fate
 uiharu kazari
 tina branford
 omaru polka
@@ -977,7 +968,6 @@ enemy aircraft kancolle
 myoukou kancolle
 kaeya genshin impact
 skadi the corrupting heart arknights
-jeanne d'arc swimsuit archer fate
 tashkent kancolle
 konjiki no yami
 elsa frozen
@@ -1068,7 +1058,6 @@ tsukumo benben
 mayano top gun umamusume
 silver pokemon
 ryu street fighter
-abigail williams swimsuit foreigner fate
 dido azur lane
 umikaze kancolle
 okita souji alter fate
@@ -1135,7 +1124,6 @@ fletcher kancolle
 st ar-15 girls' frontline
 koyanskaya fate
 arch bishop ragnarok online
-miyamoto musashi swimsuit berserker fate
 honma meiko
 wattson apex legends
 diana cavendish
@@ -1241,7 +1229,6 @@ green pokemon
 james pokemon
 fairy knight tristan fate
 rydia ff4
-artoria pendragon alter swimsuit rider second ascension fate
 mikuma kancolle
 marie girls und panzer
 i-26 kancolle
@@ -1289,7 +1276,6 @@ high priest ragnarok online
 rias gremory
 nemoto hina
 squirtle
-minamoto no raikou swimsuit lancer fate
 tsukuyomi shirabe
 berserker fate zero
 tharja fire emblem
@@ -1375,7 +1361,6 @@ jumpy dumpty
 miyamizu mitsuha
 inuyama aoi
 chongyun genshin impact
-scathach swimsuit assassin fate
 hisakawa nagi
 arjuna fate
 kureiji ollie
@@ -1482,7 +1467,6 @@ shirayuki hime
 araragi karen
 nate pokemon
 miss cloud
-meltryllis swimsuit lancer first ascension fate
 sucy manbavaran
 meowth
 toudou shimako
@@ -1581,7 +1565,6 @@ sugiura ayano
 lyria granblue fantasy
 type 95 girls' frontline
 mukai takumi
-miyamoto musashi swimsuit berserker second ascension fate
 vira granblue fantasy
 nibutani shinka
 nia blade xenoblade
@@ -1598,7 +1581,6 @@ celestia ludenberg
 miyu blue archive
 marie rose
 kasaki nozomi
-shiroko swimsuit blue archive
 lei lei
 fairy knight gawain fate
 ro635 girls' frontline
@@ -1783,7 +1765,6 @@ female saniwa touken ranbu
 yuuki juudai
 flareon
 usada hikaru
-scathach piercing bunny fate
 jeanne d'arc third ascension fate
 hau pokemon
 harukaze kancolle
@@ -1882,8 +1863,6 @@ air groove umamusume
 lisbeth
 calem pokemon
 sol badguy
-bb swimsuit mooncancer second ascension fate
-abigail williams swimsuit foreigner third ascension fate
 nelson kancolle
 naoe riki
 rita mordio
@@ -1912,7 +1891,6 @@ shokudaikiri mitsutada
 iori blue archive
 super creek umamusume
 narita brian umamusume
-jeanne d'arc swimsuit archer first ascension fate
 regina dokidoki! precure
 ako blue archive
 sailor saturn
@@ -1940,8 +1918,6 @@ kogitsunemaru
 wakan tanka
 small-clawed otter kemono friends
 taihou forbidden feast azur lane
-nitocris swimsuit assassin fate
-meltryllis swimsuit lancer second ascension fate
 lina inverse
 lavinia whateley fate
 akaboshi koume
@@ -1984,7 +1960,6 @@ me-tan
 fujimaru ritsuka male polar chaldea uniform
 toudou yurika
 crewmate among us
-mash kyrielight swimsuit of perpetual summer
 hunter bloodborne
 hagoromo lala
 chocobo
@@ -2089,7 +2064,6 @@ elysia honkai impact
 nijimura okuyasu
 nakagawa natsuki
 cheria barnes
-bb swimsuit mooncancer third ascension fate
 lance pokemon
 himekawa yuki
 toutetsu yuuma
@@ -2104,7 +2078,6 @@ ryuzaki kaoru
 le malin listless lapin azur lane
 sakata kintoki fate
 rhea fire emblem
-mordred swimsuit rider fate
 kasuga ayumu
 jirachi
 hoshimiya kate
@@ -2143,7 +2116,6 @@ sheffield azur lane
 kano shuuya
 ingrid capcom
 uehara himari
-saren summer princess connect!
 sans
 jude mathis
 higashikata josuke jojolion
@@ -2169,7 +2141,6 @@ uchi emiri
 jessica albert
 chocola nekopara
 arle nadja
-tomoe gozen swimsuit saber fate
 suzuki jun
 spider-man
 sheik
@@ -2192,7 +2163,6 @@ kuga natsuki
 uni neptune series
 poison final fight
 luma mario
-kiyohime swimsuit lancer fate
 euphemia li britannia
 azusa blue archive
 hei darker than black
@@ -2241,7 +2211,6 @@ ui blue archive
 toyokawa fuka
 silva granblue fantasy
 magallan arknights
-jeanne d'arc swimsuit archer second ascension fate
 tsuyuri kanao
 super pochaco
 soraka league of legends
@@ -2261,7 +2230,6 @@ erwin girls und panzer
 vanilla nekopara
 samson skullgirls
 midori blue archive
-karyl summer princess connect!
 flonne
 butz klauser
 alice cartelet
@@ -2335,7 +2303,6 @@ smart falcon umamusume
 naganami kai ni kancolle
 katarina league of legends
 caracal kemono friends
-atago summer march azur lane
 shannon umineko
 noctis lucis caelum
 jibril no game no life
@@ -2409,7 +2376,6 @@ leo fire emblem
 kuroyukihime
 totodile
 litwick
-hina swimsuit blue archive
 zima arknights
 natsume kyousuke
 lord knight ragnarok online
@@ -2426,7 +2392,6 @@ ogasawara sachiko
 mizuho kancolle
 mercedes von martritz
 ptilopsis arknights
-kama swimsuit avenger fate
 friend nanashi mumei
 yamanaka sawako
 rosa arknights
@@ -2442,7 +2407,6 @@ anya alstreim
 tokoro megumi
 sun wukong
 romani archaman
-nonomi swimsuit blue archive
 massachusetts azur lane
 hamanami kancolle
 noi dorohedoro
@@ -2485,7 +2449,6 @@ wuxian the legend of luoxiaohei
 shun small blue archive
 santa claus
 melony pokemon
-martha swimsuit ruler fate
 kar98k girls' frontline
 itoshiki nozomu
 tomori nao
@@ -2650,12 +2613,10 @@ ots-14 girls' frontline
 lugia
 cheshire cat alice in wonderland
 aircraft carrier oni
-tamamo no mae swimsuit lancer second ascension fate
 rozaliya olenyeva
 rindou mikoto
 nero claudius olympian bloomers fate
 king dedede
-sesshouin kiara swimsuit mooncancer
 sayori doki doki literature club
 adult neptune
 yakushiji saaya
@@ -2676,7 +2637,6 @@ isshiki akane
 wingull
 princess of the crystal
 nakiri erina
-hoshino swimsuit blue archive
 chris redfield
 tatebayashi sakurako
 tanaka gandamu
@@ -2716,7 +2676,6 @@ kongou aoki hagane no arpeggio
 hummy suite precure
 giratina
 cure dream
-frankenstein's monster swimsuit saber fate
 asia argento
 arima senne
 aioi yuuko

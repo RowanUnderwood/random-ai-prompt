@@ -1,5 +1,5 @@
 ---
-description: A subject — animal, character, flower, instrument, creature, tree, or person
+description: A subject — animal, flower, instrument, creature, tree, or person
 script: entity.js
 ---
 

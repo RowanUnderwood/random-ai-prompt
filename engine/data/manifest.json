@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-25T19:23:41.911Z",
+  "generatedAt": "2026-11-25T21:28:44.382Z",
   "lists": [
     "activity/crafts.txt",
     "activity/everyday.txt",
@@ -43,6 +43,7 @@
     "krea2/styles.txt",
     "look/action.txt",
     "look/calendar.txt",
+    "look/clothes-everyday.txt",
     "look/clothes-nsfw.txt",
     "look/clothes-sfw.txt",
     "look/color.txt",
@@ -247,6 +248,7 @@
     "styled-subject/vibrant-art.dpl",
     "subject/animal-scene.dpl",
     "subject/animal.dpl",
+    "subject/anime-character.dpl",
     "subject/entity.dpl",
     "subject/food.dpl",
     "subject/furry.dpl",

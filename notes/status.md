@@ -3,7 +3,7 @@
 _Current state only._ For the chronological history of what changed each session and why, see
 [`sessions/`](sessions/README.md). For the commit-by-commit changelog see [`version.md`](version.md).
 
-## Local fork (2026-11-25, 2.60.4-local.14)
+## Local fork (2026-11-25, 2.60.4-local.15)
 
 Block and list variety pass complete in four commits, awaiting the owner's judgment of sample prompts:
 see [the plan](plans/block-list-variety.md). Manage's Restore default no longer deletes files.

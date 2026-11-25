@@ -150,7 +150,7 @@ Slurs, minor-sexualizing, and extreme shock/gore content are removed by
 | `medium/` | Photo, film, cinema, lighting, palette, painting, ink, print, comic, anime, poster, digital, render, craft, surface and backdrop terms for style blocks. No artists. Force-prefixed; no union. |
 | `thing/` | still-life, food, machine, setting. Force-prefixed; no union. |
 | `nature/` | animal, animal-behavior, flower, tree, planet, water, mythological-creature |
-| `look/` | color, size, hair, clothes, weather, time, mood, emotion, view, image-effect, instrument, action (poses/activities), shot (framing), lens, calendar (months, weekdays, holidays), focus (vocabulary of the focus dial, not camera focus); expression is an SFW/NSFW pair; `clothes-nsfw` (gated lingerie/fetish) |
+| `look/` | color, size, hair, clothes, weather, time, mood, emotion, view, image-effect, instrument, action (poses/activities), shot (framing), lens, calendar (months, weekdays, holidays), focus (vocabulary of the focus dial, not camera focus); expression is an SFW/NSFW pair; `clothes-everyday` (full coverage, used by `{#anime-character}`), `clothes-nsfw` (gated lingerie/fetish) |
 | `style/` | art-movement, art-technique, general, construct, building (folder is `_force-prefix` → `{style/building}` etc.) |
 | `scene/` | room, school-room, shed, ship, store, vehicle (folder is `_force-prefix` → `{scene/ship}` etc.) |
 | `brand/` | organization |

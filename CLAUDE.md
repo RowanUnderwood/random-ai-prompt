@@ -72,7 +72,8 @@ their own subject are in `styled-subject/`. `{#subject}` draws from `subject/` a
 adult humans only and suits `{#action}`; `helper/` pieces work by name but never in random groups; a
 block's sidecar `requires` names a setting it needs. Blocks people ask for by name must not come out
 empty: lead with an unconditional line, since a bare `- ` bullet shows about 25% of the time at default
-intensity. People lists are adults only, and anime characters wear `{clothes-sfw}`. Measure changes
+intensity. People lists are adults only. Named anime characters appear only in `{#anime-character}` (everyday
+clothes, SFW expressions); never combine them with adult lists. Measure changes
 with `node scripts/variety-report.mjs`; `tests/unit/contentQuality.test.js` enforces the rules.
 
 Krea-specific content: People `{#krea2-actors}` (identity only; bands separate), six Style `krea2-*`

@@ -63,7 +63,7 @@ generator from it:
 | Folder | What's in it |
 |--------|--------------|
 | `scene/` | Full standalone scenes & places — `city`, `castle`, `beach`, `landscape`, `room`, `space`, `ship`, … |
-| `subject/` | Subjects — the `entity` polymorphism, `animal`, `animal-scene`, `still-life`, `food`, `machine`, the `portrait-*` family, … Its sidecar includes `people/`, so `{#subject}` draws from both |
+| `subject/` | Subjects — the `entity` polymorphism, `anime-character` (the only block that names them), `animal`, `animal-scene`, `still-life`, `food`, `machine`, the `portrait-*` family, … Its sidecar includes `people/`, so `{#subject}` draws from both |
 | `people/` | Adults only — `person`, `everyday-person`, `occupation`, `historical-figure`, `fantasy-role`, `scifi-role`, `pair`, `group`, … Use `{#people}` with `{#action}` |
 | `helper/` | Pieces used inside other blocks (`color`, `glow`, `neon`, `portrait`, `entity-name`, `living-entity`); usable by name, never picked by a group |
 | `fragment/` | Partial modifiers / garnishes composed into fulls — `weather`, `water`, `nature`, `camera`, … |

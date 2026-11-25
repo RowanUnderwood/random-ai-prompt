@@ -49,6 +49,7 @@ describe("lists", () => {
     "style/construct",
     "nature/water",
     "nature/animal-behavior",
+    "look/clothes-everyday",
     ...["view", "weather", "time", "calendar", "mood", "expression", "shot", "lens"].map(
       (n) => `look/${n}`,
     ),
@@ -239,14 +240,38 @@ describe("blocks", () => {
     expect(aged(outputs("{#entity-name}", {}, 100))).toEqual([]);
   });
 
-  it("dress anime characters from the SFW clothes only", () => {
-    const nsfw = new Set(nodeLoader.readListLines("clothes-nsfw", true));
-    for (const line of nodeLoader.readListLines("clothes-sfw", true)) nsfw.delete(line);
-    const source = fs.readFileSync(path.join(BLOCKS, "subject/entity.js"), "utf8");
-    expect(nsfw.size).toBeGreaterThan(0);
-    expect(source).toMatch(/d\/character\}`;\s+clothes = "\{clothes-sfw\}"/);
+  const characters = nodeLoader.readListLines("d/character-nc", true);
+  const named = (texts) =>
+    texts.filter((t) => characters.some((c) => t.startsWith(`${c},`) || t === c));
+
+  it("name anime characters in {#anime-character} and nowhere else", () => {
+    expect(named(outputs("{#anime-character}", {}, 40))).toHaveLength(40);
+    for (const token of ["person", "entity", "living-entity", "entity-name"])
+      expect([token, named(outputs(`{#${token}}`, {}, 150))]).toEqual([token, []]);
+    const users = sources.filter(([, text]) => /\{d\/(character|keyword)/.test(text));
+    expect(users.map(([file]) => file.replaceAll("\\", "/"))).toEqual([
+      "subject/anime-character.dpl",
+    ]);
+    expect(direct("people")).not.toContain("anime-character");
   });
 
+  it("dress anime characters in everyday clothes, whatever the NSFW setting", () => {
+    const revealing =
+      /\b(swim\w*|bikini|bunny|lingerie|underwear|bra|panties|leotard|latex|corset|crop|mini\w*|micro\w*|short skirt|shorts|topless|naked|nude|wet|torn|lowleg|thigh\w*|fishnets|pajamas)\b/i;
+    const clothes = nodeLoader.readListLines("look/clothes-everyday", true);
+    expect(clothes.filter((l) => revealing.test(l))).toEqual([]);
+    expect(characters.filter((l) => /\b(swimsuit|bikini|nude|naked|lingerie)\b/i.test(l))).toEqual(
+      [],
+    );
+    const source = fs.readFileSync(path.join(BLOCKS, "subject/anime-character.dpl"), "utf8");
+    expect(source.match(/\{[^}]+\}/g)).toEqual([
+      "{d/character-nc}", // character-c holds series titles
+      "{expression-sfw}",
+      "{#color}",
+      "{hair}",
+      "{look/clothes-everyday}",
+    ]);
+  });
   it("reference only blocks and groups that exist", () => {
     const known = [...blocks, ...nodeLoader.blockGroupDirsAll()];
     const missing = [];

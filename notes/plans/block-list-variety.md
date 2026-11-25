@@ -1,5 +1,7 @@
 # Block and list variety
 
+Update (.15): anime characters moved from `{#person}` to `{#anime-character}`.
+
 Approved 2026-11-25. Decisions: pure looks stay in `{#style}` and styles with their own subject move to
 `{#styled-subject}`; the Krea library splits into six category blocks; blocks asked for by name are never
 empty; new people, historical/fantasy, group, object and creature subjects. The most-used recent prompt
