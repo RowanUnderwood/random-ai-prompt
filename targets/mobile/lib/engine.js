@@ -32,10 +32,11 @@ export function expandOnce(dpl, extra = {}) {
   try {
     const { prompts } = run.generatePrompts({
       ...baseSettings,
-      autoAddFx: false,
-      autoAddArtists: false,
       includeArtist: false,
       ...extra,
+      // After `extra`: callers pass their full settings, which would otherwise turn these back on.
+      autoAddFx: false,
+      autoAddArtists: false,
       prompt: dpl,
       promptCount: 1,
       randomSeed: true,

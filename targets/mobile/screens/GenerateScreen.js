@@ -983,6 +983,7 @@ export default function GenerateScreen({ onGenerated, onOpenImage }) {
                 selectRow("Keyword list", "keywordsFilename", LIST_OPTIONS),
                 selectRow("Artist list", "artistFilename", LIST_OPTIONS),
                 toggleRow("Natural language for artists & styles", "naturalArtistStyle", true),
+                toggleRow("Auto-add FX (art styles & image effects)", "autoAddFx"),
               ])}
               {grp("Emphasis", [
                 toggleRow("Randomly emphasize keywords", "keywordEmphasis"),

@@ -3,7 +3,10 @@
 _Current state only._ For the chronological history of what changed each session and why, see
 [`sessions/`](sessions/README.md). For the commit-by-commit changelog see [`version.md`](version.md).
 
-## Local fork (2026-11-25, 2.60.4-local.7)
+## Local fork (2026-11-25, 2.60.4-local.8)
+
+Prompt settings has an **Auto-add FX** checkbox (`autoAddFx`), with a hint when the active wrapper adds
+`{#fx}` itself. The built-in Default wrapper does. Auto-added extras no longer reach negative prompts.
 
 SeedVR2 upscaling on the 4090: Resize menu and Gallery bulk action, sharing the GPU queue with
 renders, with progress, cancel and an adjustable 4000px target. See [the plan](plans/seedvr2-upscale.md).

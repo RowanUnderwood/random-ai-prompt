@@ -15,7 +15,7 @@ import { useIntl, defineMessages } from "react-intl";
 import { generatePrompt, renderWrapperPart, expandPrompt } from "../lib/promptEngine.js";
 import { shouldReflectSeed } from "../lib/home/seed.js";
 import { buildRoll } from "../lib/home/buildRoll.js";
-import { getDefaultWrapper } from "../lib/wrapperStore.js";
+import { activeWrapper } from "../lib/wrapperStore.js";
 import { getProvider } from "../lib/providers/index.js";
 import { flattenForProvider } from "../lib/useProvider.js";
 import { softLockedForNsfw } from "../lib/contentPolicy.js";
@@ -158,14 +158,10 @@ export default function Home({ settings, setSettings, onOpenImage }) {
   // active wrapper, roll the batch, and auto-fire an image batch per prompt (api providers only).
   // Errors propagate to the composer, which surfaces them inline.
   async function buildPrompts(text) {
-    const w =
-      !settings.wrapperName || settings.wrapperName === "Default"
-        ? getDefaultWrapper()
-        : (settings.wrapper ?? getDefaultWrapper());
     const { prompts: out, rollSeed } = buildRoll({
       settings,
       text,
-      wrapper: w,
+      wrapper: activeWrapper(settings),
       mode: flat.mode,
       deps: { renderWrapperPart, generatePrompt, nextId },
     });

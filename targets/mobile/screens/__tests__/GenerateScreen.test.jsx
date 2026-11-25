@@ -4,6 +4,7 @@
  * flows wire: rolling prompts into results, opening the full prompt-settings gear, and the live preview.
  */
 import React from "react";
+import { Switch } from "react-native";
 import { render, fireEvent, act } from "@testing-library/react-native";
 
 jest.mock("../../lib/theme.js", () => ({
@@ -39,6 +40,7 @@ jest.mock("../../components/InsertMenu.js", () => () => null);
 jest.mock("../../components/BlockPalette.js", () => () => null);
 
 import * as providers from "../../lib/imageProviders.js";
+import * as engine from "../../lib/engine.js";
 import * as storage from "../../lib/storage.js";
 import GenerateScreen from "../GenerateScreen.js";
 
@@ -78,6 +80,25 @@ describe("GenerateScreen (mounted)", () => {
     expect(await findByText("Salt & lists")).toBeTruthy();
     expect(getByText("Vocabulary")).toBeTruthy();
     expect(getByText("Emphasis")).toBeTruthy();
+  });
+
+  it("the Auto-add FX switch reaches the next roll", async () => {
+    const { getByLabelText, findByText, UNSAFE_getAllByType } = await setup();
+    fireEvent.press(getByLabelText("Prompt settings"));
+    const label = await findByText(/Auto-add FX/);
+    const row = label.parent.parent;
+    const toggle = UNSAFE_getAllByType(Switch).find((s) => {
+      for (let node = s.parent; node; node = node.parent) if (node === row) return true;
+      return false;
+    });
+    for (const on of [true, false]) {
+      fireEvent(toggle, "valueChange", on);
+      fireEvent.press(getByLabelText("Generate prompts"));
+      await act(async () => {});
+      expect(engine.run.generatePrompts).toHaveBeenLastCalledWith(
+        expect.objectContaining({ autoAddFx: on }),
+      );
+    }
   });
 
   it("live preview renders a re-rolled example", async () => {

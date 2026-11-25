@@ -93,6 +93,14 @@ describe("createPromptRun", () => {
     expect(last.seed).toBe("9");
   });
 
+  it("never auto-appends effects or artists to a negative prompt", () => {
+    const engine = makeEngine();
+    const settings = { autoAddFx: true, autoAddArtists: true };
+    createPromptRun(engine).expandPromptSeeded("blurry", settings);
+    expect(engine.calls.at(-1)).toMatchObject({ autoAddFx: false, autoAddArtists: false });
+    expect(settings.autoAddFx).toBe(true); // caller untouched
+  });
+
   it("works without a setActiveSettings hook", () => {
     const run = createPromptRun(makeEngine());
     expect(() => run.generatePrompt({ randomSeed: true })).not.toThrow();

@@ -96,7 +96,8 @@ user-relevant as app config, drop the rest.
 
 ## See also
 - [`v3-layers.md`](v3-layers.md) — weighted-layer engine; the wrapper that supplies start/end framing
-  (replaces `autoAddFx`/`autoAddArtists`).
+  (replaces `autoAddFx`/`autoAddArtists`). `autoAddFx` returned to Prompt settings on 2026-11-25 at
+  the fork owner's request; the engine skips it when the wrapper already contains `{#fx}`.
 - [`../reference/prompt-dsl.md`](../reference/prompt-dsl.md) — the emphasis/editing/alternating math being
   reworked, and the `{salt}` token.
 - [`next-steps.md`](next-steps.md) — Sweep 1 tracked there as the next concrete item.

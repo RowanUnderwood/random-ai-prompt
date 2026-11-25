@@ -13,6 +13,13 @@ single exception list. The adapter also uploaded every source under one fixed na
 ComfyUI's queue against its 180-second limit. Proof: all five cases in
 `tests/regression/comfyUpscale.test.js` failed before the fix.
 
+**Auto-added FX/artists appear in the negative prompt, or twice in a generated prompt:** negatives use
+`expandPromptSeeded`, which passed `autoAddFx`/`autoAddArtists` straight through; suggestions did too,
+so their text gained effects that generation then added again. Every expansion other than the main
+prompt must force both off, after spreading the caller's settings (mobile's `expandOnce` set
+them first and was overridden). Covered in `promptRun`, `promptEngine.integration` and mobile
+`engine` tests.
+
 Quick table of errors hit and how they were resolved. Add a row whenever you fix something reusable.
 
 **Single-view arrows navigate while editing a prompt, or Escape leaves Single before closing a modal:**

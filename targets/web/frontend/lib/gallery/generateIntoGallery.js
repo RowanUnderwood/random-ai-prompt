@@ -16,7 +16,7 @@
 import { rewritePrompt } from "../rewrite.js";
 import { expandPromptSeeded, generatePrompt, renderWrapperPart } from "../promptEngine.js";
 import { buildRoll } from "../home/buildRoll.js";
-import { getDefaultWrapper } from "../wrapperStore.js";
+import { activeWrapper } from "../wrapperStore.js";
 import { ingestImage } from "../output.js";
 import { effectiveKey } from "../sessionKeys.js";
 import { cleanSnapshot } from "../home/snapshot.js";
@@ -79,15 +79,11 @@ export async function generateIntoGallery({
 
   // Frame each prompt with the active wrapper, then roll `promptCount` prompts (each with a forked
   // seed) — the same helper Home uses.
-  const w =
-    !settings.wrapperName || settings.wrapperName === "Default"
-      ? getDefaultWrapper()
-      : (settings.wrapper ?? getDefaultWrapper());
   let idc = 0;
   const { prompts: rolled } = buildRoll({
     settings,
     text,
-    wrapper: w,
+    wrapper: activeWrapper(settings),
     mode: flat.mode,
     deps: { renderWrapperPart, generatePrompt, nextId: () => ++idc },
   });

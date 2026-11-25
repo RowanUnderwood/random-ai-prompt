@@ -39,6 +39,17 @@ export function getDefaultWrapper() {
 }
 
 /**
+ * The wrapper that will frame the next prompt: the live Default, or the chosen preset's own text.
+ * @param {object} settings App settings (`wrapper`, `wrapperName`).
+ * @returns {{start: string, end: string}}
+ */
+export function activeWrapper(settings) {
+  return !settings.wrapperName || settings.wrapperName === "Default"
+    ? getDefaultWrapper()
+    : (settings.wrapper ?? getDefaultWrapper());
+}
+
+/**
  * Persist edits to the live Default wrapper (kept local; never overwritten unless reset).
  * @param {{start: string, end: string}} value The edited start/end.
  * @returns {void}

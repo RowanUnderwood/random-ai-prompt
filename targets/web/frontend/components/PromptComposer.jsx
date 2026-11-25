@@ -160,7 +160,14 @@ function PromptComposer({ settings, setSettings, onGenerate, compact = false }, 
   useEffect(() => {
     const roll = () => {
       try {
-        setSuggestion(expandPrompt("{#random-words}", settingsRef.current));
+        // Auto-added extras are applied when generating; baking them in here would add them twice.
+        setSuggestion(
+          expandPrompt("{#random-words}", {
+            ...settingsRef.current,
+            autoAddFx: false,
+            autoAddArtists: false,
+          }),
+        );
       } catch {
         /* engine not ready — skip this tick */
       }

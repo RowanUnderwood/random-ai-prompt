@@ -21,7 +21,7 @@ vi.mock("../../frontend/lib/promptEngine.js", () => ({
   expandPromptSeeded: vi.fn(() => ""),
 }));
 vi.mock("../../frontend/lib/wrapperStore.js", () => ({
-  getDefaultWrapper: () => ({ start: "", end: "" }),
+  activeWrapper: () => ({ start: "", end: "" }),
 }));
 
 import { generateIntoGallery } from "../../frontend/lib/gallery/generateIntoGallery.js";

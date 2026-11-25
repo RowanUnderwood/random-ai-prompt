@@ -141,13 +141,19 @@ export function expandPrompt(prompt, settings) {
 
 /**
  * Expand a prompt HONOURING the current seed settings — so a pinned roll reproduces it. Used for the
- * real negative-prompt roll (part of the generated image), not for previews.
+ * real negative-prompt roll (part of the generated image), not for previews. Auto-added effects and
+ * artists describe what the image SHOULD have, so they never apply here.
  * @param {string} prompt The prompt to expand.
  * @param {object} settings The generation settings.
  * @returns {string} The expanded prompt (deterministic when a seed is pinned).
  */
 export function expandPromptSeeded(prompt, settings) {
-  return engine.generate({ ...forEngine(settings), prompt });
+  return engine.generate({
+    ...forEngine(settings),
+    autoAddFx: false,
+    autoAddArtists: false,
+    prompt,
+  });
 }
 
 /**

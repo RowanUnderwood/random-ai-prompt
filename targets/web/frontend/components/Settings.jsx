@@ -1,14 +1,15 @@
 /**
  * The gear's settings — the **non-provider** prompt knobs only. Provider controls (URL / key /
  * sampler / size / …) live in the provider box; the provider itself is chosen in the header; the
- * prompts-per-run counter sits on the prompt box. Keyword/artist *counts* and auto-add fx/artists
- * were removed — that's better expressed in the prompt itself (DPL).
+ * prompts-per-run counter sits on the prompt box. Keyword/artist *counts* and auto-add artists were
+ * removed — that's better expressed in the prompt itself (DPL). Auto-add FX is back as a simple switch.
  * @module gui/components/Settings
  */
 import { useIntl, defineMessages } from "react-intl";
 import { Num, Text, Toggle, Select, Group } from "./Field.jsx";
 import { getListNames } from "../lib/promptEngine.js";
 import { defaultSettings } from "../lib/settings.js";
+import { activeWrapper } from "../lib/wrapperStore.js";
 import { dialog } from "../lib/dialog.js";
 import LocalServices from "./LocalServices.jsx";
 
@@ -41,6 +42,17 @@ const msgs = defineMessages({
   naturalArtistStyle: {
     id: "settings.naturalArtistStyle",
     defaultMessage: "Natural language for artists & styles",
+  },
+  autoAddFx: {
+    id: "settings.autoAddFx",
+    defaultMessage: "Auto-add FX (art styles & image effects)",
+    description: "Checkbox: append the fx block to every generated prompt",
+  },
+  autoAddFxWrapped: {
+    id: "settings.autoAddFxWrapped",
+    defaultMessage:
+      "The active wrapper already adds {token}, so effects appear either way. Edit or switch the wrapper to control them here.",
+    description: "Hint under Auto-add FX; token is the literal block reference",
   },
   groupEmphasis: { id: "settings.group.emphasis", defaultMessage: "Emphasis" },
   randEmphasize: {
@@ -84,6 +96,9 @@ const msgs = defineMessages({
 export default function Settings({ settings, setSettings }) {
   const intl = useIntl();
   const set = (patch) => setSettings({ ...settings, ...patch });
+  // Mirrors the engine, which skips its own auto-add when the prompt already contains the token.
+  const wrapper = activeWrapper(settings);
+  const wrapperAddsFx = `${wrapper.start}${wrapper.end}`.includes("{#fx}");
 
   // Source-list options: every list, plus "(fully random)" meaning fully random.
   // List names themselves are content identifiers (not UI strings) and stay as-is.
@@ -146,6 +161,16 @@ export default function Settings({ settings, setSettings }) {
           value={settings.naturalArtistStyle !== false}
           onChange={(v) => set({ naturalArtistStyle: v })}
         />
+        <Toggle
+          label={intl.formatMessage(msgs.autoAddFx)}
+          value={settings.autoAddFx}
+          onChange={(v) => set({ autoAddFx: v })}
+        />
+        {wrapperAddsFx && (
+          <p className="settings-hint">
+            {intl.formatMessage(msgs.autoAddFxWrapped, { token: "{#fx}" })}
+          </p>
+        )}
       </Group>
 
       <Group title={intl.formatMessage(msgs.groupEmphasis)}>

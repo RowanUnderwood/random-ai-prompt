@@ -1732,6 +1732,14 @@
   "settings.artistList": {
     "defaultMessage": "Artist list"
   },
+  "settings.autoAddFx": {
+    "defaultMessage": "Auto-add FX (art styles & image effects)",
+    "description": "Checkbox: append the fx block to every generated prompt"
+  },
+  "settings.autoAddFxWrapped": {
+    "defaultMessage": "The active wrapper already adds {token}, so effects appear either way. Edit or switch the wrapper to control them here.",
+    "description": "Hint under Auto-add FX; token is the literal block reference"
+  },
   "settings.deEmphasisChance": {
     "defaultMessage": "De-emphasis chance"
   },

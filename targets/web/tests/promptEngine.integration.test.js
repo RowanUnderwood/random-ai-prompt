@@ -175,6 +175,25 @@ describe("promptEngine — expandPrompt (preview) is seed-independent; expandPro
   });
 });
 
+describe("promptEngine — auto-add FX", () => {
+  const on = { ...settings, keywordEmphasis: false, keywordEditing: false, autoAddFx: true };
+  it("follows the setting on every generated prompt, without doubling an explicit {#fx}", () => {
+    // {#fx} may itself roll empty, so look across a batch of seeds.
+    const base = { ...on, prompt: "plain" };
+    const roll = (s) => Array.from({ length: 40 }, (_, seed) => generatePrompt(s, seed));
+    expect(roll(base).filter((p) => p.startsWith("plain, ")).length).toBeGreaterThan(5);
+    expect(new Set(roll({ ...base, autoAddFx: false }))).toEqual(new Set(["plain"]));
+    const explicit = { ...base, prompt: "plain, {#fx}" };
+    expect(generatePrompt(explicit, "same")).toBe(
+      generatePrompt({ ...explicit, autoAddFx: false }, "same"),
+    );
+  });
+  it("never reaches the negative prompt", () => {
+    const rolls = Array.from({ length: 40 }, () => expandPromptSeeded("blurry", on));
+    expect(new Set(rolls)).toEqual(new Set(["blurry"]));
+  });
+});
+
 describe("promptEngine — building blocks & presets", () => {
   it("returns categorized building-block groups", () => {
     const blocks = getBlocks();
