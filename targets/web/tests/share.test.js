@@ -20,6 +20,13 @@ describe("share links", () => {
     expect(url).not.toContain("sk-secret");
   });
 
+  it("neither sends nor accepts auto-fix instructions", () => {
+    const url = shareUrl({ prompt: "x", rewriteSystem: "private instructions" });
+    expect(readSharedSettings(url.slice(url.indexOf("#")))).toEqual({ prompt: "x" });
+    const crafted = `#s=${btoa(JSON.stringify({ prompt: "x", rewriteSystem: "injected" }))}`;
+    expect(readSharedSettings(crafted)).toEqual({ prompt: "x" });
+  });
+
   it("handles unicode safely", () => {
     const settings = { prompt: "café 日本語 🦊" };
     const url = shareUrl(settings);

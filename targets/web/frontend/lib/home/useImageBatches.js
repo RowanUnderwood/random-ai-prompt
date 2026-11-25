@@ -180,6 +180,7 @@ export function useImageBatches({ settings, provider, flat }) {
               providerId: settings.rewriteProvider,
               prompt: working,
               key: rkey,
+              system: settings.rewriteSystem, // the positive prompt only
             });
             if (fixed && fixed.trim()) working = fixed.trim();
           }

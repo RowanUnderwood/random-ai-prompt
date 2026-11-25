@@ -65,6 +65,8 @@ const REST_DROP = new Set([
   "autoAddFx",
   "autoAddArtists",
   "rewriteProvider",
+  "rewriteSystem",
+  "shuffleDeck",
   "wrapper",
   "wrapperName",
   "wrapperParams",

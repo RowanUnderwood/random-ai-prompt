@@ -6,11 +6,13 @@
   flex: none;
 }
 
+/* Takes a second line when the tools don't fit, rather than squashing the action buttons. */
 .prompt-tools {
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.2rem;
-  flex: none;
+  flex: 0 1 auto;
 }
 
 .field-count-label {
@@ -128,6 +130,68 @@
 .field-size-wh input:focus {
   border-color: var(--accent);
   background: var(--bg-2);
+}
+
+/* Short edge + aspect ratio (Krea): one unit inline, stacked inside the compact popover. */
+.short-edge {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 0.1rem 0.25rem;
+}
+
+.size-cog-pop .short-edge {
+  flex-wrap: wrap;
+}
+
+.short-edge .field-count input {
+  width: 3.1rem;
+  appearance: textfield;
+}
+
+.short-edge .field-count input::-webkit-outer-spin-button,
+.short-edge .field-count input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.field-size.short-edge-ratio select.field-size-select {
+  max-width: none;
+}
+
+.short-edge-ratio {
+  display: inline-flex;
+  align-items: center;
+}
+
+.short-edge-swap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.short-edge-swap:hover:not(:disabled) {
+  border-color: var(--border);
+  color: var(--fg);
+}
+
+.short-edge-swap:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.short-edge-result {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .field-size-x {

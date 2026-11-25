@@ -6,10 +6,12 @@
  * @module gui/components/Settings
  */
 import { useIntl, defineMessages } from "react-intl";
-import { Num, Text, Toggle, Select, Group } from "./Field.jsx";
-import { getListNames } from "../lib/promptEngine.js";
+import { Num, Text, TextArea, Toggle, Select, Group } from "./Field.jsx";
+import { REWRITE_SYSTEM } from "../../../shared/_shared/rewriteSystem.js";
+import { getListNames, resetDecks } from "../lib/promptEngine.js";
 import { defaultSettings } from "../lib/settings.js";
 import { activeWrapper } from "../lib/wrapperStore.js";
+import { usesDecks } from "../../../../engine/core/decks.js";
 import { dialog } from "../lib/dialog.js";
 import LocalServices from "./LocalServices.jsx";
 
@@ -83,7 +85,25 @@ const msgs = defineMessages({
   },
   noAnd: { id: "settings.noAnd", defaultMessage: "Don't combine with AND" },
   usedOnce: { id: "settings.usedOnce", defaultMessage: "List entries used once" },
-  reloadLists: { id: "settings.reloadLists", defaultMessage: "Reload lists each prompt" },
+  shuffleDeck: { id: "settings.shuffleDeck", defaultMessage: "Draw from shuffled decks" },
+  shuffleDeckHint: {
+    id: "settings.shuffleDeckHint",
+    defaultMessage:
+      "No list entry, random block or unweighted choice repeats until every option has been used. Decks carry over between batches and start over when the app does. While on, the shown seed can't reproduce a roll.",
+  },
+  shuffleDeckPaused: {
+    id: "settings.shuffleDeckPaused",
+    defaultMessage: "Paused while a seed is pinned, so that seed keeps giving the same prompt.",
+  },
+  reshuffle: { id: "settings.reshuffle", defaultMessage: "Reshuffle now" },
+  groupRewrite: { id: "settings.group.rewrite", defaultMessage: "AI rewrite" },
+  rewriteSystem: { id: "settings.rewriteSystem", defaultMessage: "Auto-fix system prompt" },
+  rewriteHint: {
+    id: "settings.rewriteHint",
+    defaultMessage:
+      "Instructions for the auto-fix wand. Applies to new prompts; negative prompts and keyword translation keep their own instructions. Blank uses the default.",
+  },
+  rewriteReset: { id: "settings.rewriteReset", defaultMessage: "Reset to default" },
 });
 
 /**
@@ -96,6 +116,7 @@ const msgs = defineMessages({
 export default function Settings({ settings, setSettings }) {
   const intl = useIntl();
   const set = (patch) => setSettings({ ...settings, ...patch });
+  const rewriteSystem = settings.rewriteSystem ?? REWRITE_SYSTEM; // null follows the built-in text
   // Mirrors the engine, which skips its own auto-add when the prompt already contains the token.
   const wrapper = activeWrapper(settings);
   const wrapperAddsFx = `${wrapper.start}${wrapper.end}`.includes("{#fx}");
@@ -261,10 +282,42 @@ export default function Settings({ settings, setSettings }) {
           onChange={(v) => set({ listEntriesUsedOnce: v })}
         />
         <Toggle
-          label={intl.formatMessage(msgs.reloadLists)}
-          value={settings.reloadListsOnPromptChange}
-          onChange={(v) => set({ reloadListsOnPromptChange: v })}
+          label={intl.formatMessage(msgs.shuffleDeck)}
+          value={settings.shuffleDeck}
+          onChange={(v) => set({ shuffleDeck: v })}
         />
+        {settings.shuffleDeck && (
+          <>
+            <button type="button" className="ghost" onClick={() => resetDecks()}>
+              {intl.formatMessage(msgs.reshuffle)}
+            </button>
+            <p className="settings-hint">
+              {intl.formatMessage(
+                usesDecks(settings) ? msgs.shuffleDeckHint : msgs.shuffleDeckPaused,
+              )}
+            </p>
+          </>
+        )}
+      </Group>
+
+      <Group title={intl.formatMessage(msgs.groupRewrite)}>
+        <div className="settings-wide">
+          <TextArea
+            label={intl.formatMessage(msgs.rewriteSystem)}
+            rows={8}
+            value={rewriteSystem}
+            onChange={(v) => set({ rewriteSystem: v === REWRITE_SYSTEM ? null : v })}
+          />
+        </div>
+        <button
+          type="button"
+          className="ghost"
+          disabled={rewriteSystem === REWRITE_SYSTEM}
+          onClick={() => set({ rewriteSystem: null })}
+        >
+          {intl.formatMessage(msgs.rewriteReset)}
+        </button>
+        <p className="settings-hint">{intl.formatMessage(msgs.rewriteHint)}</p>
       </Group>
     </div>
   );

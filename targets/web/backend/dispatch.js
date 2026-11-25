@@ -191,13 +191,14 @@ export const rewriteAdapters = {
 /**
  * Dispatch a prompt-rewrite request to the chosen text provider.
  * @param {object} req `{ providerId, prompt, key, mode }`. `mode` = `"keyword"` for the tag-list
- *   rewrite, anything else (default) for the prose auto-fix.
+ *   rewrite, anything else (default) for the prose auto-fix. `system` = the user's own instructions
+ *   for that auto-fix.
  * @returns {Promise<{text: string}>}
  * @throws {Error} If the provider can't rewrite or the key is missing.
  */
-export async function dispatchRewrite({ providerId, prompt, key, mode }) {
+export async function dispatchRewrite({ providerId, prompt, key, mode, system }) {
   const adapter = rewriteAdapters[providerId];
   if (!adapter) throw new Error(`"${providerId}" can't rewrite prompts.`);
   if (!key && providerId !== "ninfer") throw new Error("Missing API key for the rewrite provider.");
-  return adapter({ prompt, key, system: systemFor(mode) });
+  return adapter({ prompt, key, system: systemFor(mode, system) });
 }

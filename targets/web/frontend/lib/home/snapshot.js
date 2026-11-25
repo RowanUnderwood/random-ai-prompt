@@ -8,7 +8,7 @@
 // (e.g. an OpenAI image shouldn't carry another provider's sampler/steps from `providerParams`).
 const SNAPSHOT_DROP = new Set([
   "keys", "providerParams", "prompt", "promptCount", "locale", "includeAdult", "autoFix",
-  "autoKeyword", "autoAddFx", "autoAddArtists", "rewriteProvider", "wrapper", "wrapperName",
+  "autoKeyword", "autoAddFx", "autoAddArtists", "rewriteProvider", "rewriteSystem", "shuffleDeck", "wrapper", "wrapperName",
   "wrapperParams", "useAutoSections", "provider",
 ]);
 

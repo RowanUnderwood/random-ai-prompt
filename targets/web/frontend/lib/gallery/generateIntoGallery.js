@@ -29,10 +29,10 @@ const uid = () => `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 
 // Run the shared prose fix → keyword-translate passes over one string (best-effort; a failed pass
 // falls back to the input). `run` is the (limited) runner so a big run doesn't stampede the API.
-async function rewriteBoth({ providerId, text, key, useFix, useKeyword, run }) {
+async function rewriteBoth({ providerId, text, key, useFix, useKeyword, run, system }) {
   let working = text;
   if (useFix) {
-    const fixed = await run(() => rewritePrompt({ providerId, prompt: working, key }));
+    const fixed = await run(() => rewritePrompt({ providerId, prompt: working, key, system }));
     if (fixed && fixed.trim()) working = fixed.trim();
   }
   if (useKeyword) {
@@ -128,6 +128,7 @@ export async function generateIntoGallery({
             useFix,
             useKeyword,
             run: runRewrite,
+            system: settings.rewriteSystem, // the positive prompt only
           });
           if (working !== p.text) {
             promptRoll = p.text;

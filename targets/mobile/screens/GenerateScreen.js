@@ -26,7 +26,8 @@ import {
   SparkleIcon,
   GridIcon,
 } from "../lib/icons.js";
-import { run, baseSettings, expandOnce, getListNames } from "../lib/engine.js";
+import { run, baseSettings, expandOnce, getListNames, resetDecks } from "../lib/engine.js";
+import { REWRITE_SYSTEM } from "shared/_shared/rewriteSystem.js";
 import { getDplCompletions } from "../lib/blockCatalog.js";
 import { getImageProvider, getTextProvider, providerDefaults, systemFor } from "../lib/imageProviders.js";
 import { sizeFromSettings } from "../lib/single.js";
@@ -440,7 +441,7 @@ export default function GenerateScreen({ onGenerated, onOpenImage }) {
             setGenMsg(`Rewriting prompt ${i + 1} of ${rolled.length}…`);
             let t = rolled[i];
             const rs = { backendUrl };
-            if (autoFix) t = (await rprov.rewrite({ prompt: t, key: rkey, system: systemFor("fix"), mode: "fix", settings: rs })).text || t;
+            if (autoFix) t = (await rprov.rewrite({ prompt: t, key: rkey, system: systemFor("fix", getS("rewriteSystem")), mode: "fix", settings: rs })).text || t;
             if (autoKeyword) t = (await rprov.rewrite({ prompt: t, key: rkey, system: systemFor("keyword"), mode: "keyword", settings: rs })).text || t;
             out.push(t);
           }
@@ -1004,7 +1005,25 @@ export default function GenerateScreen({ onGenerated, onOpenImage }) {
                 numRow("Salt start (-1 = random)", "promptSaltStart"),
                 toggleRow("Don't combine with AND", "noAnd"),
                 toggleRow("List entries used once", "listEntriesUsedOnce"),
-                toggleRow("Reload lists each prompt", "reloadListsOnPromptChange"),
+                toggleRow("Draw from shuffled decks", "shuffleDeck"),
+                getS("shuffleDeck") && (
+                  <TouchableOpacity accessibilityRole="button" key="reshuffle" style={styles.resetBtn} onPress={() => resetDecks()}>
+                    <Text style={styles.resetText}>Reshuffle now</Text>
+                  </TouchableOpacity>
+                ),
+              ])}
+              {grp("AI rewrite", [
+                <TextInput
+                  key="rewriteSystem"
+                  accessibilityLabel="Auto-fix system prompt"
+                  style={styles.wrapInput}
+                  value={getS("rewriteSystem") ?? REWRITE_SYSTEM}
+                  onChangeText={(v) => setS("rewriteSystem", v === REWRITE_SYSTEM ? null : v)}
+                  multiline
+                />,
+                <TouchableOpacity accessibilityRole="button" key="rewriteReset" style={styles.resetBtn} onPress={() => setS("rewriteSystem", null)}>
+                  <Text style={styles.resetText}>Reset rewrite prompt</Text>
+                </TouchableOpacity>,
               ])}
             </ScrollView>
           </View>

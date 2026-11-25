@@ -228,7 +228,7 @@ export const TEXT_PROVIDERS = rewriteProviders().map((p) =>
         const fn = await p.loadRewrite();
         return fn({ prompt, key, system, mode, signal });
       }
-      return callRewriteProxy({ providerId: p.id, prompt, key, mode, signal });
+      return callRewriteProxy({ providerId: p.id, prompt, key, mode, system, signal });
     },
   }),
 );

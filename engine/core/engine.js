@@ -21,7 +21,8 @@
 // loader, so there is no duplicated prompt logic.
 import baseSettings from "../settings.js";
 import { createRng } from "./rng.js";
-import { withAmbientRng } from "../helpers/random.js";
+import { createDecks, usesDecks } from "./decks.js";
+import { withAmbientDecks, withAmbientRng } from "../helpers/random.js";
 import promptSalt from "./stages/prompt-salt.js";
 import cleanup from "./stages/cleanup.js";
 import { makeBlockStage } from "./stages/block.js";
@@ -40,13 +41,15 @@ const DEFAULT_ORDER = ["block", "prompt-salt", "list", "emphasis", "cleanup"];
  * Create a framework-agnostic prompt engine that runs the same pipeline as the CLI.
  * @param {object} loader Data-access loader (Node fs or browser glob):
  *   `readListLines`, `listNames`, `loadBlock`.
- * @returns {{expand: Function, generate: Function, generateMany: Function}} The engine API.
+ * @returns {{expand: Function, generate: Function, generateMany: Function, resetDecks: Function}}
+ *   The engine API.
  */
 export function createEngine(loader) {
   let activeSettings = {};
   let sdContent = false;
   loader = modelContentLoader(loader, () => activeSettings);
   const store = createListStore(loader);
+  const decks = createDecks(); // shared by every prompt this engine rolls, until reset or app restart
 
   const stages = {
     block: makeBlockStage(loader),
@@ -96,7 +99,9 @@ export function createEngine(loader) {
     const run = () => {
       store.reset();
       const settings = { ...baseSettings, ...userSettings };
-      return expand(settings.prompt ?? "{#random-words}", settings, {}, {});
+      return withAmbientDecks(usesDecks(settings) ? decks.session() : null, () =>
+        expand(settings.prompt ?? "{#random-words}", settings, {}, {}),
+      );
     };
     return rng ? withAmbientRng(rng, run) : run();
   }
@@ -158,5 +163,13 @@ export function createEngine(loader) {
     return out;
   }
 
-  return { expand, generate, generateWithSeed, generateMany, generateManyAsync };
+  return {
+    expand,
+    generate,
+    generateWithSeed,
+    generateMany,
+    generateManyAsync,
+    /** Start every shuffled deck over. */
+    resetDecks: decks.reset,
+  };
 }

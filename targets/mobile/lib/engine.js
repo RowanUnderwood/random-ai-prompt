@@ -9,7 +9,9 @@ import baseSettings from "engine/settings.js";
 import { modelContentLoader } from "engine/modelContent.js";
 
 export const loader = metroLoader;
-export const run = createPromptRun(createEngine(metroLoader));
+const engine = createEngine(metroLoader);
+export const run = createPromptRun(engine);
+export const resetDecks = engine.resetDecks;
 export { baseSettings };
 
 /** Word-list names for the gear's Vocabulary selects (mirrors the web getListNames()). */
@@ -37,6 +39,7 @@ export function expandOnce(dpl, extra = {}) {
       // After `extra`: callers pass their full settings, which would otherwise turn these back on.
       autoAddFx: false,
       autoAddArtists: false,
+      shuffleDeck: false,
       prompt: dpl,
       promptCount: 1,
       randomSeed: true,

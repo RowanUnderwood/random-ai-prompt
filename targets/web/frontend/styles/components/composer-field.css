@@ -86,6 +86,7 @@
 
 /* Round icon actions: Save / Share / Random (subtle) + Generate (primary green) */
 .field-act {
+  flex: none;
   width: 34px;
   height: 34px;
   padding: 0;

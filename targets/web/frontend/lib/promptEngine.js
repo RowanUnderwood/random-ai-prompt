@@ -121,6 +121,9 @@ export function generatePrompt(settings, explicitSeed) {
 export function generatePrompts(settings) {
   return engine.generateMany(forEngine(settings));
 }
+/** Start every shuffled deck over (the settings' "Reshuffle now"). */
+export const resetDecks = () => engine.resetDecks();
+
 /**
  * Expand a prompt for an on-screen PREVIEW / illustrative example — the live-preview eye, the
  * building-block hover examples, the editor/insert-bar examples, and the cycling suggestion. These
@@ -136,7 +139,11 @@ export function generatePrompts(settings) {
  * @returns {string} A fresh, randomly-rolled expansion.
  */
 export function expandPrompt(prompt, settings) {
-  return engine.generate({ ...forEngine({ ...settings, randomSeed: true }), prompt });
+  return engine.generate({
+    ...forEngine({ ...settings, randomSeed: true }),
+    shuffleDeck: false, // an example must not use up cards meant for real prompts
+    prompt,
+  });
 }
 
 /**
@@ -152,6 +159,7 @@ export function expandPromptSeeded(prompt, settings) {
     ...forEngine(settings),
     autoAddFx: false,
     autoAddArtists: false,
+    shuffleDeck: false,
     prompt,
   });
 }

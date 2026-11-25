@@ -19,6 +19,7 @@ import { getProvider } from "../lib/providers/index.js";
 import { useProviderSettings } from "../lib/useProvider.js";
 import { useCompact } from "../lib/useCompact.js";
 import { GearIcon } from "./icons.jsx";
+import ShortEdgeSize from "./ShortEdgeSize.jsx";
 
 const msgs = defineMessages({
   imagesTitle: { id: "inlineImg.imagesTitle", defaultMessage: "Images generated per prompt" },
@@ -100,8 +101,31 @@ export default function InlineImageControls({ settings, setSettings }) {
     </label>
   );
 
-  // The Size control — a Size/Ratio select, a text field, or the Width × Height pair.
-  const sizeEl = sizeField ? (
+  const workflow = params.comfyWorkflow ?? defaults.comfyWorkflow;
+  const useShortEdge =
+    !!schema.shortEdgeSize && schema.shortEdgeSize.workflow === workflow && width && height;
+
+  // The Size control — short edge + ratio for a workflow that asks for it, else a Size/Ratio select, a text field, or the Width × Height pair.
+  const sizeEl = useShortEdge ? (
+    <ShortEdgeSize
+      width={Number(params.imageWidth) || defaults.imageWidth}
+      height={Number(params.imageHeight) || defaults.imageHeight}
+      min={width.min}
+      onChange={(size) =>
+        setSettings((s) => ({
+          ...s,
+          providerParams: {
+            ...s.providerParams,
+            [pid]: {
+              ...s.providerParams?.[pid],
+              imageWidth: size.width,
+              imageHeight: size.height,
+            },
+          },
+        }))
+      }
+    />
+  ) : sizeField ? (
     <label className="field-count field-size" title={sizeField.label}>
       <span className="field-count-label">{sizeLabel}</span>
       {sizeField.type === "select" ? (

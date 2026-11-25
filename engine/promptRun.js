@@ -107,7 +107,11 @@ export function createPromptRun(engine, { setActiveSettings } = {}) {
      */
     expandPrompt(prompt, settings) {
       apply(settings);
-      return engine.generate({ ...forEngine({ ...settings, randomSeed: true }), prompt });
+      return engine.generate({
+        ...forEngine({ ...settings, randomSeed: true }),
+        shuffleDeck: false, // an example must not use up cards meant for real prompts
+        prompt,
+      });
     },
 
     /**
@@ -124,6 +128,7 @@ export function createPromptRun(engine, { setActiveSettings } = {}) {
         ...forEngine(settings),
         autoAddFx: false,
         autoAddArtists: false,
+        shuffleDeck: false,
         prompt,
       });
     },

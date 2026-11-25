@@ -35,6 +35,7 @@ export const APP_DEFAULTS = {
   rewriteProvider: "none",
   autoFix: false,
   autoKeyword: false,
+  rewriteSystem: null,
 
   // Image params (read by the provider adapters).
   sampler: "Euler",

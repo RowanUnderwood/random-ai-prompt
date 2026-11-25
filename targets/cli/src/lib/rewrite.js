@@ -15,15 +15,16 @@ import { systemFor } from "../../../shared/_shared/rewriteSystem.js";
  * @param {string} args.prompt The prompt to rewrite.
  * @param {string} args.key The provider's API key.
  * @param {string} [args.mode] `"keyword"` for the tag-list rewrite; omit for the prose clean-up.
+ * @param {string|null} [args.system] Custom instructions for the prose clean-up (blank = built-in).
  * @returns {Promise<string>} The rewritten prompt (or the original on empty result).
  * @throws {Error} On a failed rewrite.
  */
-export async function rewritePrompt({ providerId, prompt, key, mode }) {
+export async function rewritePrompt({ providerId, prompt, key, mode, system }) {
   const provider = await getProvider(providerId);
 
   if (provider?.transport === "browser-direct" && provider.loadRewrite) {
     const rewrite = await provider.loadRewrite();
-    const { text } = await rewrite({ prompt, key, system: systemFor(mode) });
+    const { text } = await rewrite({ prompt, key, system: systemFor(mode, system) });
     return text || "";
   }
 
@@ -31,7 +32,7 @@ export async function rewritePrompt({ providerId, prompt, key, mode }) {
   const res = await fetch("/api/rewrite", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ providerId, prompt, key, mode }),
+    body: JSON.stringify({ providerId, prompt, key, mode, system }),
   });
   const d = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(d.error || `Rewrite proxy returned ${res.status}`);

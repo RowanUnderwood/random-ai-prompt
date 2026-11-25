@@ -24,6 +24,7 @@ jest.mock("../../lib/engine.js", () => ({
   },
   baseSettings: { prompt: "{#random-words}" },
   expandOnce: jest.fn(() => "a live preview line"),
+  resetDecks: jest.fn(),
   getListNames: jest.fn(() => []),
 }));
 jest.mock("../../lib/blockCatalog.js", () => ({ getDplCompletions: jest.fn(() => []) }));
@@ -99,6 +100,36 @@ describe("GenerateScreen (mounted)", () => {
         expect.objectContaining({ autoAddFx: on }),
       );
     }
+  });
+
+  it("edits and resets the rewrite prompt, and reshuffles decks", async () => {
+    const { getByLabelText, findByText, getByText, queryByText, UNSAFE_getAllByType } =
+      await setup();
+    fireEvent.press(getByLabelText("Prompt settings"));
+    await findByText("AI rewrite");
+    const box = () => getByLabelText("Auto-fix system prompt");
+    const original = box().props.value;
+    expect(original).toMatch(/^You are a prompt engineer/);
+    fireEvent.changeText(box(), "Mine");
+    expect(box().props.value).toBe("Mine");
+    fireEvent.press(getByText("Reset rewrite prompt"));
+    expect(box().props.value).toBe(original);
+
+    expect(queryByText("Reload lists each prompt")).toBeNull();
+    expect(queryByText("Reshuffle now")).toBeNull();
+    const row = getByText("Draw from shuffled decks").parent.parent;
+    const toggle = UNSAFE_getAllByType(Switch).find((s) => {
+      for (let node = s.parent; node; node = node.parent) if (node === row) return true;
+      return false;
+    });
+    fireEvent(toggle, "valueChange", true);
+    fireEvent.press(getByText("Reshuffle now"));
+    expect(engine.resetDecks).toHaveBeenCalledTimes(1);
+    fireEvent.press(getByLabelText("Generate prompts"));
+    await act(async () => {});
+    expect(engine.run.generatePrompts).toHaveBeenLastCalledWith(
+      expect.objectContaining({ shuffleDeck: true, rewriteSystem: null }),
+    );
   });
 
   it("live preview renders a re-rolled example", async () => {

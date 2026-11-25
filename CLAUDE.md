@@ -84,7 +84,15 @@ from prompt dialect. See [Krea content](notes/systems/krea2-content.md) for sour
   keyword, expansion, and Manage AI actions. The shared instructions are in
   `targets/shared/_shared/rewriteSystem.js`. Auto-fix cleans up the expanded prompt; keyword
   translation explicitly produces tags. If both are enabled, keyword translation runs last.
-  There is currently no Krea-specific descriptive rewrite mode.
+  The auto-fix system prompt is user-editable (`settings.rewriteSystem`; null/blank = built-in). It
+  applies to `fix` mode and positive prompts only, and is kept out of share links and sidecars.
+- **Krea size:** `targets/shared/comfy-local/sizes.js` + `ShortEdgeSize.jsx` edit a short edge and
+  ratio while the Krea workflow is active. `imageWidth`/`imageHeight` stay the only stored size;
+  never add a second source of truth.
+- **Shuffled decks:** `engine/core/decks.js` (`settings.shuffleDeck`) deals lists, block groups and
+  unweighted choices without repeats until the app restarts. Pick among options with `pickOption`
+  (`engine/helpers/random.js`). Only real rolls draw: previews, suggestions and negatives must force
+  it off, and a pinned seed pauses it. With decks off, random draws must not change.
 - **Image batches:** `targets/web/backend/localGpuPool.js` shares one worker per endpoint across
   Home and Gallery. Batches, including multiple images for one prompt, are divided between
   enabled ready GPUs rather than duplicated. Faster workers take the next waiting image.

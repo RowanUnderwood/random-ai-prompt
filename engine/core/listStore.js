@@ -3,7 +3,7 @@
  * @brief Browser-safe list store: once-only depletion and alias resolution behind the injected loader.
  */
 
-import { randomInt, sample } from "../helpers/random.js";
+import { ambientDecks, pickOption, randomInt } from "../helpers/random.js";
 import { keywordAlias, artistAlias } from "../helpers/aliases.js";
 import { isGatedList } from "../gatedLists.js";
 
@@ -43,13 +43,15 @@ export function createListStore(loader) {
     if (name == artistAlias && String(settings.artistFilename) != "false")
       return settings.artistFilename;
     if (name == keywordAlias && String(settings.keywordsFilename) == "false")
-      return sample(
+      return pickOption(
+        "lists:keyword",
         loader
           .listNames()
           .filter((n) => !isArtistName(settings, n) && (settings.includeAdult || !isGatedList(n))),
       );
     if (name == artistAlias && String(settings.artistFilename) == "false")
-      return sample(
+      return pickOption(
+        "lists:artist",
         loader
           .listNames()
           .filter((n) => isArtistName(settings, n) && (settings.includeAdult || !isGatedList(n))),
@@ -65,7 +67,8 @@ export function createListStore(loader) {
   }
 
   /**
-   * Pull a random entry from list `name` (alias-resolved), with once-only depletion.
+   * Pull a random entry from list `name` (alias-resolved), with once-only depletion — or from the
+   * list's shuffled deck, which outlives the prompt and so replaces that depletion.
    * @param {object} settings The merged settings.
    * @param {string} name The list name or alias.
    * @returns {string} A random entry, or "".
@@ -76,6 +79,12 @@ export function createListStore(loader) {
 
     if (isArtistName(settings, name) && !settings.includeArtist) return "";
     if (isGatedList(name) && !settings.includeAdult) return "";
+
+    const decks = ambientDecks();
+    if (decks) {
+      const lines = loader.readListLines(name, settings.includeAdult);
+      return lines?.length ? decks.draw(`list:${name}`, lines) : "";
+    }
 
     const target = ensureLoaded(settings, name);
     let list = target[name];

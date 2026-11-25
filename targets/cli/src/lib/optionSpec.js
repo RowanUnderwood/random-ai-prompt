@@ -239,6 +239,14 @@ export const ENGINE_FLAGS = [
     desc: "A list entry appears at most once",
   },
   {
+    flag: "--shuffle-deck <bool>",
+    opt: "shuffleDeck",
+    key: "shuffleDeck",
+    type: "bool",
+    group: "Prompt engine",
+    desc: "No repeats until every option is used (within one command)",
+  },
+  {
     flag: "--prompt-modules <csv>",
     opt: "promptModules",
     key: "promptModules",
@@ -374,6 +382,14 @@ export const REWRITE_FLAGS = [
     type: "bool",
     group: "Auto-fix",
     desc: "Prose clean-up rewrite before image gen",
+  },
+  {
+    flag: "--rewrite-system <text>",
+    opt: "rewriteSystem",
+    key: "rewriteSystem",
+    type: "string",
+    group: "Auto-fix",
+    desc: "Custom auto-fix instructions (blank = built-in)",
   },
   {
     flag: "--auto-keyword <bool>",

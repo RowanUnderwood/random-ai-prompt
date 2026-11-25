@@ -61,6 +61,9 @@ reproducible stream; unseeded runs fall back to `Math.random` unchanged. `genera
 async-capable batch boundary (yields between prompts); the per-prompt render stays synchronous by
 design (it also drives the instant live preview). Full detail: [rng-design.md](../reference/rng-design.md).
 
+Shuffled decks (`decks.js`) optionally replace random selection; see
+[rng-design](../reference/rng-design.md).
+
 ## Status
 
 Model-specific visibility lives in `engine/modelContent.js`. The engine binds a filtered loader

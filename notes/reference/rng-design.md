@@ -47,6 +47,23 @@ DPL renderer's `weightedSampleN`.
 `settings.seed` flows through the GUI facade (`targets/web/frontend/lib/promptEngine.js`) automatically because it
 spreads `settings`, so a seed field in the UI is a thin follow-up — the engine already honors it.
 
+## Shuffled decks
+
+`settings.shuffleDeck` swaps random selection for dealing without replacement. `core/decks.js` keeps one
+deck per list, block group, `{#any}` variant, fully-random list choice, and unweighted `one of` / `N of`
+(keyed by its options, so identical choices share a deck). The engine owns them, so they last across
+prompts and batches until `resetDecks()` or a restart. A per-prompt session is installed on an ambient slot
+like the generator; `pickOption(key, options)` uses it, or makes exactly the previous draw.
+
+- Deck draws depend on history, so a seed cannot reproduce them. `usesDecks` pauses them while a seed is
+  pinned.
+- `expandPrompt` and `expandPromptSeeded` force decks off: previews refresh every second and would drain them.
+- A reshuffle never starts with the last card, and puts cards already in the current prompt last.
+- Options are deduplicated. Content, NSFW or model changes are reconciled without forgetting what was dealt.
+- Chance gates, repeat counts, weighted choices and JavaScript blocks' internal picks stay random.
+- Decks replace `listEntriesUsedOnce` while on. They copy less, so they are faster than plain draws
+  (1,000 rolls: 160 vs 420 ms first run; 37k-line list 14 vs 96 ms).
+
 ## Rules
 
 - **Never** use lodash `_.random` / `_.sample` / `_.shuffle` (or a bare `Math.random`) in engine code

@@ -152,6 +152,12 @@ export default {
   /*--list-entries-once <true/false>*/
   listEntriesUsedOnce: true,
 
+  // Draw list entries, block-group members and unweighted choices from shuffled decks: nothing
+  // repeats until every option has come up once. Decks last until the app restarts, replace
+  // listEntriesUsedOnce while on, and pause while a prompt seed is pinned.
+  /*--shuffle-deck <true/false>*/
+  shuffleDeck: false,
+
   // Path to the artists file (Each artist on a seperate line)
   // If false, then don't use an artist file, have it be completely random (excluding keyword dictionaries)
   /*--artist-filename <name>*/

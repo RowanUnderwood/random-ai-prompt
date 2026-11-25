@@ -4,6 +4,8 @@ import { createServiceManager } from "../targets/web/backend/localServices.js";
 import { createGpuQueue, generateLocalBatch } from "../targets/web/backend/localGpuPool.js";
 import generateComfy from "../targets/shared/comfyui/code/generate.js";
 import ninferRewrite from "../targets/shared/ninfer/code/rewrite.js";
+import { dispatchRewrite } from "../targets/web/backend/dispatch.js";
+import { systemFor } from "../targets/shared/_shared/rewriteSystem.js";
 
 afterEach(() => vi.unstubAllGlobals());
 const deferred = () => {
@@ -225,6 +227,20 @@ describe("Krea workflow and Qwen", () => {
         },
       }),
     ).rejects.toThrow("out of memory");
+  });
+  it("gives Qwen custom auto-fix instructions, but keeps the built-in ones for other modes", async () => {
+    const fetch = vi.fn(async () => ({
+      ok: true,
+      json: async () => ({ choices: [{ message: { content: "ok" } }] }),
+    }));
+    vi.stubGlobal("fetch", fetch);
+    const sent = async (args) => {
+      await dispatchRewrite({ providerId: "ninfer", prompt: "fox", ...args });
+      return JSON.parse(fetch.mock.lastCall[1].body).messages[0].content;
+    };
+    expect(await sent({ system: "Mine" })).toBe("Mine");
+    expect(await sent({ system: " " })).toBe(systemFor("fix"));
+    expect(await sent({ system: "Mine", mode: "keyword" })).toBe(systemFor("keyword"));
   });
   it("calls Qwen without an API key and excludes reasoning from the returned prompt", async () => {
     const fetch = vi.fn(async () => ({

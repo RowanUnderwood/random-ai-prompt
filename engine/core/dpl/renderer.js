@@ -7,6 +7,7 @@
 
 import { condPasses, scaleCount, applyIntensityMod, clampIntensity } from "./intensity.js";
 import { intensityWord, focusWord } from "./words.js";
+import { ambientDecks } from "../../helpers/random.js";
 
 const AUTO_WEIGHT_START = 1000; // first auto-assigned line weight; +1 per following line
 
@@ -125,7 +126,11 @@ function renderChoice(node, ctx) {
   const lo = Math.min(scaleCount(node.choice.min, ctx.intensity), hi);
   const count = ctx.rng.int(lo, hi);
   if (count <= 0) return "";
-  const picked = weightedSampleN(opts, count, ctx.rng);
+  const decks = ambientDecks();
+  const picked =
+    decks && opts.every((o) => o.gate == null)
+      ? dealN(node, opts, count, decks)
+      : weightedSampleN(opts, count, ctx.rng);
   return picked
     .map((o) => renderNode(o, ctx))
     .filter(Boolean)
@@ -235,6 +240,22 @@ function renderRef(ref, _weight, ctx) {
 /** A node's explicit weight, or null (used for refs that carry a weight). */
 function weightOf(node) {
   return node.weight ?? null;
+}
+
+const choiceKeys = new WeakMap();
+
+/**
+ * Deal `n` distinct options from the choice's deck. The deck is named by the options themselves, so it
+ * survives a template being recompiled; only unweighted choices use one, since dealing every option
+ * once would flatten authored weights.
+ */
+function dealN(node, opts, n, decks) {
+  if (!choiceKeys.has(node)) choiceKeys.set(node, `choice:${JSON.stringify(opts)}`);
+  const key = choiceKeys.get(node);
+  const indexes = opts.map((_o, i) => i);
+  const taken = new Set();
+  while (taken.size < n) taken.add(decks.draw(key, indexes, taken));
+  return [...taken].map((i) => opts[i]);
 }
 
 /**

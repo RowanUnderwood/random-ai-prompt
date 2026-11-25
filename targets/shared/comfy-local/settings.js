@@ -15,6 +15,8 @@ export default {
     sampler: "euler",
     scheduler: "simple",
   },
+  // While this workflow is active, size is edited as a short edge + aspect ratio (see sizes.js).
+  shortEdgeSize: { workflow: "krea2" },
   fields: [
     { key: "use3090", label: "Use RTX 3090 (8190)", type: "checkbox" },
     { key: "use4090", label: "Use RTX 4090 (8191)", type: "checkbox" },

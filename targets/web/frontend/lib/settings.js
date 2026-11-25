@@ -93,6 +93,7 @@ export const defaultSettings = {
   // List behaviour
   listEntriesUsedOnce: true,
   reloadListsOnPromptChange: true,
+  shuffleDeck: false,
 
   // Generation / providers. Default to Plain text: it needs no machine, key, or network — it just
   // copies a plain-text prompt — so it's the one provider that works for everyone out of the box
@@ -111,6 +112,8 @@ export const defaultSettings = {
   rewriteProvider: "none",
   autoFix: false,
   autoKeyword: false,
+  // Custom auto-fix instructions; null follows the built-in ones (shared/_shared/rewriteSystem.js).
+  rewriteSystem: null,
 
   // Image params
   sampler: "Euler",

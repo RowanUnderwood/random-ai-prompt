@@ -77,6 +77,44 @@ export function sample(arr) {
   return arr[Math.floor(randomFloat() * arr.length)];
 }
 
+// The current prompt's deck session, on a process-global slot for the same reason as the generator.
+const DECKS_KEY = Symbol.for("rap.ambientDecks");
+
+/**
+ * Install a deck session for the duration of `fn` (null → no decks). Nestable.
+ * @param {object|null} session A `createDecks().session()` (see core/decks.js).
+ * @param {() => T} fn The work to run.
+ * @returns {T} Whatever `fn` returns.
+ * @template T
+ */
+export function withAmbientDecks(session, fn) {
+  const prev = globalThis[DECKS_KEY] ?? null;
+  globalThis[DECKS_KEY] = session;
+  try {
+    return fn();
+  } finally {
+    globalThis[DECKS_KEY] = prev;
+  }
+}
+
+/** @returns {object|null} The current prompt's deck session, when shuffled decks are on. */
+export function ambientDecks() {
+  return globalThis[DECKS_KEY] ?? null;
+}
+
+/**
+ * Pick one of `options`: from the deck called `key` when decks are on, else uniformly at random
+ * (exactly the draw {@link sample} makes).
+ * @param {string} key The deck's name.
+ * @param {Array<T>} options A non-empty array.
+ * @returns {T} The picked option.
+ * @template T
+ */
+export function pickOption(key, options) {
+  const decks = ambientDecks();
+  return decks ? decks.draw(key, options) : sample(options);
+}
+
 /** A new array with `arr`'s elements in uniformly random order (Fisher–Yates). */
 export function shuffle(arr) {
   const out = [...arr];

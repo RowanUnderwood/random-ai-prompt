@@ -13,7 +13,9 @@ vi.mock("../../frontend/lib/providers/index.js", () => ({
     ({
       direct: {
         transport: "browser-direct",
-        loadRewrite: async () => async ({ prompt }) => ({ text: `DIRECT:${prompt}` }),
+        loadRewrite: async () => async ({ prompt, system }) => ({
+          text: system === "Mine" ? `CUSTOM:${prompt}` : `DIRECT:${prompt}`,
+        }),
       },
       proxy: { transport: "hosted-proxy" },
     })[id],
@@ -25,6 +27,23 @@ describe("rewritePrompt — browser-direct", () => {
   it("calls the provider's own adapter (no proxy)", async () => {
     const out = await rewritePrompt({ providerId: "direct", prompt: "a fox", key: "k", mode: "fix" });
     expect(out).toBe("DIRECT:a fox");
+  });
+});
+
+describe("rewritePrompt — custom instructions", () => {
+  it("reach a direct provider and the proxy, but never other modes", async () => {
+    const direct = { providerId: "direct", prompt: "a fox", key: "k", system: "Mine" };
+    expect(await rewritePrompt(direct)).toBe("CUSTOM:a fox");
+    expect(await rewritePrompt({ ...direct, mode: "keyword" })).toBe("DIRECT:a fox");
+    let body;
+    server.use(
+      http.post("/api/rewrite", async ({ request }) => {
+        body = await request.json();
+        return HttpResponse.json({ text: "ok" });
+      }),
+    );
+    await rewritePrompt({ ...direct, providerId: "proxy" });
+    expect(body).toMatchObject({ system: "Mine", prompt: "a fox" });
   });
 });
 

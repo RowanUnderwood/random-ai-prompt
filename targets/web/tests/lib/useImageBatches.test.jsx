@@ -13,11 +13,15 @@ vi.mock("../../frontend/lib/output.js", () => ({
   deleteImageFile: vi.fn(),
 }));
 vi.mock("../../frontend/lib/rewrite.js", () => ({ rewritePrompt: vi.fn() }));
-vi.mock("../../frontend/lib/promptEngine.js", () => ({ expandPrompt: vi.fn(() => "") }));
+vi.mock("../../frontend/lib/promptEngine.js", () => ({
+  expandPrompt: vi.fn(() => ""),
+  expandPromptSeeded: vi.fn((prompt) => prompt),
+}));
 vi.mock("../../frontend/lib/sessionKeys.js", () => ({ effectiveKey: vi.fn(() => "key") }));
 
 import { useImageBatches, createLimiter } from "../../frontend/lib/home/useImageBatches.js";
 import { ingestImage, isOutputFile, deleteImageFile } from "../../frontend/lib/output.js";
+import { rewritePrompt } from "../../frontend/lib/rewrite.js";
 import { dialog } from "../../frontend/lib/dialog.js";
 
 const wrapper = ({ children }) => (
@@ -56,6 +60,38 @@ describe("useImageBatches.makeBatch", () => {
     expect(ingestImage).toHaveBeenCalledTimes(1);
     expect(result.current.prompts[0].batches[0].images).toEqual([
       { path: "/api/output/x.png", file: "x.png" },
+    ]);
+  });
+});
+
+describe("useImageBatches — custom auto-fix instructions", () => {
+  it("apply to the positive prompt and never the negative", async () => {
+    rewritePrompt.mockImplementation(async ({ prompt }) => `${prompt}!`);
+    const custom = {
+      rewriteProvider: "ninfer",
+      autoFix: true,
+      autoKeyword: true,
+      rewriteSystem: "Mine",
+    };
+    const { result } = renderHook(
+      () =>
+        useImageBatches({
+          settings: custom,
+          provider: makeProvider(),
+          flat: { ...flat, negativePrompt: "blurry" },
+        }),
+      { wrapper },
+    );
+    act(() => result.current.setPrompts([{ id: 1, text: "a fox", dpl: "d", batches: [] }]));
+    await act(async () => {
+      await result.current.makeBatch(1, "a fox", "d");
+    });
+    await waitFor(() => expect(result.current.prompts[0].batches[0]?.busy).toBe(false));
+    expect(rewritePrompt.mock.calls.map(([a]) => [a.prompt, a.mode, a.system])).toEqual([
+      ["a fox", undefined, "Mine"],
+      ["a fox!", "keyword", undefined],
+      ["blurry", undefined, undefined],
+      ["blurry!", "keyword", undefined],
     ]);
   });
 });

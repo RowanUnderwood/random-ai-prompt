@@ -40,9 +40,10 @@ export async function flattenForProvider(settings, provider) {
  * both are on. Returns the possibly-rewritten text and whether it changed.
  * @param {string} text The input text.
  * @param {object} settings The effective settings (`rewriteProvider`, `autoFix`, `autoKeyword`).
+ * @param {string|null} [system] Custom auto-fix instructions (positive prompts only).
  * @returns {Promise<{text: string, changed: boolean}>}
  */
-async function applyRewrites(text, settings) {
+async function applyRewrites(text, settings, system) {
   const hasProvider = settings.rewriteProvider && settings.rewriteProvider !== "none";
   const useFix = settings.autoFix && hasProvider;
   const useKeyword = settings.autoKeyword && hasProvider;
@@ -59,6 +60,7 @@ async function applyRewrites(text, settings) {
       providerId: settings.rewriteProvider,
       prompt: working,
       key: rkey,
+      system,
     });
     if (fixed && fixed.trim()) working = fixed.trim();
   }
@@ -123,7 +125,11 @@ export async function runProvider({ prompt, promptDpl, settings, provider }) {
 
   // --- Main prompt rewrite passes (auto-fix / keyword). ---
   const roll = prompt;
-  const { text: finalPrompt, changed } = await applyRewrites(prompt, settings);
+  const { text: finalPrompt, changed } = await applyRewrites(
+    prompt,
+    settings,
+    settings.rewriteSystem,
+  );
   const promptAi = changed ? finalPrompt : null;
 
   // --- Negative prompt: roll its DPL, then optionally rewrite it too. ---

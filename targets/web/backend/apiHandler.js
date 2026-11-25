@@ -354,10 +354,10 @@ export function createApiHandler() {
     // --- prompt rewrite (auto-fix / keyword-translate) proxy ---
     if (u.pathname === "/api/rewrite" && req.method === "POST") {
       const body = await readJson(req);
-      const { providerId, prompt, key, mode } = body;
+      const { providerId, prompt, key, mode, system } = body;
       if (!prompt) return send(res, 400, { error: "Missing prompt" });
       try {
-        const out = await dispatchRewrite({ providerId, prompt, key, mode });
+        const out = await dispatchRewrite({ providerId, prompt, key, mode, system });
         return send(res, 200, out);
       } catch (e) {
         return send(res, 502, { error: e.message || "Rewrite failed" });

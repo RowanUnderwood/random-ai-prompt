@@ -20,6 +20,17 @@ describe("systemFor — legacy modes", () => {
   });
 });
 
+describe("systemFor — custom auto-fix instructions", () => {
+  it("replace only the prose fix, and blank means the built-in text", () => {
+    expect(systemFor("fix", "Mine")).toBe("Mine");
+    expect(systemFor(undefined, "Mine")).toBe("Mine");
+    for (const blank of [null, undefined, "", "  \n", 7, {}])
+      expect(systemFor("fix", blank)).toBe(REWRITE_SYSTEM);
+    for (const mode of ["keyword", "expand", "dpl-create"])
+      expect(systemFor(mode, "Mine")).toBe(systemFor(mode));
+  });
+});
+
 describe("systemFor — DPL modes", () => {
   const allModes = [...DPL_REFINE_MODES, DPL_CREATE_MODE, DPL_CUSTOM_MODE];
 

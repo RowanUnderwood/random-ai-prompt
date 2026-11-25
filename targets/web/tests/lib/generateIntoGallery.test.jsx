@@ -27,6 +27,8 @@ vi.mock("../../frontend/lib/wrapperStore.js", () => ({
 import { generateIntoGallery } from "../../frontend/lib/gallery/generateIntoGallery.js";
 import { getProvider } from "../../frontend/lib/providers/index.js";
 import { ingestImage } from "../../frontend/lib/output.js";
+import { rewritePrompt } from "../../frontend/lib/rewrite.js";
+import { expandPromptSeeded } from "../../frontend/lib/promptEngine.js";
 
 function makeApiProvider(generate) {
   return {
@@ -89,6 +91,31 @@ describe("generateIntoGallery", () => {
     expect(onBatchDone.mock.invocationCallOrder[0]).toBeLessThan(
       onRemovePending.mock.invocationCallOrder[0],
     );
+  });
+
+  it("uses custom auto-fix instructions for the positive prompt only", async () => {
+    const generate = vi.fn(async () => ({ images: ["b64img"] }));
+    const provider = makeApiProvider(generate);
+    provider.loadSettings = async () => ({ defaults: { negativePrompt: "blurry" } });
+    getProvider.mockImplementation((id) => (id === "sd" ? provider : { id, needsKey: false }));
+    expandPromptSeeded.mockReturnValueOnce("blurry");
+    rewritePrompt.mockImplementation(async ({ prompt }) => `${prompt}!`);
+    await generateIntoGallery({
+      text: "a fox",
+      settings: {
+        ...baseSettings,
+        rewriteProvider: "ninfer",
+        autoFix: true,
+        rewriteSystem: "Mine",
+      },
+      onAddPending: vi.fn(),
+      onRemovePending: vi.fn(),
+      onBatchDone: vi.fn(),
+    });
+    expect(rewritePrompt.mock.calls.map(([a]) => [a.prompt, a.system])).toEqual([
+      ["a fox", "Mine"],
+      ["blurry", undefined],
+    ]);
   });
 
   it("refuses a non-image provider with a friendly error and never adds placeholders", async () => {

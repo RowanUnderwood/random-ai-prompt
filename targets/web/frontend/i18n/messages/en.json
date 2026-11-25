@@ -1761,6 +1761,9 @@
   "settings.group.emphasis": {
     "defaultMessage": "Emphasis"
   },
+  "settings.group.rewrite": {
+    "defaultMessage": "AI rewrite"
+  },
   "settings.group.salt": {
     "defaultMessage": "Salt & lists"
   },
@@ -1798,14 +1801,23 @@
   "settings.randEmphasize": {
     "defaultMessage": "Randomly emphasize keywords"
   },
-  "settings.reloadLists": {
-    "defaultMessage": "Reload lists each prompt"
-  },
   "settings.reset": {
     "defaultMessage": "Reset to defaults"
   },
   "settings.resetConfirm": {
     "defaultMessage": "Reset all settings to defaults?"
+  },
+  "settings.reshuffle": {
+    "defaultMessage": "Reshuffle now"
+  },
+  "settings.rewriteHint": {
+    "defaultMessage": "Instructions for the auto-fix wand. Applies to new prompts; negative prompts and keyword translation keep their own instructions. Blank uses the default."
+  },
+  "settings.rewriteReset": {
+    "defaultMessage": "Reset to default"
+  },
+  "settings.rewriteSystem": {
+    "defaultMessage": "Auto-fix system prompt"
   },
   "settings.saltStart": {
     "defaultMessage": "Salt start (-1 = random)"
@@ -1822,6 +1834,15 @@
   "settings.seedRandom": {
     "defaultMessage": "Random seed"
   },
+  "settings.shuffleDeck": {
+    "defaultMessage": "Draw from shuffled decks"
+  },
+  "settings.shuffleDeckHint": {
+    "defaultMessage": "No list entry, random block or unweighted choice repeats until every option has been used. Decks carry over between batches and start over when the app does. While on, the shown seed can't reproduce a roll."
+  },
+  "settings.shuffleDeckPaused": {
+    "defaultMessage": "Paused while a seed is pinned, so that seed keeps giving the same prompt."
+  },
   "settings.usedOnce": {
     "defaultMessage": "List entries used once"
   },
@@ -1830,6 +1851,24 @@
   },
   "settingsDrawer.title": {
     "defaultMessage": "Settings"
+  },
+  "shortEdge.custom": {
+    "defaultMessage": "Custom {width}×{height}"
+  },
+  "shortEdge.label": {
+    "defaultMessage": "Short edge"
+  },
+  "shortEdge.ratio": {
+    "defaultMessage": "Aspect ratio"
+  },
+  "shortEdge.result": {
+    "defaultMessage": "Output size in pixels"
+  },
+  "shortEdge.swap": {
+    "defaultMessage": "Swap landscape and portrait"
+  },
+  "shortEdge.title": {
+    "defaultMessage": "Length of the shorter side in pixels (rounded to a multiple of {multiple})"
   },
   "single.aiNeedsKey": {
     "defaultMessage": "{provider} — add a key to use"

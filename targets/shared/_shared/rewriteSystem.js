@@ -145,15 +145,17 @@ export const DPL_TASKS = {
  * @param {string} [mode] `"keyword"` for the tag list, `"expand"` for the list-grow prompt, a
  *   `"dpl-*"` key (see {@link DPL_TASKS}) for a DPL refine/create, anything else (default) for the
  *   prose fix.
+ * @param {string|null} [custom] The user's own auto-fix instructions. They replace the prose fix only;
+ *   blank means the built-in text.
  * @returns {string} The system prompt text.
  */
-export function systemFor(mode) {
+export function systemFor(mode, custom) {
   if (mode === "keyword") return KEYWORD_SYSTEM;
   if (mode === "expand") return EXPAND_SYSTEM;
   if (mode && Object.prototype.hasOwnProperty.call(DPL_TASKS, mode)) {
     return `${DPL_PRIMER}\n\n${DPL_TASKS[mode]}`;
   }
-  return REWRITE_SYSTEM;
+  return typeof custom === "string" && custom.trim() ? custom : REWRITE_SYSTEM;
 }
 
 /**

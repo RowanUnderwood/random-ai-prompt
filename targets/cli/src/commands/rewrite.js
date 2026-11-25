@@ -56,6 +56,7 @@ export default function registerRewrite(program) {
           prompt,
           key,
           mode: opts.keyword ? "keyword" : undefined,
+          system: settings.rewriteSystem,
         });
         if (json) printJson({ provider: providerId, mode: opts.keyword ? "keyword" : "fix", text });
         else console.log(c.value(text));

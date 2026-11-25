@@ -16,21 +16,22 @@ import { callRewriteProxy } from "../../../shared/_shared/transport/hostedProxy.
  * @param {string} args.key The provider's API key (per-request).
  * @param {string} [args.mode] `"keyword"` for the comma-separated tag-list rewrite; omit/`"fix"`
  *   for the default prose clean-up.
+ * @param {string|null} [args.system] Custom instructions for the prose clean-up (blank = built-in).
  * @returns {Promise<string>} The rewritten prompt.
  * @throws {Error} On a failed rewrite.
  */
-export async function rewritePrompt({ providerId, prompt, key, mode }) {
+export async function rewritePrompt({ providerId, prompt, key, mode, system }) {
   const provider = getProvider(providerId);
 
   // Browser-direct: call the provider's API straight from the browser (no proxy).
   if (provider?.transport === "browser-direct" && provider.loadRewrite) {
     const rewrite = await provider.loadRewrite();
-    const { text } = await rewrite({ prompt, key, system: systemFor(mode) });
+    const { text } = await rewrite({ prompt, key, system: systemFor(mode, system) });
     return text || "";
   }
 
   // Fallback: the shared proxy (local dev middleware / any non-browser-direct provider). Goes
   // through the transport so a native target can point it at an absolute Backend URL.
-  const { text } = await callRewriteProxy({ providerId, prompt, key, mode });
+  const { text } = await callRewriteProxy({ providerId, prompt, key, mode, system });
   return text;
 }

@@ -28,8 +28,8 @@ function fromBase64Url(b64) {
  * @returns {string} The share URL.
  */
 export function shareUrl(settings) {
-  // Drop secrets and bulky in-memory bits before sharing.
-  const { keys, ...shareable } = settings;
+  // Drop secrets, and personal auto-fix instructions, before sharing.
+  const { keys, rewriteSystem, ...shareable } = settings;
   const encoded = toBase64Url(JSON.stringify(shareable));
   return `${location.origin}${location.pathname}#s=${encoded}`;
 }
@@ -43,7 +43,9 @@ export function readSharedSettings(hash = location.hash) {
   const m = /[#&]s=([^&]+)/.exec(hash);
   if (!m) return null;
   try {
-    return JSON.parse(fromBase64Url(m[1]));
+    // A link must not replace the reader's own auto-fix instructions.
+    const { rewriteSystem, ...shared } = JSON.parse(fromBase64Url(m[1]));
+    return shared;
   } catch {
     return null;
   }

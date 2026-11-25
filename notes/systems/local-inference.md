@@ -52,6 +52,20 @@ stack remain those of the Krea workflow: listing a diffusion model does not make
 architecture compatible with this graph. Explicit standard-pool checkpoint selections are also
 validated without silently substituting another checkpoint. See [model selection plan](../plans/local-model-selector.md).
 
+### Size
+
+While the Krea workflow is active the prompt window shows **Short edge**, an aspect-ratio dropdown, an
+orientation swap and the resulting pixels (the schema's `shortEdgeSize` marker selects this).
+`targets/shared/comfy-local/sizes.js` converts to and from the stored `imageWidth`/`imageHeight`,
+snapping to multiples of 8. Nothing else is stored, so the CLI's size flags, saved images and Render
+another are unaffected. A size matching no listed ratio shows as Custom. Mobile keeps width and height.
+
+### Auto-fix instructions
+
+Prompt settings → **AI rewrite** edits the auto-fix system prompt, with a reset. It reaches NInfer through
+`/api/rewrite`, which applies it to `fix` mode only. Negative prompts, keyword translation and
+Manage AI keep their built-in instructions. Rows already rewritten keep their cached text.
+
 ## Single-view rendering and viewing
 
 **Render another**, beside Resize, opens an editor prefilled with the final positive and negative

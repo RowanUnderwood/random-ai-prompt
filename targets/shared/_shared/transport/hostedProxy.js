@@ -70,16 +70,17 @@ export async function callUpscaleProxy({ providerId, image, key, params, signal 
  * @param {string} args.prompt The prompt to rewrite.
  * @param {string} args.key The user's BYOK API key (per-request, never stored).
  * @param {string} [args.mode] Rewrite mode (`fix` | `keyword` | `expand` | a `dpl-*` task).
+ * @param {string|null} [args.system] Custom auto-fix instructions (the server uses them for `fix` only).
  * @param {AbortSignal} [args.signal] Optional abort signal.
  * @returns {Promise<{text: string}>} The rewritten text.
  * @throws {Error} On a non-OK proxy response.
  */
-export async function callRewriteProxy({ providerId, prompt, key, mode, signal }) {
+export async function callRewriteProxy({ providerId, prompt, key, mode, system, signal }) {
   const res = await transportFetch(apiUrl("/api/rewrite"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     signal,
-    body: JSON.stringify({ providerId, prompt, key, mode }),
+    body: JSON.stringify({ providerId, prompt, key, mode, system }),
   });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error || `Rewrite proxy returned ${res.status}`);

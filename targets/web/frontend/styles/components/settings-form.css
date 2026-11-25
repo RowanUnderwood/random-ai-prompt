@@ -41,6 +41,15 @@
   background: var(--panel-2);
 }
 
+.settings-wide {
+  grid-column: 1 / -1;
+}
+
+.settings-wide textarea {
+  width: 100%;
+  resize: vertical;
+}
+
 .settings-hint {
   grid-column: 1 / -1;
   margin: 0;

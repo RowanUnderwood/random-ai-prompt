@@ -11,7 +11,7 @@
 // Generators live flat under data/blocks/<category>/. A bare `{#name}` is
 // resolved by PATH SUFFIX (the same rule lists use), so references stay short and
 // folder-independent; `{#category/name}` addresses one explicitly.
-import { sample } from "../../helpers/random.js";
+import { pickOption } from "../../helpers/random.js";
 import { resolveName } from "../../listManifest.js";
 import { isReservedAny, dynGroupMembers } from "../../blockManifest.js";
 import { isGatedBlock } from "../../gatedLists.js";
@@ -135,13 +135,13 @@ export function makeBlockStage(loader) {
 
     // Pick ONE generator from a pool (a group's members, or the whole catalog for {#any}),
     // honoring an explicit sfw/nsfw variant or the adult-mode default.
-    function pickFrom(pool, variant, intensity, focus, dedup) {
+    function pickFrom(deck, pool, variant, intensity, focus, dedup) {
       let ok;
       if (variant === "sfw") ok = pool.filter((n) => !isNsfw(n));
       else if (variant === "nsfw")
         ok = includeAdult ? pool : []; // -nsfw is nothing when adult off
       else ok = includeAdult ? pool : pool.filter((n) => !isNsfw(n));
-      const key = ok.length ? sample(ok) : null;
+      const key = ok.length ? pickOption(`blocks:${deck}`, ok) : null;
       return key ? run(key, settings, imageSettings, upscaleSettings, intensity, focus, dedup) : "";
     }
 
@@ -152,14 +152,22 @@ export function makeBlockStage(loader) {
       // {#any} family — one random generator from the whole catalog.
       if (isReservedAny(name)) {
         const m = name.match(/-(sfw|nsfw)$/i);
-        return pickFrom(names, m ? m[1].toLowerCase() : null, intensity, focus, dedup);
+        const deck = name.toLowerCase();
+        return pickFrom(deck, names, m ? m[1].toLowerCase() : null, intensity, focus, dedup);
       }
 
       const canonical = resolveName(name, resolvePool);
 
       // Implied folder group ({#scene}) — pick one random member generator.
       if (groups.includes(canonical))
-        return pickFrom(dynGroupMembers(canonical, names), null, intensity, focus, dedup);
+        return pickFrom(
+          canonical,
+          dynGroupMembers(canonical, names),
+          null,
+          intensity,
+          focus,
+          dedup,
+        );
 
       // Explicit `<name>.group` file — pick one random member.
       const groupFile = loader.readBlockGroup ? loader.readBlockGroup(canonical) : null;
@@ -168,7 +176,7 @@ export function makeBlockStage(loader) {
           .map((l) => l.replace(/\r$/, "").trim())
           .filter((l) => l && !l.startsWith("#") && !l.startsWith("@"))
           .map((l) => resolveName(l, names));
-        return pickFrom(members, null, intensity, focus, dedup);
+        return pickFrom(canonical, members, null, intensity, focus, dedup);
       }
 
       // Direct generator — gated out (empty) when adult is off.

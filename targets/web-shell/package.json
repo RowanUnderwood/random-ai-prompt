@@ -1,7 +1,7 @@
 {
   "name": "random-ai-prompt-web-shell",
   "private": true,
-  "version": "2.60.4-local.8",
+  "version": "2.60.4-local.9",
   "type": "module",
   "description": "Tauri desktop shell (its own target) that wraps the built LOCAL web target into a native app.",
   "scripts": {
