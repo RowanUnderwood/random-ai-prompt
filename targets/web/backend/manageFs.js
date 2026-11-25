@@ -302,11 +302,11 @@ export function setMarker(root, dir, marker, on) {
   return true;
 }
 
-// The stable branch the "restore default" action pulls original files from. `main` is the current
-// stable release, which carries the flat repo-root layout (`data/` at the top level).
+// The branch "restore default" pulls original files from, and that deleted files are compared with.
+// This fork's own `main`: its content differs from upstream's, so upstream's files are not its defaults.
 const STABLE_BRANCH = "main";
-const REPO = "1fairyfox/random-ai-prompt";
-const RAW_BASE = `https://raw.githubusercontent.com/${REPO}/${STABLE_BRANCH}/data`;
+const REPO = "RowanUnderwood/random-ai-prompt";
+const RAW_BASE = `https://raw.githubusercontent.com/${REPO}/${STABLE_BRANCH}/engine/data`;
 
 let manifestCache = null;
 let manifestAt = 0;
@@ -423,27 +423,25 @@ export async function remoteManifest(fresh = false) {
 }
 
 /**
- * Restore a file to its repository default (the stable `master` branch). Overwrites the local copy;
- * if the file no longer exists upstream (404) the local copy is deleted instead.
+ * Restore a file to its repository default. Overwrites the local copy only with a downloaded one: a file
+ * the repository doesn't have is left alone, since a 404 can also mean an unpublished file or a moved
+ * folder.
  * @param {string} root `"lists"` or `"blocks"`.
  * @param {string} rel The relative path within the root (e.g. "place/city.txt").
- * @returns {Promise<{ok: boolean, deleted?: boolean, error?: string}>}
+ * @returns {Promise<{ok: boolean, error?: string}>}
  */
 export async function restoreFromRepo(root, rel) {
-  // User-overlay content has no upstream default. Never route it through the raw-URL restore (a 404
-  // there DELETES the local file) — reject up front so a user's file can't be wiped.
+  // User-overlay content has no repository default, and a built-in of the same name must not replace it.
   if (USER_MANAGE_ROOTS.has(root)) {
     return { ok: false, error: "User content has no repository default" };
   }
   const abs = resolveManagePath(root, rel);
   if (!abs) return { ok: false, error: "Invalid path" };
-  const url = `${RAW_BASE}/${root}/${String(rel).split("\\").join("/")}`;
+  const url = `${RAW_BASE}/${root}/${String(rel).split(/[\\/]/).map(encodeURIComponent).join("/")}`;
   try {
     const r = await fetch(url);
-    if (r.status === 404) {
-      fs.rmSync(abs, { force: true });
-      return { ok: true, deleted: true };
-    }
+    if (r.status === 404)
+      return { ok: false, error: "This file is not in the repository; it was left unchanged" };
     if (!r.ok) return { ok: false, error: `Upstream returned ${r.status}` };
     writeFileAtomic(abs, await r.text());
     return { ok: true };

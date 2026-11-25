@@ -849,7 +849,7 @@ export function createApiHandler() {
       const body = await readJson(req);
       const out = await restoreFromRepo(body?.root, body?.path);
       return out.ok
-        ? send(res, 200, { ok: true, deleted: out.deleted || false })
+        ? send(res, 200, { ok: true })
         : send(res, 502, { error: out.error });
     }
 

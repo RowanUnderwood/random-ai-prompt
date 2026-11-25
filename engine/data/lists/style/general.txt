@@ -33,7 +33,6 @@ Ancient Egyptian style
 Ancient Greek style
 Angevin Gothic France style
 Arcology style
-Art Deco style
 Art Nouveaustyle
 UK style
 Australian style
@@ -49,7 +48,6 @@ Brownstone style
 Brutalist style
 Buddhist style
 Byzantine  style
-Cape Cod style
 Carolingian France and Germany style
 Chicago school American style
 Chilotan Chiloé Chile style
@@ -70,7 +68,6 @@ Elizabethan style
 Empire revival style
 English Baroque style
 Expressionist style
-Farmhouse style
 Federal American style
 Federation Australia style
 Florida cracker American style
@@ -81,16 +78,13 @@ Futurist Europe style
 Georgian style
 Googie style
 Gothic style
-Gothic Revival style
 Gotico Angioiano Italy style
-Greek Revival style
 Green style
 Heliopolis Egypt style
 Indian India style
 Interactive style
 International style
 Isabelline Gothic Spain style
-Italianate style
 Jacobean style
 Jacobethan style
 Indonesia style
@@ -127,7 +121,6 @@ Polite style
 Prairie American style
 Pueblo style
 Shingle New England style
-Queen Anne style
 Queenslander style
 Ranch American style
 Repoblación Spain style
@@ -139,7 +132,6 @@ Romanesque style
 Romanesque Revival American style
 Russian style
 Russian Revival style
-Saltbox style
 Scottish Baronial style
 Second Empire style
 Serbo-Byzantine revival Interwar style
@@ -158,15 +150,12 @@ Sumerian style
 Sustainable style
 Swiss chalet style
 Tidewater style
-Tudor style
 Tudorbethan style
 Ukrainian Baroque style
 Usonian American style
-Victorian style
 Vienna style
 Asian style
 European style
-American style
 Mexican style
 Spanish style
 Egyptian style

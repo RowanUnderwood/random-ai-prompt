@@ -4,7 +4,9 @@
  * own catalog, the write/sidecar/marker/move/delete ops round-trip through the snapshot (in an
  * isolated throwaway folder), the traversal guard holds, and ghost detection is exact.
  */
-import { describe, it, expect, afterAll } from "vitest";
+import fs from "node:fs";
+import path from "node:path";
+import { describe, it, expect, afterAll, vi } from "vitest";
 import {
   buildManageSnapshot,
   buildManageTree,
@@ -191,6 +193,39 @@ describe("user overlay — user/ content merges into the pool", () => {
     expect(nodeLoader.blockNames()).toContain("user/beach-merk");
     const mod = nodeLoader.loadBlock("user/beach-merk");
     expect(typeof mod.default).toBe("function");
+  });
+
+  it("never deletes a local file because the repository answered 404 (regression)", async () => {
+    const abs = path.join(MANAGE_ROOTS.lists, "zz-restore-test.txt");
+    fs.writeFileSync(abs, "mine");
+    const fetched = vi.spyOn(globalThis, "fetch").mockResolvedValue({ status: 404, ok: false });
+    try {
+      const r = await restoreFromRepo("lists", "zz-restore-test.txt");
+      expect(r.ok).toBe(false);
+      expect(r.error).toMatch(/not in the repository/i);
+      expect(fs.readFileSync(abs, "utf8")).toBe("mine");
+    } finally {
+      fetched.mockRestore();
+      fs.rmSync(abs, { force: true });
+    }
+  });
+
+  it("fetches defaults from where the content actually lives in the repository", async () => {
+    const abs = path.join(MANAGE_ROOTS.blocks, "zz restore test.dpl");
+    const fetched = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue({ status: 200, ok: true, text: async () => "default" });
+    try {
+      expect(await restoreFromRepo("blocks", "zz restore test.dpl")).toEqual({ ok: true });
+      const url = new URL(fetched.mock.calls[0][0]);
+      const inRepo = decodeURIComponent(url.pathname).split("/main/")[1];
+      expect(inRepo).toBe("engine/data/blocks/zz restore test.dpl");
+      expect(fs.existsSync(path.dirname(path.resolve(inRepo)))).toBe(true);
+      expect(fs.readFileSync(abs, "utf8")).toBe("default");
+    } finally {
+      fetched.mockRestore();
+      fs.rmSync(abs, { force: true });
+    }
   });
 
   it("refuses to restore user content from the repo (no upstream default)", async () => {

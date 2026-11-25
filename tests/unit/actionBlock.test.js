@@ -48,7 +48,8 @@ describe("Kinetics action block", () => {
   it("retains the legacy {action} list rather than shadowing it with a new group", () => {
     const original = fs
       .readFileSync(new URL("../../engine/data/lists/look/action.txt", import.meta.url), "utf8")
-      .split(/\r?\n/);
+      .split(/\r?\n/)
+      .filter(Boolean);
     expect(nodeLoader.readListLines("action", false)).toEqual(original);
     expect(original).toContain(node.generate({ ...settings, prompt: "{action}", seed: 42 }));
   });

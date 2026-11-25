@@ -131,10 +131,10 @@ export function fsOp(op, args) {
 }
 
 /**
- * Restore a file to its repository default (the stable `master` branch), overwriting the local copy.
+ * Restore a file to its repository default, overwriting the local copy.
  * @param {("lists"|"blocks")} root Which data root.
  * @param {string} path The relative path within the root (with extension).
- * @returns {Promise<object>} The reply (`{ ok, deleted }`).
+ * @returns {Promise<object>} The reply (`{ ok }`).
  */
 export function restoreDefault(root, path) {
   return postJson("/api/manage/restore", { root, path });

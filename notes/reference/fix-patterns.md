@@ -20,6 +20,14 @@ prompt must force both off, after spreading the caller's settings (mobile's `exp
 them first and was overridden). Covered in `promptRun`, `promptEngine.integration` and mobile
 `engine` tests.
 
+**Manage → Restore default deletes the file:** the download path still pointed at `main/data/`, which moved
+to `engine/data/` in 2.47, so every request returned 404 and 404 meant "removed upstream, delete locally".
+A 404 now never touches the local file, the path is correct, and defaults come from this fork's `main`.
+Both cases in `tests/integration/manageFs.test.js` fail on the old code.
+
+**A list sometimes yields nothing:** the newline ending a file became an entry (43 of 83 files).
+`resolveListLines` now drops blank lines for every loader and for user lists.
+
 Quick table of errors hit and how they were resolved. Add a row whenever you fix something reusable.
 
 **Single-view arrows navigate while editing a prompt, or Escape leaves Single before closing a modal:**

@@ -229,10 +229,12 @@ export function resolveListLines(
     return resolveGroup(base, groupLines, readers, includeAdult, variant, depth, seen);
   }
 
-  // Plain list. SFW base + (NSFW extra when the variant is full).
+  // Plain list. SFW base + (NSFW extra when the variant is full). Blank lines (usually just the newline
+  // ending the file) are never entries: they would be drawn as empty text.
   const sfw = readSfwBase(base, readers);
-  if (variant === "sfw") return sfw == null ? null : [...sfw];
+  const entries = (lines) => lines.filter((line) => line.trim() !== "");
+  if (variant === "sfw") return sfw == null ? null : entries(sfw);
   const nsfw = readers.readListFile(`${base}-nsfw`) ?? [];
   if (sfw == null && nsfw.length === 0) return null;
-  return [...(sfw ?? []), ...nsfw];
+  return entries([...(sfw ?? []), ...nsfw]);
 }
