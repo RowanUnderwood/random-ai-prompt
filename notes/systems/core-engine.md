@@ -63,6 +63,10 @@ design (it also drives the instant live preview). Full detail: [rng-design.md](.
 
 ## Status
 
+The shared catalog includes the Kinetics-derived `{#action}` fragment, using the existing DPL/list
+pipeline unchanged across Node, browser and Metro. See [action content](action-content.md) for
+human-subject usage, the separate legacy `{action}` list, attribution and offline regeneration.
+
 The browser path powers the React SPA ([gui.md](gui.md)). The Node path runs the test suite and the
 local `/api` runtime, and doubles as **engine verification** (proving the browser and Node produce the
 same output). It's also the seam a future CLI would plug into to share this one engine (the classic

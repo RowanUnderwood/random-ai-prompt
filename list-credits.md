@@ -9,6 +9,16 @@ nai-tag-expirement  https://zele.st/NovelAI/?Verbs                              
 
 NovelAI Experiments by u/Carlyone is licensed under CC BY 4.0
 
+The `activity/*` lists backing `{#action}` are adapted from **Kinetics-700-2020**,
+created by the Google DeepMind Kinetics team and distributed by the
+[Common Visual Data Foundation](https://github.com/cvdfoundation/kinetics-dataset).
+Kinetics annotations and these adapted activity lists are attributed under
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+Changes: select 72 action labels, group into six families, normalize wording and add
+manually authored pose/prop details. Curation and phrasing by OpenAI Codex for Rowan's fork.
+No video material is included. Exact source URL, hashes, mappings and regeneration are in
+[the source readme](engine/data/sources/kinetics/README.md).
+
 Any other files which are not listed here are developed internaly by Merk and
 me (1fairyfox) and are licensed public domain.
 

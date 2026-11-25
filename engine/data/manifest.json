@@ -1,6 +1,12 @@
 {
-  "generatedAt": "2026-07-06T16:00:44.023Z",
+  "generatedAt": "2026-11-25T13:03:02.980Z",
   "lists": [
+    "activity/crafts.txt",
+    "activity/everyday.txt",
+    "activity/music.txt",
+    "activity/outdoor.txt",
+    "activity/social.txt",
+    "activity/sports.txt",
     "artist/anime.txt",
     "artist/bw.txt",
     "artist/cartoon.txt",
@@ -89,6 +95,7 @@
     "expansion/style/pixelart.dpl",
     "expansion/subject/coffecup.dpl",
     "expansion/subject/flower-pic.dpl",
+    "fragment/action.dpl",
     "fragment/color.dpl",
     "fragment/crystal.dpl",
     "fragment/eerie.dpl",

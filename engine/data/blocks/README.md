@@ -64,6 +64,12 @@ generator from it:
 | `expansion/` | Reusable lighting / detail accents referenced from other generators (`{#rays}`, `{#dap}`, …); not listed as pickable chips |
 | `user/` | Community-submitted generators (`{#user-name}`) |
 
+`{#action}` is a reusable human-activity fragment: for example, `a person, {#action}`.
+It draws one complete activity with a matching pose/prop from the six Kinetics-derived
+`activity/` lists. It never adds an unrelated second activity or chooses a subject;
+some social actions explicitly include another person. `{action}` remains the original
+poses/activities list. See [action content](../../../notes/systems/action-content.md).
+
 ## Keeping a generator out of suggestions
 
 There is no full/partial distinction — every generator is just a "prompt", and the whole set is

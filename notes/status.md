@@ -3,7 +3,13 @@
 _Current state only._ For the chronological history of what changed each session and why, see
 [`sessions/`](sessions/README.md). For the commit-by-commit changelog see [`version.md`](version.md).
 
-## Local fork (2026-11-25, 2.60.4-local.4)
+## Local fork (2026-11-25, 2.60.4-local.5)
+
+Added `{#action}` with 72 Kinetics-derived human activities across six family lists, preserving
+the existing `{action}` list. The fragment keeps action/pose/props together and composes explicitly
+with human subjects. See [action content](systems/action-content.md). Full gate passes: 984 tests
+(411 Node, 451 web, 122 mobile); production UI/native builds pass. Native .5 is staged; close the
+running app and use `launch-desktop.bat` to apply it. Packaged runtime checks pass.
 
 Agent context reviewed 2026-11-25: root `CLAUDE.md` now summarizes this fork, and
 [AGENTS.md](../AGENTS.md) plus [working agreements](reference/working-agreements.md#heading-a0a)

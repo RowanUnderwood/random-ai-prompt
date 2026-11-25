@@ -1,7 +1,7 @@
 {
   "name": "random-ai-prompt-web",
   "private": true,
-  "version": "2.60.4-local.4",
+  "version": "2.60.4-local.5",
   "type": "module",
   "description": "React + Vite SPA front-end for random-ai-prompt (online BYOK or local).",
   "scripts": {

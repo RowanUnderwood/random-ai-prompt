@@ -62,6 +62,11 @@ Its native Windows desktop additions are opt-in providers built on the same shar
 layer. See [local inference](notes/systems/local-inference.md) and the
 [model selector plan](notes/plans/local-model-selector.md) for detailed behavior and file maps.
 
+The shared content catalog also includes `{#action}`: one human activity with matching pose/props,
+backed by six curated Kinetics-700 lists under `engine/data/lists/activity/`. It composes explicitly
+with human subjects and does not infer subject compatibility. The existing `{action}` list remains
+separate. Source attribution, regeneration and usage: [action content](notes/systems/action-content.md).
+
 | Optional service | GPU | Endpoint | Provider |
 |---|---|---|---|
 | NInfer Qwen | RTX 5090 | `http://127.0.0.1:1234` | `ninfer` — keyless text features |

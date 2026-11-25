@@ -2,6 +2,9 @@
 
 Ordered, roughly by priority. Update as items are done or added.
 
+Completed 2026-11-25: reusable `{#action}` fragment backed by six curated Kinetics-700 activity
+lists, with source provenance and shared-engine validation. See [action content](../systems/action-content.md).
+
 0000. **⚠️ The engine costs ~23–30 ms/prompt on the CI emulator vs 0.18 ms/prompt in Node — a ~150× gap.**
    Measured on device (2.60.0): 1000 prompts = engine 23–31 s, render 272 ms. The render is fine; on a
    phone the **engine is the whole cost**.

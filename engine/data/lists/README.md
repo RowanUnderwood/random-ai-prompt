@@ -138,6 +138,7 @@ Slurs, minor-sexualizing, and extreme shock/gore content are removed by
 
 | Folder | What's in it |
 |--------|--------------|
+| `activity/` | Kinetics-derived everyday, crafts, music, sports, outdoor, and social activities, each with matching pose/props. Forced prefixes (`{activity/music}`); implied union `{activity}` backs `{#action}`. Original `{action}` still resolves to `look/action`. See [action content](../../../notes/systems/action-content.md). |
 | `danbooru/d/` | Danbooru tags: general-sfw + general-nsfw (implicit `{d/general}`), artist, character-c, character-nc, meta, person. `_force-prefix` (→ `{d/...}`); implied group `{d}` (2+ files). Subset groups: `keyword` (no artists), `character` (c + nc) |
 | `artist/` | Stable-Diffusion artist styles: anime, bw, cartoon, dhigh/dmed/dlow, fareast, fineart, nudity-nsfw, scribbles, special, ukioe, weird, secondary. `_force-prefix` (→ `{artist/...}`); implied group `{artist}`. Subset group: `digipa` (dhigh+dmed+dlow) |
 | `word/` | Parts of speech, one list each: adjective, adverb, noun, verb, preposition, interjection; plus `misc` (function/uncategorized words), `language` (languages/scripts), and `adult-nsfw` (gated sexual terms). Curated + dictionary merged. |

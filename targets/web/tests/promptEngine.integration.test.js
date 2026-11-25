@@ -5,6 +5,7 @@
  * the whole prompt system the way the SPA does — no mocks.
  */
 import { describe, it, expect, beforeAll } from "vitest";
+import curatedActions from "../../../engine/data/sources/kinetics/curated-actions.json";
 import {
   generatePrompt,
   generatePrompts,
@@ -41,6 +42,17 @@ const settings = {
 };
 
 describe("promptEngine — generation", () => {
+  it("discovers and expands the Kinetics action block through the real browser catalog", () => {
+    const tokens = getBlocks(settings).flatMap((group) => group.items.map((item) => item.token));
+    expect(tokens).toContain("{#action}");
+    expect(tokens).toContain("{activity/music}");
+    const phrases = Object.values(curatedActions).flatMap((entries) => entries.map(({ text }) => text));
+    for (let seed = 0; seed < 12; seed++) {
+      const output = expandPromptSeeded("{#action}", { ...settings, keywordEmphasis: false }, seed);
+      expect(phrases).toContain(output);
+    }
+  });
+
   it("generates the requested number of non-empty prompts", () => {
     const out = generatePrompts({ ...settings, promptCount: 3 });
     expect(out).toHaveLength(3);

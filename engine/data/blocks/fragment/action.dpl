@@ -1,0 +1,10 @@
+---
+description: A human activity with matching pose and props, curated from Kinetics-700
+---
+
+; The activity folder is an implied union of six equally sized curated family lists.
+; An unconditional list reference keeps exactly one complete activity at every dial value.
+; Compose explicitly with a human subject; this block does not inspect the subject.
+Start
+===
+{activity}
