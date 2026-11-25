@@ -52,6 +52,22 @@ stack remain those of the Krea workflow: listing a diffusion model does not make
 architecture compatible with this graph. Explicit standard-pool checkpoint selections are also
 validated without silently substituting another checkpoint. See [model selection plan](../plans/local-model-selector.md).
 
+## Single-view rendering and viewing
+
+**Render another**, beside Resize, opens an editor prefilled with the final positive and negative
+prompts. Confirmation sends the edited text directly, without prompt expansion or LLM rewriting.
+It reuses the source sidecar's provider, model, dimensions and generation settings, overrides the
+seed and batch size (one image), and uses App's existing derivation lifecycle and provider queue.
+The source stays selected; a pending linked variation becomes a child with its own prompt metadata.
+Missing prompt/provider/key disables the action. Clearing the negative prompt also clears it in
+the child's saved settings. Providers without a seed field can still render another version.
+
+Clicking the main image opens a native modal image-only view covering the app viewport, using
+`object-fit: contain` for uncropped images. Left/right retain feed order and keep this view open;
+click or Escape returns to Single. Prompt editing and other modal/text controls own their keyboard
+events. Components live under `frontend/components/single/`, with shared modal setup in
+`frontend/lib/useModalDialog.js`. See [the feature plan](../plans/single-view-render-and-focus.md).
+
 ## Launch and ownership
 
 Settings → **Local services** shows readiness and Start/Stop buttons for fixed profiles:

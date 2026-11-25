@@ -281,9 +281,7 @@ function AppShell({ settings, setSettings }) {
     // palette/generation fill in once it resolves (via the catalog-change notification). See
     // promptEngine.ensureCatalog.
     const idle =
-      typeof requestIdleCallback === "function"
-        ? requestIdleCallback
-        : (fn) => setTimeout(fn, 200);
+      typeof requestIdleCallback === "function" ? requestIdleCallback : (fn) => setTimeout(fn, 200);
     idle(() => ensureCatalog());
     // Switch the engine from the build-time bundle to the live disk snapshot (local mode only).
     // A no-op online / on a static host — Generate keeps using the bundled catalog.
@@ -334,9 +332,7 @@ function AppShell({ settings, setSettings }) {
     };
     try {
       es = new EventSource("/api/manage/watch");
-      es.addEventListener("data", () =>
-        debounce("data", () => refreshCatalog().catch(() => {})),
-      );
+      es.addEventListener("data", () => debounce("data", () => refreshCatalog().catch(() => {})));
       es.addEventListener("output", () => debounce("output", () => loadFeed()));
       es.addEventListener("settings", () =>
         debounce("settings", async () => {
@@ -426,13 +422,13 @@ function AppShell({ settings, setSettings }) {
     });
   }
 
-  async function deriveImage(item, kind, source) {
+  async function deriveImage(item, kind, source, promptEdits) {
     setDeriveError("");
     if (!(await nsfwOkFor(getProvider(item.meta?.provider)))) return;
     const id = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
     setDerivations((d) => [...d, { id, parentPath: item.path, kind }]);
     try {
-      await runDerive({ item, kind, source, settings });
+      await runDerive({ item, kind, source, settings, promptEdits });
       await refreshAndResync(item.path);
     } catch (e) {
       setDeriveError(e.message || String(e));
@@ -562,7 +558,9 @@ function AppShell({ settings, setSettings }) {
     });
   }
 
-  const returnLabel = intl.formatMessage(returnTo === "generate" ? msgs.tabGenerate : msgs.tabGallery);
+  const returnLabel = intl.formatMessage(
+    returnTo === "generate" ? msgs.tabGenerate : msgs.tabGallery,
+  );
 
   return (
     <div className="app">
@@ -571,13 +569,19 @@ function AppShell({ settings, setSettings }) {
       </a>
       {/* One top-level heading for the page — visually hidden (the brand wordmark carries the
           visible identity), but present for screen readers and search engines. */}
-      <h1 className="sr-only">Random AI Prompt — richer AI image &amp; text prompts, automatically</h1>
+      <h1 className="sr-only">
+        Random AI Prompt — richer AI image &amp; text prompts, automatically
+      </h1>
       <header className="topbar">
         <div className="brand" title="Random AI Prompt">
           <img src="/logo.png" alt="" />
           <span className="wordmark">Random AI Prompt</span>
         </div>
-        <div className="view-switch" role="tablist" aria-label={intl.formatMessage(msgs.switchView)}>
+        <div
+          className="view-switch"
+          role="tablist"
+          aria-label={intl.formatMessage(msgs.switchView)}
+        >
           {TABS.map(([id, labelKey, featureKey, descKey]) => {
             const label = intl.formatMessage(msgs[labelKey]);
             // Manage is gated on the local-mode backend (a runtime capability); Gallery/Single are
@@ -604,7 +608,9 @@ function AppShell({ settings, setSettings }) {
                 aria-controls={paneMounted ? `pane-${id}` : undefined}
                 className={`vs-tab${!locked && view === id ? " on" : ""}${locked ? " is-locked" : ""}`}
                 title={tabTitle}
-                onClick={() => (locked ? (id !== "manage" ? openFullVersion() : undefined) : go(id))}
+                onClick={() =>
+                  locked ? (id !== "manage" ? openFullVersion() : undefined) : go(id)
+                }
               >
                 {label}
                 {locked && (

@@ -43,6 +43,17 @@ export function canDerive(meta) {
   return !!(prov && prov.loadGenerate && prov.capabilities && prov.capabilities.seed);
 }
 
+/** A new version can use any image provider; seed-less providers still generate new images. */
+export function canRenderAnother(meta) {
+  const provider = getProvider(meta?.provider);
+  const p = promptLayers(meta);
+  return !!(
+    provider?.id === meta?.provider &&
+    provider?.loadGenerate &&
+    (p.final || p.ai || p.roll || p.dpl)
+  );
+}
+
 /**
  * Resolve the prompt text a derive sends, from the chosen source layer:
  * - `dpl`   → re-run the DPL recipe through the engine (random tokens re-roll → new wording).
@@ -76,25 +87,38 @@ export function resolveDeriveText(meta, source, settings) {
  * @param {"dpl"|"final"|"ai"|"roll"} args.source Which prompt layer to draw from.
  * @param {object} args.settings Current app settings (BYOK key + engine word lists).
  * @param {Function} [args.onText] `(text)` — the resolved prompt, fired before the image returns.
+ * @param {{prompt: string, negativePrompt: string}} [args.promptEdits] Send edited text directly with a fresh seed.
  * @returns {Promise<{path: string, meta: object}>} The new image's served path + its sidecar.
  * @throws {Error} When the provider can't generate, lacks seeds, the layer is missing, or 0 images.
  */
-export async function deriveImage({ item, kind, source, settings, onText }) {
+export async function deriveImage({ item, kind, source, settings, onText, promptEdits }) {
   const meta = item?.meta || {};
   const prov = getProvider(meta.provider);
-  if (!prov || !prov.loadGenerate) throw new Error("This image's provider can't generate here.");
-  if (!prov.capabilities || !prov.capabilities.seed) {
+  if (!prov || prov.id !== meta.provider || !prov.loadGenerate)
+    throw new Error("This image's provider can't generate here.");
+  if (!promptEdits && (!prov.capabilities || !prov.capabilities.seed)) {
     throw new Error(`${prov.label || "This provider"} doesn't support seeds.`);
   }
 
-  const text = resolveDeriveText(meta, source, settings);
-  if (!text) throw new Error("That prompt layer isn't available on this image.");
+  const text = promptEdits
+    ? String(promptEdits.prompt || "").trim()
+    : resolveDeriveText(meta, source, settings);
+  if (!text?.trim()) throw new Error("That prompt layer isn't available on this image.");
   onText?.(text);
 
-  const neg = negativeLayers(meta).final || "";
+  const neg = promptEdits
+    ? String(promptEdits.negativePrompt ?? "")
+    : negativeLayers(meta).final || "";
   // Start from the parent's exact settings snapshot, then force a fresh seed — the whole point of
   // a re-roll / variation is a genuinely new image (v1-2 deliberately did NOT copy the seed).
-  const childSettings = { ...(meta.settings || {}), seed: Math.floor(Math.random() * 1e15) };
+  let nextSeed = Math.floor(Math.random() * 1e15);
+  if (nextSeed === Number(meta.settings?.seed)) nextSeed = (nextSeed + 1) % 1e15;
+  const childSettings = {
+    ...(meta.settings || {}),
+    seed: nextSeed,
+    batchSize: 1,
+    negativePrompt: neg,
+  };
 
   const generate = await prov.loadGenerate();
   const key = effectiveKey(prov.id, settings);
@@ -109,12 +133,14 @@ export async function deriveImage({ item, kind, source, settings, onText }) {
   const childMeta = {
     // Carry the recipe forward so the child is itself re-rollable; record what THIS image sent.
     prompt: {
-      dpl: p.dpl ?? null,
+      dpl: promptEdits ? null : (p.dpl ?? null),
       roll: text,
-      ai: source === "ai" ? text : null,
+      ai: !promptEdits && source === "ai" ? text : null,
       final: text,
     },
-    negative: meta.negative || { dpl: null, roll: null, ai: null, final: neg || null },
+    negative: promptEdits
+      ? { dpl: null, roll: neg || null, ai: null, final: neg || null }
+      : meta.negative || { dpl: null, roll: null, ai: null, final: neg || null },
     provider: meta.provider,
     providerLabel: meta.providerLabel,
     settings: { ...childSettings, ...imageMeta?.[0] },

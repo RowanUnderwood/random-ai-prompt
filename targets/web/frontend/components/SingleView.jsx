@@ -24,7 +24,7 @@ import { convertUrl } from "../lib/magick.js";
 import { isOutputFile, openImageFile, revealImageFile } from "../lib/output.js";
 import { effectiveKey } from "../lib/sessionKeys.js";
 import { getProvider, providers } from "../lib/providers/index.js";
-import { canDerive, hasSource, RESIZE_SCALES } from "../lib/derive.js";
+import { canDerive, canRenderAnother, hasSource, RESIZE_SCALES } from "../lib/derive.js";
 import { msgs, layerMsg } from "./single/messages.js";
 import { toMarkdown } from "../lib/single/markdown.js";
 import { syntaxHighlightJson } from "../lib/single/json.js";
@@ -36,6 +36,8 @@ import CopyButton from "./single/CopyButton.jsx";
 import LineageHead from "./single/LineageHead.jsx";
 import DerivedStrips from "./single/DerivedStrips.jsx";
 import KeywordsCard from "./single/KeywordsCard.jsx";
+import RenderAnotherDialog from "./single/RenderAnotherDialog.jsx";
+import ImageOnlyView from "./single/ImageOnlyView.jsx";
 
 // Fraction glyphs for sub-1 resize factors.
 const FRAC = { 0.25: "¼×", 0.5: "½×" };
@@ -50,10 +52,31 @@ const pick = (s, ...keys) => {
 // dump - so old sidecars (written before the snapshot was provider-scoped) stop leaking another
 // provider's metadata into the table.
 const REST_DROP = new Set([
-  "provider", "providerLabel", "providerParams", "prompt", "negativePrompt", "promptCount",
-  "locale", "includeAdult", "autoFix", "autoKeyword", "autoAddFx", "autoAddArtists",
-  "rewriteProvider", "wrapper", "wrapperName", "wrapperParams", "useAutoSections", "keys", "mode",
-  "parent", "derivedKind", "derivedSource", "savedAt", "file", "image",
+  "provider",
+  "providerLabel",
+  "providerParams",
+  "prompt",
+  "negativePrompt",
+  "promptCount",
+  "locale",
+  "includeAdult",
+  "autoFix",
+  "autoKeyword",
+  "autoAddFx",
+  "autoAddArtists",
+  "rewriteProvider",
+  "wrapper",
+  "wrapperName",
+  "wrapperParams",
+  "useAutoSections",
+  "keys",
+  "mode",
+  "parent",
+  "derivedKind",
+  "derivedSource",
+  "savedAt",
+  "file",
+  "image",
 ]);
 
 /**
@@ -70,7 +93,7 @@ const REST_DROP = new Set([
  * @param {Function} props.onDelete `(item)`.
  * @param {Function} props.onSearch `(term)` — search the gallery for a keyword.
  * @param {Function} props.onMetaUpdate `(path, meta)` — apply a saved sidecar to the feed + view.
- * @param {Function} [props.onDerive] `(item, kind, source)` — re-roll / vary into a new image.
+ * @param {Function} [props.onDerive] `(item, kind, source, promptEdits?)` — re-roll / vary into a new image.
  * @param {Function} [props.onResize] `(item, scale)` — resize into a new image (ImageMagick).
  * @param {object[]} [props.derivations] In-flight derivations `{ id, parentPath, kind }`.
  * @param {string} [props.deriveError] The last re-roll / variation / resize failure, if any.
@@ -97,18 +120,41 @@ export default function SingleView({
   const intl = useIntl();
   const [rawView, setRawView] = useState(false);
   const [copyOpen, setCopyOpen] = useState(false);
+  const [imageOnly, setImageOnly] = useState(false);
+  const [renderSource, setRenderSource] = useState(null);
   const index = current ? items.findIndex((it) => it.path === current.path) : -1;
   const total = items.length;
   const hasPrev = index > 0;
   const hasNext = index >= 0 && index < total - 1;
 
   useEffect(() => {
+    if (!active || !current) {
+      setImageOnly(false);
+      setRenderSource(null);
+    }
+  }, [active, !!current]);
+
+  useEffect(() => {
     if (!active || !current) return undefined;
     const onKey = (e) => {
-      if (e.target.tagName === "SELECT" || e.target.tagName === "INPUT") return;
+      if (
+        e.defaultPrevented ||
+        e.altKey ||
+        e.ctrlKey ||
+        e.metaKey ||
+        e.target?.closest?.(
+          'input, select, textarea, [contenteditable]:not([contenteditable="false"]), dialog, [role="dialog"][aria-modal="true"]',
+        )
+      )
+        return;
       if (e.key === "Escape") onBack();
-      else if (e.key === "ArrowLeft" && hasPrev) onNavigate(items[index - 1]);
-      else if (e.key === "ArrowRight" && hasNext) onNavigate(items[index + 1]);
+      else if (e.key === "ArrowLeft" && hasPrev) {
+        e.preventDefault();
+        onNavigate(items[index - 1]);
+      } else if (e.key === "ArrowRight" && hasNext) {
+        e.preventDefault();
+        onNavigate(items[index + 1]);
+      }
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
@@ -139,6 +185,8 @@ export default function SingleView({
 
   // --- Inline re-roll / make-variation actions, injected into the prompt layer rows ---
   const deriveLocked = !canDerive(m);
+  const anotherLocked =
+    !canRenderAnother(m) || (prov?.needsKey && !effectiveKey(prov.id, settings));
   const lockHint = intl.formatMessage(msgs.deriveLocked, {
     provider: m.providerLabel || prov?.label || m.provider || "This provider",
   });
@@ -189,13 +237,26 @@ export default function SingleView({
   const saved = m.savedAt ? new Date(m.savedAt).toLocaleString() : undefined;
   const details = [
     [intl.formatMessage(msgs.dProvider), m.providerLabel || m.provider],
-    [intl.formatMessage(msgs.dModel), pick(s, "model", "modelName", "checkpoint", "sd_model", "sd_model_hash")],
+    [
+      intl.formatMessage(msgs.dModel),
+      pick(s, "model", "modelName", "checkpoint", "sd_model", "sd_model_hash"),
+    ],
     ...(showCap("samplers")
-      ? [[intl.formatMessage(msgs.dSampler), pick(s, "sampler", "samplerName", "sampler_name", "scheduler")]]
+      ? [
+          [
+            intl.formatMessage(msgs.dSampler),
+            pick(s, "sampler", "samplerName", "sampler_name", "scheduler"),
+          ],
+        ]
       : []),
     ...(showCap("steps") ? [[intl.formatMessage(msgs.dSteps), pick(s, "steps", "numSteps")]] : []),
     ...(showCap("cfg")
-      ? [[intl.formatMessage(msgs.dCfg), pick(s, "cfg", "cfgScale", "cfg_scale", "guidance", "guidanceScale")]]
+      ? [
+          [
+            intl.formatMessage(msgs.dCfg),
+            pick(s, "cfg", "cfgScale", "cfg_scale", "guidance", "guidanceScale"),
+          ],
+        ]
       : []),
     [intl.formatMessage(msgs.dSize), size],
     ...(showCap("seed") ? [[intl.formatMessage(msgs.dSeed), pick(s, "seed")]] : []),
@@ -203,9 +264,28 @@ export default function SingleView({
     [intl.formatMessage(msgs.dFile), item.file],
   ];
   const shownKeys = new Set([
-    "width", "height", "model", "modelName", "checkpoint", "sd_model", "sd_model_hash",
-    "sampler", "samplerName", "sampler_name", "scheduler", "steps", "numSteps", "cfg",
-    "cfgScale", "cfg_scale", "guidance", "guidanceScale", "seed", "negativePrompt", "prompt", "mode",
+    "width",
+    "height",
+    "model",
+    "modelName",
+    "checkpoint",
+    "sd_model",
+    "sd_model_hash",
+    "sampler",
+    "samplerName",
+    "sampler_name",
+    "scheduler",
+    "steps",
+    "numSteps",
+    "cfg",
+    "cfgScale",
+    "cfg_scale",
+    "guidance",
+    "guidanceScale",
+    "seed",
+    "negativePrompt",
+    "prompt",
+    "mode",
   ]);
   const restSettings = Object.entries(s).filter(
     ([k, v]) =>
@@ -232,7 +312,11 @@ export default function SingleView({
   // Providers that ship an AI upscale adapter; a key-gated one is offered but disabled until keyed.
   const upscalers = providers
     .filter((pp) => pp.capabilities?.upscale && pp.loadUpscale)
-    .map((pp) => ({ id: pp.id, label: pp.label, ready: !pp.needsKey || !!effectiveKey(pp.id, settings) }));
+    .map((pp) => ({
+      id: pp.id,
+      label: pp.label,
+      ready: !pp.needsKey || !!effectiveKey(pp.id, settings),
+    }));
   const hasUpscalers = upscalers.length > 0;
   const onResizePick = (e) => {
     const val = e.target.value;
@@ -245,6 +329,27 @@ export default function SingleView({
 
   return (
     <div className="gallery-view">
+      {active && imageOnly && (
+        <ImageOnlyView
+          item={item}
+          previous={hasPrev ? items[index - 1] : null}
+          next={hasNext ? items[index + 1] : null}
+          onNavigate={onNavigate}
+          onClose={() => setImageOnly(false)}
+        />
+      )}
+      {active && renderSource && (
+        <RenderAnotherDialog
+          prompt={promptText(renderSource)}
+          negativePrompt={negativeLayers(renderSource.meta).final || ""}
+          onCancel={() => setRenderSource(null)}
+          onRender={(promptEdits) => {
+            const source = renderSource;
+            setRenderSource(null);
+            onDerive(source, "variation", "final", promptEdits);
+          }}
+        />
+      )}
       <div className="g-inner">
         <div className="g-single">
           <div className="g-single-bar">
@@ -254,7 +359,11 @@ export default function SingleView({
               })}
             </button>
             <div className="g-single-nav">
-              <button onClick={() => onNavigate(items[index - 1])} disabled={!hasPrev} title={intl.formatMessage(msgs.prevTitle)}>
+              <button
+                onClick={() => onNavigate(items[index - 1])}
+                disabled={!hasPrev}
+                title={intl.formatMessage(msgs.prevTitle)}
+              >
                 {intl.formatMessage(msgs.prev)}
               </button>
               {index >= 0 && (
@@ -262,7 +371,11 @@ export default function SingleView({
                   {index + 1} / {total}
                 </span>
               )}
-              <button onClick={() => onNavigate(items[index + 1])} disabled={!hasNext} title={intl.formatMessage(msgs.nextTitle)}>
+              <button
+                onClick={() => onNavigate(items[index + 1])}
+                disabled={!hasNext}
+                title={intl.formatMessage(msgs.nextTitle)}
+              >
                 {intl.formatMessage(msgs.next)}
               </button>
             </div>
@@ -271,9 +384,15 @@ export default function SingleView({
           <div className="g-single-body">
             <div className="g-single-left">
               <div className="g-single-img">
-                <a href={item.path} target="_blank" rel="noreferrer" title={intl.formatMessage(msgs.openFull)}>
+                <button
+                  type="button"
+                  className="single-image-expand"
+                  title={intl.formatMessage(msgs.enterImageOnly)}
+                  aria-label={intl.formatMessage(msgs.enterImageOnly)}
+                  onClick={() => setImageOnly(true)}
+                >
                   <img src={item.path} alt={promptText(item) || item.file} />
-                </a>
+                </button>
                 {/* Overlay actions, top-right — mirrors the gallery thumbnails. Download is the
                     extra (thumbnails don't have it); open / reveal / delete need the local file. */}
                 <div className="img-actions g-img-actions">
@@ -320,7 +439,12 @@ export default function SingleView({
                 </div>
               </div>
               {/* Re-Rolls / Variations / Resizes strips, with live placeholders while generating. */}
-              <DerivedStrips item={item} items={items} derivations={derivations} onNavigate={onNavigate} />
+              <DerivedStrips
+                item={item}
+                items={items}
+                derivations={derivations}
+                onNavigate={onNavigate}
+              />
             </div>
 
             <div className="g-single-meta">
@@ -335,23 +459,44 @@ export default function SingleView({
                       className="g-convert"
                       defaultValue=""
                       onChange={onConvert}
-                      title={magickOk ? intl.formatMessage(msgs.convertTitle) : intl.formatMessage(msgs.convertLocked)}
+                      title={
+                        magickOk
+                          ? intl.formatMessage(msgs.convertTitle)
+                          : intl.formatMessage(msgs.convertLocked)
+                      }
                     >
                       <option value="">{intl.formatMessage(msgs.convertOption)}</option>
-                      {magickOk
-                        ? magick.formats.map((f) => (
-                            <option key={f} value={f}>
-                              {f.toUpperCase()}
-                            </option>
-                          ))
-                        : (
-                          <option value="" disabled>
-                            {intl.formatMessage(msgs.needsMagickOpt)}
+                      {magickOk ? (
+                        magick.formats.map((f) => (
+                          <option key={f} value={f}>
+                            {f.toUpperCase()}
                           </option>
-                        )}
+                        ))
+                      ) : (
+                        <option value="" disabled>
+                          {intl.formatMessage(msgs.needsMagickOpt)}
+                        </option>
+                      )}
                     </select>
-                    {!magickOk && <span className="g-tool-lock" aria-hidden="true">🔒</span>}
+                    {!magickOk && (
+                      <span className="g-tool-lock" aria-hidden="true">
+                        🔒
+                      </span>
+                    )}
                   </span>
+
+                  {onDerive && (
+                    <button
+                      type="button"
+                      disabled={anotherLocked}
+                      title={intl.formatMessage(
+                        anotherLocked ? msgs.renderAnotherLocked : msgs.renderAnotherTitle,
+                      )}
+                      onClick={() => setRenderSource(item)}
+                    >
+                      {intl.formatMessage(msgs.renderAnother)}
+                    </button>
+                  )}
 
                   {/* Resize — ImageMagick down/up-scale + a (locked) AI Upscale, always visible. */}
                   {onResize && (
@@ -360,18 +505,25 @@ export default function SingleView({
                         className="g-resize"
                         defaultValue=""
                         onChange={onResizePick}
-                        title={magickOk ? intl.formatMessage(msgs.resizeTitle) : intl.formatMessage(msgs.resizeLocked)}
+                        title={
+                          magickOk
+                            ? intl.formatMessage(msgs.resizeTitle)
+                            : intl.formatMessage(msgs.resizeLocked)
+                        }
                       >
                         <option value="">{intl.formatMessage(msgs.resizeOption)}</option>
                         <optgroup label={intl.formatMessage(msgs.resizeGroupMagick)}>
                           {RESIZE_SCALES.map((sc) => {
                             const lbl = FRAC[sc] || `${sc}×`;
-                            const base = sc < 1
-                              ? intl.formatMessage(msgs.resizeDown, { label: lbl })
-                              : intl.formatMessage(msgs.resizeUp, { label: lbl });
+                            const base =
+                              sc < 1
+                                ? intl.formatMessage(msgs.resizeDown, { label: lbl })
+                                : intl.formatMessage(msgs.resizeUp, { label: lbl });
                             return (
                               <option key={sc} value={`mag:${sc}`} disabled={!magickOk}>
-                                {magickOk ? base : intl.formatMessage(msgs.resizeNeedsMagick, { label: lbl })}
+                                {magickOk
+                                  ? base
+                                  : intl.formatMessage(msgs.resizeNeedsMagick, { label: lbl })}
                               </option>
                             );
                           })}
@@ -392,7 +544,11 @@ export default function SingleView({
                           )}
                         </optgroup>
                       </select>
-                      {!magickOk && !hasUpscalers && <span className="g-tool-lock" aria-hidden="true">🔒</span>}
+                      {!magickOk && !hasUpscalers && (
+                        <span className="g-tool-lock" aria-hidden="true">
+                          🔒
+                        </span>
+                      )}
                     </span>
                   )}
                 </div>
@@ -409,12 +565,21 @@ export default function SingleView({
               )}
 
               <LineageHead item={item} items={items} onNavigate={onNavigate} />
-              {deriveError && <p className="g-card-err">{intl.formatMessage(msgs.deriveError, { error: deriveError })}</p>}
+              {deriveError && (
+                <p className="g-card-err">
+                  {intl.formatMessage(msgs.deriveError, { error: deriveError })}
+                </p>
+              )}
 
-              <PromptCard title={intl.formatMessage(msgs.promptTitle)} layers={p} extrasFor={extrasFor} />
+              <PromptCard
+                title={intl.formatMessage(msgs.promptTitle)}
+                layers={p}
+                extrasFor={extrasFor}
+              />
               <PromptCard title={intl.formatMessage(msgs.negativeTitle)} layers={n} />
 
-              {(item.meta || details.some(([, v]) => v !== undefined && v !== null && v !== "")) && (
+              {(item.meta ||
+                details.some(([, v]) => v !== undefined && v !== null && v !== "")) && (
                 <section className="g-card">
                   <div className="g-card-head">
                     <h3 className="g-card-title">{intl.formatMessage(msgs.details)}</h3>

@@ -49,6 +49,7 @@
 @import url("./components/errors.css") layer(components);
 @import url("./components/prompts-list.css") layer(components);
 @import url("./components/gallery.css") layer(components);
+@import url("./components/single-view-interactions.css") layer(components);
 @import url("./components/building-block-palette.css") layer(components);
 @import url("./components/building-block-hover-tooltip.css") layer(components);
 @import url("./components/settings-drawer.css") layer(components);

@@ -1907,6 +1907,12 @@
   "single.engineRoll": {
     "defaultMessage": "Engine roll"
   },
+  "single.enterImageOnly": {
+    "defaultMessage": "View image only"
+  },
+  "single.exitImageOnly": {
+    "defaultMessage": "Return to Single view"
+  },
   "single.find": {
     "defaultMessage": "Find “{term}”"
   },
@@ -1915,6 +1921,9 @@
   },
   "single.galleryFallback": {
     "defaultMessage": "gallery"
+  },
+  "single.imageOnly": {
+    "defaultMessage": "Image-only view"
   },
   "single.keywords": {
     "defaultMessage": "Keywords"
@@ -2008,6 +2017,33 @@
   },
   "single.rebuilding": {
     "defaultMessage": "Rebuilding…"
+  },
+  "single.renderAnother.action": {
+    "defaultMessage": "Render another"
+  },
+  "single.renderAnother.cancel": {
+    "defaultMessage": "Cancel"
+  },
+  "single.renderAnother.locked": {
+    "defaultMessage": "A saved prompt and an available image provider with its required key are needed"
+  },
+  "single.renderAnother.negative": {
+    "defaultMessage": "Negative prompt"
+  },
+  "single.renderAnother.note": {
+    "defaultMessage": "Uses this image's saved model and generation settings with a fresh seed. Edit the prompts if desired; the text below is sent as written."
+  },
+  "single.renderAnother.prompt": {
+    "defaultMessage": "Prompt"
+  },
+  "single.renderAnother.queue": {
+    "defaultMessage": "Queue render"
+  },
+  "single.renderAnother.title": {
+    "defaultMessage": "Render another version"
+  },
+  "single.renderAnother.tooltip": {
+    "defaultMessage": "Edit the prompt and queue one new version using this image's saved settings"
   },
   "single.rerollAction": {
     "defaultMessage": "re-roll"

@@ -2,6 +2,12 @@
 
 Quick table of errors hit and how they were resolved. Add a row whenever you fix something reusable.
 
+**Single-view arrows navigate while editing a prompt, or Escape leaves Single before closing a modal:**
+document shortcuts must ignore prevented events, modifiers, text fields, contenteditable controls
+and modal dialogs. Use native modal ownership for overlays, and handle image-only arrows inside
+the overlay. `SingleViewInteractions.test.jsx` covers editing, contenteditable, modal cancellation
+and image-only navigation. Reintroducing the old document handler makes the editing test fail.
+
 **Local ComfyUI says "No selected instance is ready" while the service panel later shows Ready:**
 the old two-second `/system_stats` check could time out on synchronous CUDA memory queries.
 Probe `/queue` instead, allow ten seconds, validate both queue arrays, and share concurrent checks.

@@ -79,6 +79,12 @@ layer. See [local inference](notes/systems/local-inference.md) and the
   enabled ready GPUs rather than duplicated. Faster workers take the next waiting image.
   Sidecars record the actual model, seed, workflow, GPU, and endpoint. Keep partial successes
   and report failed jobs; do not automatically retry submitted work and risk duplicate images.
+- **Single view:** Render another opens a positive/negative prompt editor, reuses the source's
+  saved provider/model/dimensions/settings, and queues one linked variation with a fresh seed.
+  Edited text is sent directly without rerolling or rewriting. Clicking the image opens a
+  viewport-filling, aspect-preserving image-only view; click or Escape returns, and arrow keys
+  retain feed navigation. Native modal dialogs own their keyboard events; Single shortcuts
+  must ignore text editors and dialogs. See [the feature plan](notes/plans/single-view-render-and-focus.md).
 - **Workflows/models:** `targets/shared/comfy-local/` offers Jake's Krea 2 workflow and standard
   checkpoints. Krea uses the flattened API export in
   `targets/shared/comfyui/data/krea2-workflow.json`, with 12 steps, CFG 1, Euler/simple.

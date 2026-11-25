@@ -6,6 +6,19 @@
 import { defineMessages } from "react-intl";
 
 export const msgs = defineMessages({
+  renderAnother: { id: "single.renderAnother.action", defaultMessage: "Render another" },
+  renderAnotherTitle: {
+    id: "single.renderAnother.tooltip",
+    defaultMessage: "Edit the prompt and queue one new version using this image's saved settings",
+  },
+  renderAnotherLocked: {
+    id: "single.renderAnother.locked",
+    defaultMessage:
+      "A saved prompt and an available image provider with its required key are needed",
+  },
+  imageOnly: { id: "single.imageOnly", defaultMessage: "Image-only view" },
+  enterImageOnly: { id: "single.enterImageOnly", defaultMessage: "View image only" },
+  exitImageOnly: { id: "single.exitImageOnly", defaultMessage: "Return to Single view" },
   copy: { id: "single.copy", defaultMessage: "copy" },
   reroll: { id: "single.rerollAction", defaultMessage: "re-roll" },
   vary: { id: "single.varyAction", defaultMessage: "vary" },
@@ -97,7 +110,10 @@ export const msgs = defineMessages({
     id: "single.rerollTitle",
     defaultMessage: "Re-roll the recipe — a fresh random prompt from the DPL, with a new seed",
   },
-  varyTitle: { id: "single.varyTitle", defaultMessage: "Make a variation from this layer (new seed)" },
+  varyTitle: {
+    id: "single.varyTitle",
+    defaultMessage: "Make a variation from this layer (new seed)",
+  },
   deriveLocked: {
     id: "single.deriveLocked",
     defaultMessage: "{provider} doesn't support seeds — re-roll & variations need seed control",
@@ -138,7 +154,10 @@ export const msgs = defineMessages({
   resizeGroupAi: { id: "single.resizeGroupAi", defaultMessage: "AI" },
   resizeDown: { id: "single.resizeDown", defaultMessage: "{label} (downscale)" },
   resizeUp: { id: "single.resizeUp", defaultMessage: "{label} (upscale)" },
-  resizeNeedsMagick: { id: "single.resizeNeedsMagick", defaultMessage: "{label} — needs ImageMagick" },
+  resizeNeedsMagick: {
+    id: "single.resizeNeedsMagick",
+    defaultMessage: "{label} — needs ImageMagick",
+  },
   resizeLocked: {
     id: "single.resizeLocked",
     defaultMessage: "Resizing needs ImageMagick installed — it isn't, so this is locked",
