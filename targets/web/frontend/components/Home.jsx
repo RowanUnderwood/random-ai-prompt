@@ -196,6 +196,7 @@ export default function Home({ settings, setSettings, onOpenImage }) {
           below are phone-only; on wider screens the pane is always visible and they're hidden. */}
       <BlockPalette
         includeAdult={settings.includeAdult}
+        settings={settings}
         onInsert={insert}
         onShowTip={showTip}
         onMoveTip={moveTip}

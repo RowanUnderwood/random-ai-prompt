@@ -63,6 +63,12 @@ design (it also drives the instant live preview). Full detail: [rng-design.md](.
 
 ## Status
 
+Model-specific visibility lives in `engine/modelContent.js`. The engine binds a filtered loader
+to the current run; the catalog uses the same rule. Loader `readListLines` accepts optional third
+argument `contentSettings`, propagated into shared list resolution and its recursive unions.
+Read caches include the SD-visibility state. This prevents hidden Krea data leaking through
+`{keyword}` or nested groups. See [Krea content](krea2-content.md).
+
 The shared catalog includes the Kinetics-derived `{#action}` fragment, using the existing DPL/list
 pipeline unchanged across Node, browser and Metro. See [action content](action-content.md) for
 human-subject usage, the separate legacy `{action}` list, attribution and offline regeneration.

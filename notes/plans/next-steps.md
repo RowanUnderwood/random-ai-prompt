@@ -2,6 +2,9 @@
 
 Ordered, roughly by priority. Update as items are done or added.
 
+Completed 2026-11-25: Krea 2 identity/style blocks with separate bands and shared model-aware
+visibility for SD selections. See [Krea content](../systems/krea2-content.md).
+
 Completed 2026-11-25: reusable `{#action}` fragment backed by six curated Kinetics-700 activity
 lists, with source provenance and shared-engine validation. See [action content](../systems/action-content.md).
 

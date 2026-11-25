@@ -10,6 +10,7 @@
  */
 
 import { resolveName, RESERVED_WILDCARD, SFW_SUFFIX, NSFW_SUFFIX } from "./nameOrder.js";
+import { modelContentAllowed } from "./modelContent.js";
 
 /** Recursion cutoff for group-includes-group nesting. */
 export const MAX_GROUP_DEPTH = 3;
@@ -216,6 +217,7 @@ export function resolveListLines(
   // Re-resolve the (suffix-stripped) base to its canonical name, so an explicit
   // variant like {d-sfw} maps to the group/list path {d} resolves to.
   base = resolveName(base, readers.names);
+  if (!modelContentAllowed(base, readers.contentSettings)) return [];
 
   // Group? Either a real `.group` file, or an IMPLIED group: a folder marked with a
   // `.force-group-list` file resolves to the union of all lists directly/under it.

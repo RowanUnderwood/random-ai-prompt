@@ -67,6 +67,12 @@ backed by six curated Kinetics-700 lists under `engine/data/lists/activity/`. It
 with human subjects and does not infer subject compatibility. The existing `{action}` list remains
 separate. Source attribution, regeneration and usage: [action content](notes/systems/action-content.md).
 
+Krea-specific content: Subject `{#krea2-actors}` (identity only; bands separate) and Style
+`{#krea2-style-library}` (one complete descriptor). `engine/modelContent.js` hides `krea2`-named
+content for selected Stable Diffusion providers/models, including local checkpoint workflow,
+across palettes/completions and generation/group/wildcard pools. Image model context is separate
+from prompt dialect. See [Krea content](notes/systems/krea2-content.md) for sources and regeneration.
+
 | Optional service | GPU | Endpoint | Provider |
 |---|---|---|---|
 | NInfer Qwen | RTX 5090 | `http://127.0.0.1:1234` | `ninfer` — keyless text features |

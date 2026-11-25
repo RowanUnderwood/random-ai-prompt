@@ -22,6 +22,7 @@ import {
   compareNames,
 } from "../listManifest.js";
 import compileDpl from "./dpl/dpl.js";
+import { isStableDiffusionSelected } from "../modelContent.js";
 import {
   dpJsModules,
   dpDplText,
@@ -128,8 +129,8 @@ function metroBridge(dplKey) {
  * @type {object}
  */
 export const metroLoader = {
-  readListLines(name, includeAdult = false) {
-    const cacheKey = `${name}|${includeAdult ? 1 : 0}|${_overlayVersion}`;
+  readListLines(name, includeAdult = false, contentSettings = {}) {
+    const cacheKey = `${name}|${includeAdult ? 1 : 0}|${_overlayVersion}|${isStableDiffusionSelected(contentSettings)}`;
     if (_listLinesCache.has(cacheKey)) return _listLinesCache.get(cacheKey);
     const names = getAllNames();
     const canonical = resolveName(name, names);
@@ -140,6 +141,7 @@ export const metroLoader = {
         readListFile: (n) => overlay.lists[n] ?? listLines[n] ?? null, // user-wins
         readGroupFile: (n) => groupLines[n] ?? null,
         groupListDirs: _groupListDirs,
+        contentSettings,
       },
       includeAdult,
     );

@@ -35,11 +35,6 @@ import { saveImageSrc } from "../lib/storage.js";
 import InsertMenu from "../components/InsertMenu.js";
 import BlockPalette from "../components/BlockPalette.js";
 
-const LIST_OPTIONS = [
-  { value: false, label: "(fully random)" },
-  ...getListNames().map((n) => ({ value: n, label: n })),
-];
-
 const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
 
 // Prompts-per-roll has a FLOOR (you can't roll zero prompts) but deliberately NO CEILING. The
@@ -48,7 +43,6 @@ const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
 // smoothly it will handle more, degrading gracefully rather than refusing. (This screen used to
 // clamp to 1000 in five places — a mobile-only limit the engine and the web never had.)
 const atLeast1 = (n) => Math.max(1, n);
-const COMPLETIONS = getDplCompletions();
 
 // Share link — encode settings (minus secrets) into the web app's #s= hash so a setup can be
 // restored elsewhere (mirrors targets/web/frontend/lib/share.js).
@@ -223,13 +217,14 @@ export default function GenerateScreen({ onGenerated, onOpenImage }) {
     const at = activeToken(prompt, caret.current);
     if (!at) return [];
     const f = at.frag.toLowerCase();
+    const COMPLETIONS = getDplCompletions({ provider, providerParams: providerSettings });
     if (f === "{" || f === "{#") return COMPLETIONS.slice(0, 24); // just opened — show a starter set
     return COMPLETIONS.filter(
       (c) =>
         c.token.toLowerCase().startsWith(f) ||
         c.label.toLowerCase().includes(f.replace(/^\{#?/, "")),
     ).slice(0, 24);
-  }, [prompt, focused, caretTick]);
+  }, [prompt, focused, caretTick, provider, providerSettings]);
 
   const applyCompletion = useCallback((token) => {
     const text = promptRef.current;
@@ -245,13 +240,19 @@ export default function GenerateScreen({ onGenerated, onOpenImage }) {
     () => ({
       ...baseSettings,
       ...cfg,
+      provider,
+      providerParams: providerSettings,
       prompt,
       promptCount: atLeast1(promptCount),
       generateImages: false,
     }),
-    [prompt, promptCount, cfg],
+    [prompt, promptCount, cfg, provider, providerSettings],
   );
   const getS = (k) => (cfg[k] !== undefined ? cfg[k] : baseSettings[k]);
+  const LIST_OPTIONS = useMemo(() => [
+    { value: false, label: "(fully random)" },
+    ...getListNames(settings).map((n) => ({ value: n, label: n })),
+  ], [settings]);
   const setS = (k, v) => setCfg((c) => ({ ...c, [k]: v }));
 
   // A rotating random prompt SUGGESTION — web parity (PromptComposer): the empty box shows "Try: …"
@@ -541,7 +542,7 @@ export default function GenerateScreen({ onGenerated, onOpenImage }) {
       setPreview("");
       return undefined;
     }
-    const roll = () => setPreview(expandOnce(promptRef.current || "{#random-words}"));
+    const roll = () => setPreview(expandOnce(promptRef.current || "{#random-words}", settingsRef.current));
     roll();
     const id = setInterval(roll, 1000);
     return () => clearInterval(id);

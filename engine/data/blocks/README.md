@@ -70,6 +70,11 @@ It draws one complete activity with a matching pose/prop from the six Kinetics-d
 some social actions explicitly include another person. `{action}` remains the original
 poses/activities list. See [action content](../../../notes/systems/action-content.md).
 
+`{#krea2-actors}` under Subject emits one identity without the source's portrait framing;
+bands are separate in `{krea2/bands}`. `{#krea2-style-library}` under Style emits one full
+descriptor. Both participate in normal category groups, and Krea-specific names are excluded
+when Stable Diffusion is selected. See [Krea content](../../../notes/systems/krea2-content.md).
+
 ## Keeping a generator out of suggestions
 
 There is no full/partial distinction — every generator is just a "prompt", and the whole set is

@@ -1,0 +1,26 @@
+{
+  "bands": [
+    "10,000 Maniacs", "A Winged Victory for the Sullen", "Alvvays", "Autechre", "Bardo Pond",
+    "Boards of Canada", "Bon Iver", "Boris", "Caspian", "City Girls", "Coil", "Current 93",
+    "Death in June", "Destiny's Child", "Earth", "Electric Wizard", "Explosions in the Sky",
+    "Fleet Foxes", "Fuck Buttons", "Godspeed You! Black Emperor", "Hammock", "Japanese Breakfast",
+    "Lost Girls", "Maroon 5", "Melvins", "Midland", "Mogwai", "OneRepublic", "Paint the Sky Red",
+    "Pelican", "Random Forest", "Russian Circles", "Sigur Rós", "Silent Whale Becomes A Dream",
+    "Sleep", "Sleepmakeswaves", "Smerz", "Stars of the Lid", "Sunn O)))", "The Album Leaf",
+    "The American Dollar", "The Beths", "The Calm Blue Sea", "The Cranberries", "The Echelon Effect",
+    "The Script", "This Will Destroy You", "TLC", "Train", "Walk off the Earth", "We Lost The Sea",
+    "Windy & Carl", "Zoviet France"
+  ],
+  "aliases": {
+    "The Rock": "Dwayne Johnson",
+    "Childish Gambino": "Donald Glover",
+    "Oneohtrix Point Never": "Daniel Lopatin",
+    "Prince Charles, Prince of Wales": "Charles III of the United Kingdom"
+  },
+  "disambiguation": {
+    "10,000 Maniacs": "10000 Maniacs",
+    "Michelle Williams": "Michelle Williams, R&B singer",
+    "Andrew White": "Andrew White, Kaiser Chiefs musician",
+    "Robert Young": "Robert Young, Primal Scream musician"
+  }
+}

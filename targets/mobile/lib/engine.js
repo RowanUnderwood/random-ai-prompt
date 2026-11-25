@@ -6,15 +6,16 @@ import { createEngine } from "engine/core/engine.js";
 import { metroLoader } from "engine/core/metroLoader.js";
 import { createPromptRun } from "engine/promptRun.js";
 import baseSettings from "engine/settings.js";
+import { modelContentLoader } from "engine/modelContent.js";
 
 export const loader = metroLoader;
 export const run = createPromptRun(createEngine(metroLoader));
 export { baseSettings };
 
 /** Word-list names for the gear's Vocabulary selects (mirrors the web getListNames()). */
-export function getListNames() {
+export function getListNames(settings = {}) {
   try {
-    return loader.listNames().slice().sort();
+    return modelContentLoader(loader, () => settings).listNames().slice().sort();
   } catch {
     return [];
   }

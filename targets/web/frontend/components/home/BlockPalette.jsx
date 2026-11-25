@@ -38,6 +38,7 @@ const msgs = defineMessages({
  */
 export default function BlockPalette({
   includeAdult,
+  settings = {},
   onInsert,
   onShowTip,
   onMoveTip,
@@ -52,7 +53,7 @@ export default function BlockPalette({
 
   // Rebuild the block palette when custom blocks change or the NSFW switch flips (nsfw-flagged
   // generators are hidden entirely when adult is off).
-  const blocks = useMemo(() => getBlocks({ includeAdult }), [version, includeAdult]);
+  const blocks = useMemo(() => getBlocks({ ...settings, includeAdult }), [version, includeAdult, settings]);
 
   // Rebuild the palette when the catalog hot-applies (a Manage edit / refresh re-reads disk).
   useEffect(() => subscribeCatalog(() => setVersion((v) => v + 1)), []);

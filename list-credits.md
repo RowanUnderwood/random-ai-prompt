@@ -9,6 +9,16 @@ nai-tag-expirement  https://zele.st/NovelAI/?Verbs                              
 
 NovelAI Experiments by u/Carlyone is licensed under CC BY 4.0
 
+Krea 2 imports: **simsim9-stack**'s
+[identity gist](https://gist.github.com/simsim9-stack/1cc90f751cda7f638b250cf029a18cf4),
+and **matplinta**'s [Krea 2 Style Library](https://github.com/matplinta/t2i-krea-2-style-library),
+which credits **u/Dear-Spend-2865**'s Krea 2 styles/wildcards as its descriptor source.
+Modifications: remove identity portrait framing, normalize/deduplicate identities and separate bands;
+preserve full style descriptors with whitespace/prose-parenthesis normalization. Imported text
+retains its source authors' rights and is excluded from the internal public-domain statement below;
+neither reviewed source declares an explicit content license. Curation/tooling by OpenAI Codex.
+See [exact sources and regeneration](engine/data/sources/krea2/README.md).
+
 The `activity/*` lists backing `{#action}` are adapted from **Kinetics-700-2020**,
 created by the Google DeepMind Kinetics team and distributed by the
 [Common Visual Data Foundation](https://github.com/cvdfoundation/kinetics-dataset).

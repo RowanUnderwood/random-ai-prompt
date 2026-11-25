@@ -16,6 +16,7 @@ import { createEngine } from "./core/engine.js";
 import { nodeLoader } from "./core/nodeLoader.js";
 import promptFiles from "./promptFilesAndSuggestions.js";
 import baseSettings from "./settings.js";
+import { modelContentAllowed } from "./modelContent.js";
 
 let engine = null;
 let booted = false;
@@ -74,7 +75,7 @@ export function listNames() {
  */
 export function blockTokens() {
   bootNodeEngine();
-  return promptFiles.loadBlockList().all;
+  return promptFiles.loadBlockList().all.filter((name) => modelContentAllowed(name, active || {}));
 }
 
 /**

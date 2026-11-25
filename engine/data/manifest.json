@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-25T13:03:02.980Z",
+  "generatedAt": "2026-11-25T14:44:15.299Z",
   "lists": [
     "activity/crafts.txt",
     "activity/everyday.txt",
@@ -32,6 +32,9 @@
     "danbooru/d/keyword.group",
     "danbooru/d/meta.txt",
     "danbooru/d/person.txt",
+    "krea2/bands.txt",
+    "krea2/people.txt",
+    "krea2/styles.txt",
     "look/action.txt",
     "look/clothes-nsfw.txt",
     "look/clothes-sfw.txt",
@@ -154,6 +157,7 @@
     "style/fluffy-animal.dpl",
     "style/funko-3d-print.dpl",
     "style/gold-pendant.dpl",
+    "style/krea2-style-library.dpl",
     "style/lowpoly-3d-isometric.dpl",
     "style/needle-felt.dpl",
     "style/plushie.dpl",
@@ -169,6 +173,7 @@
     "subject/entity.dpl",
     "subject/furry.dpl",
     "subject/knight.dpl",
+    "subject/krea2-actors.dpl",
     "subject/living-entity.dpl",
     "subject/person.dpl",
     "subject/portrait-animal.dpl",

@@ -79,6 +79,12 @@ export function effectiveSettings({ shareGui = true, presets = [], overrides = {
   for (const p of presets) merged = applyPreset(merged, p);
 
   merged = { ...merged, ...overrides, keys };
+  // Prompt content needs the same active model/workflow context as image generation.
+  // Read only the selected namespace; do not persist or expose other providers' settings.
+  const selectedParams = store.read(`providers/${merged.provider}`);
+  if (selectedParams && Object.keys(selectedParams).length) {
+    merged.providerParams = { [merged.provider]: selectedParams };
+  }
   return merged;
 }
 

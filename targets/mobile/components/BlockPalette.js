@@ -23,13 +23,16 @@ const INCLUDE_ADULT = false;
  * @param {{ visible: boolean, onClose: () => void, onInsert: (token: string) => void }} props
  */
 export default function BlockPalette({ visible, onClose, onInsert }) {
-  const { T } = useTheme();
+  const { T, provider, providerSettings } = useTheme();
   const styles = useMemo(() => makeStyles(T), [T]);
   const [query, setQuery] = useState("");
   const [activeCat, setActiveCat] = useState(""); // top group: Blocks | Lists
   const [activeSub, setActiveSub] = useState("All"); // folder sub-tab within the active group
 
-  const blocks = useMemo(() => getBlocks({ includeAdult: INCLUDE_ADULT }), []);
+  const blocks = useMemo(
+    () => getBlocks({ includeAdult: INCLUDE_ADULT, provider, providerParams: providerSettings }),
+    [provider, providerSettings],
+  );
 
   const q = query.trim().toLowerCase();
   const matchItem = (i) =>

@@ -30,6 +30,7 @@ import {
   compareNames,
 } from "../listManifest.js";
 import compileDpl from "./dpl/dpl.js";
+import { isStableDiffusionSelected } from "../modelContent.js";
 
 // Lazy globs — declared ONLY so their KEYS (paths) are available synchronously. The importer
 // functions are never called here (content comes from the browserCatalogData chunk), so no data is
@@ -263,8 +264,8 @@ export function initBrowserCatalog() {
  * @type {object}
  */
 export const browserLoader = {
-  readListLines(name, includeAdult = false) {
-    const cacheKey = `${name}|${includeAdult ? 1 : 0}`;
+  readListLines(name, includeAdult = false, contentSettings = {}) {
+    const cacheKey = `${name}|${includeAdult ? 1 : 0}|${isStableDiffusionSelected(contentSettings)}`;
     if (_listLinesCache.has(cacheKey)) return _listLinesCache.get(cacheKey);
     const canonical = resolveName(name, _allNames);
     const lines = resolveListLines(
@@ -274,6 +275,7 @@ export const browserLoader = {
         readListFile: (n) => listLines[n] ?? null,
         readGroupFile: (n) => groupLines[n] ?? null,
         groupListDirs,
+        contentSettings,
       },
       includeAdult,
     );

@@ -27,6 +27,7 @@ import {
   compareNames,
 } from "../listManifest.js";
 import compileDpl from "./dpl/dpl.js";
+import { isStableDiffusionSelected } from "../modelContent.js";
 
 const require = createRequire(import.meta.url);
 const rootDir = fileURLToPath(new URL("../../", import.meta.url)); // repo root (engine/core is two below)
@@ -228,15 +229,15 @@ const allNames = () =>
  * @type {object}
  */
 export const nodeLoader = {
-  readListLines(name, includeAdult = false) {
-    const cacheKey = `${name}|${includeAdult ? 1 : 0}`;
+  readListLines(name, includeAdult = false, contentSettings = {}) {
+    const cacheKey = `${name}|${includeAdult ? 1 : 0}|${isStableDiffusionSelected(contentSettings)}`;
     if (_listLinesCache.has(cacheKey)) return _listLinesCache.get(cacheKey);
     const dirs = groupListDirs();
     const names = allNames();
     const canonical = resolveName(name, names);
     const lines = resolveListLines(
       canonical,
-      { names, readListFile, readGroupFile, groupListDirs: dirs },
+      { names, readListFile, readGroupFile, groupListDirs: dirs, contentSettings },
       includeAdult,
     );
     _listLinesCache.set(cacheKey, lines);

@@ -8,6 +8,7 @@ import { randomFloat, randomInt, sample } from "./helpers/random.js";
 import cleanup from "./core/stages/cleanup.js";
 import { isGatedList, hasNsfwToken, isGatedBlock } from "./gatedLists.js";
 import { hasVariantSuffix, computeButtonNames } from "./listManifest.js";
+import { modelContentAllowed } from "./modelContent.js";
 
 // Dynamic-prompt classification + random "suggestion" builder.
 //
@@ -154,7 +155,10 @@ function loadListFileList() {
  * @returns {string[]} The picker-facing list names, in load order.
  */
 function pickerListNames() {
-  const names = requireLoader().listNames(); // logical names (base + -sfw/-nsfw variants)
+  const ctx = settings ? settings() : {};
+  const names = requireLoader()
+    .listNames()
+    .filter((name) => modelContentAllowed(name, ctx.settings));
   // Reserved wildcard: {keyword} draws from all loaded vocabulary. Offered as a
   // first-class button (its -sfw/-nsfw variants follow the same mode rules as files).
   if (adultAllowed()) return ["keyword", "keyword-sfw", "keyword-nsfw", ...names];
@@ -193,7 +197,10 @@ function adultAllowed() {
  * @returns {string[]} The filtered pool.
  */
 function gatePool(names, isGated) {
-  return adultAllowed() ? names : names.filter((n) => !isGated(n));
+  const ctx = settings ? settings() : {};
+  return names.filter(
+    (n) => modelContentAllowed(n, ctx.settings) && (adultAllowed() || !isGated(n)),
+  );
 }
 
 function prePrompt(maxCount) {

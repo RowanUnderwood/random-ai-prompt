@@ -138,6 +138,7 @@ Slurs, minor-sexualizing, and extreme shock/gore content are removed by
 
 | Folder | What's in it |
 |--------|--------------|
+| `krea2/` | Identity-only people, separate band/collective names, and full style descriptors. Force-prefixed; whole-folder group disabled to avoid mixing content types. Hidden for SD selections. See [Krea content](../../../notes/systems/krea2-content.md). |
 | `activity/` | Kinetics-derived everyday, crafts, music, sports, outdoor, and social activities, each with matching pose/props. Forced prefixes (`{activity/music}`); implied union `{activity}` backs `{#action}`. Original `{action}` still resolves to `look/action`. See [action content](../../../notes/systems/action-content.md). |
 | `danbooru/d/` | Danbooru tags: general-sfw + general-nsfw (implicit `{d/general}`), artist, character-c, character-nc, meta, person. `_force-prefix` (→ `{d/...}`); implied group `{d}` (2+ files). Subset groups: `keyword` (no artists), `character` (c + nc) |
 | `artist/` | Stable-Diffusion artist styles: anime, bw, cartoon, dhigh/dmed/dlow, fareast, fineart, nudity-nsfw, scribbles, special, ukioe, weird, secondary. `_force-prefix` (→ `{artist/...}`); implied group `{artist}`. Subset group: `digipa` (dhigh+dmed+dlow) |

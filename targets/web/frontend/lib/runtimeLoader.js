@@ -141,14 +141,15 @@ export const runtimeLoader = {
     rebuildDerived();
   },
 
-  readListLines(name, includeAdult = false) {
-    if (!snap) return browserLoader.readListLines(name, includeAdult);
+  readListLines(name, includeAdult = false, contentSettings = {}) {
+    if (!snap) return browserLoader.readListLines(name, includeAdult, contentSettings);
     const { listNames, groupListDirs } = derived;
     const canonical = resolveName(name, listNames);
     return resolveListLines(
       canonical,
       {
         names: listNames,
+        contentSettings,
         readListFile: (n) => (n in snap.lists ? splitLines(snap.lists[n]) : null),
         readGroupFile: (n) => (n in snap.listGroups ? splitLines(snap.listGroups[n]) : null),
         groupListDirs,

@@ -28,6 +28,7 @@ import { makeBlockStage } from "./stages/block.js";
 import { makeListStage } from "./stages/list.js";
 import emphasis from "./stages/emphasis.js";
 import { createListStore } from "./listStore.js";
+import { modelContentLoader, isStableDiffusionSelected } from "../modelContent.js";
 
 // v3-only pipeline. The legacy `<expansion>` stage was removed (v1/v2-era); the
 // block stage internally re-expands up to 10 passes, so one entry suffices.
@@ -42,6 +43,9 @@ const DEFAULT_ORDER = ["block", "prompt-salt", "list", "emphasis", "cleanup"];
  * @returns {{expand: Function, generate: Function, generateMany: Function}} The engine API.
  */
 export function createEngine(loader) {
+  let activeSettings = {};
+  let sdContent = false;
+  loader = modelContentLoader(loader, () => activeSettings);
   const store = createListStore(loader);
 
   const stages = {
@@ -61,6 +65,10 @@ export function createEngine(loader) {
    * @returns {string} The fully expanded prompt.
    */
   function expand(prompt, settings, imageSettings, upscaleSettings) {
+    const nextSdContent = isStableDiffusionSelected(settings);
+    if (nextSdContent !== sdContent) store.reset();
+    sdContent = nextSdContent;
+    activeSettings = settings;
     const order = settings.promptModules || DEFAULT_ORDER;
     for (const name of order) {
       const stage = stages[name];

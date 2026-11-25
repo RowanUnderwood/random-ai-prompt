@@ -18,6 +18,7 @@ import promptFiles from "../../../../engine/promptFilesAndSuggestions.js";
 import { computeButtonNames, compareNames } from "../../../../engine/listManifest.js";
 import { isGatedBlock } from "../../../../engine/gatedLists.js";
 import { buildBlocks, buildDplCompletions } from "../../../../engine/blockCatalog.js";
+import { modelContentLoader } from "../../../../engine/modelContent.js";
 import { getCustomPresets } from "./customStore.js";
 import { runtimeLoader } from "./runtimeLoader.js";
 import { initBrowserCatalog } from "../../../../engine/core/browserLoader.js";
@@ -189,15 +190,15 @@ export function getBlocks(opts = {}) {
  * Flatten the building-block catalog into autocomplete entries for the DPL editor.
  * @returns {object[]} The completion entries.
  */
-export function getDplCompletions() {
-  return buildDplCompletions(loader);
+export function getDplCompletions(settings = {}) {
+  return buildDplCompletions(loader, settings);
 }
 
 /**
  * @returns {string[]} The sorted list names.
  */
-export function getListNames() {
-  return loader.listNames().slice().sort();
+export function getListNames(settings = {}) {
+  return modelContentLoader(loader, () => settings).listNames().slice().sort();
 }
 
 /**

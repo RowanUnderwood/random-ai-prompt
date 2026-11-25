@@ -28,6 +28,6 @@ export function getBlocks(opts = {}) {
  * Flatten the catalog into autocomplete entries for the mobile DPL editor's completion strip.
  * @returns {object[]} The completion entries.
  */
-export function getDplCompletions() {
-  return buildDplCompletions(loader);
+export function getDplCompletions(settings = {}) {
+  return buildDplCompletions(loader, settings);
 }

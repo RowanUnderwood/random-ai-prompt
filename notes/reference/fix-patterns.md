@@ -1,5 +1,11 @@
 # Fix Patterns — error → fix lookup
 
+**Model-hidden content leaks after direct `engine.expand` calls switch models:** loaders may filter
+fresh reads while the per-engine list store still holds depleted entries from the previous model.
+Reset list-store state when the SD-visibility context changes, and separate loader read-cache keys
+by the same context. The Krea-content direct-expand regression fails without this reset and passes
+with it; wildcard/group resolution also receives the context recursively.
+
 Quick table of errors hit and how they were resolved. Add a row whenever you fix something reusable.
 
 **Single-view arrows navigate while editing a prompt, or Escape leaves Single before closing a modal:**

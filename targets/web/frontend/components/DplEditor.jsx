@@ -137,7 +137,7 @@ function DplEditor(
         makeDplLinter(intlRef),
         autocompletion({
           override: [
-            dplCompletionSource(getDplCompletions, {
+            dplCompletionSource(() => getDplCompletions(settingsRef.current || {}), {
               expand: expandExample,
               getSettings: () => settingsRef.current || {},
             }),

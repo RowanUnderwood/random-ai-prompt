@@ -3,7 +3,14 @@
 _Current state only._ For the chronological history of what changed each session and why, see
 [`sessions/`](sessions/README.md). For the commit-by-commit changelog see [`version.md`](version.md).
 
-## Local fork (2026-11-25, 2.60.4-local.5)
+## Local fork (2026-11-25, 2.60.4-local.6)
+
+Krea 2 content: Subject `{#krea2-actors}` with 1,010 identities, separate 53-band list, and Style
+`{#krea2-style-library}` with 288 descriptors. Shared model-aware visibility hides these under SD
+selections while retaining normal Krea group selection. See [Krea content](systems/krea2-content.md).
+Full gate passes: 1,002 tests (427 Node, 453 web, 122 mobile). Production UI/native builds and
+packaged content checks pass. Browser insertion/provider switching verified at four widths.
+Native .6 is staged; close the running app and use `launch-desktop.bat` to apply it.
 
 Added `{#action}` with 72 Kinetics-derived human activities across six family lists, preserving
 the existing `{action}` list. The fragment keeps action/pose/props together and composes explicitly

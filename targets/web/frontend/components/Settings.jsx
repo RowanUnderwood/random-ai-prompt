@@ -89,7 +89,7 @@ export default function Settings({ settings, setSettings }) {
   // List names themselves are content identifiers (not UI strings) and stay as-is.
   const listOptions = [
     { value: "false", label: intl.formatMessage(msgs.fullyRandom) },
-    ...getListNames(),
+    ...getListNames(settings),
   ];
 
   return (

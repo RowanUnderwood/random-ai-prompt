@@ -23,6 +23,7 @@
  */
 import { computeButtonNames, compareNames } from "./nameOrder.js";
 import { isGatedBlock } from "./gatedLists.js";
+import { modelContentLoader } from "./modelContent.js";
 
 const lastSeg = (f) => (f === "" ? "misc" : f.split("/").pop());
 
@@ -86,6 +87,7 @@ const specialGroup = () => ({
  * @returns {object[]} The Blocks + Lists groups.
  */
 export function buildBlocks(loader, opts = {}) {
+  loader = modelContentLoader(loader, () => opts);
   const includeAdult = opts.includeAdult === true;
 
   // --- Catalog derivations, read live from the loader (so edits/refresh are reflected) ---
