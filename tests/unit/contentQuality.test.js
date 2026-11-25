@@ -173,6 +173,28 @@ describe("blocks", () => {
     }
   });
 
+  it("still answer to the full paths of blocks that moved folder (regression)", () => {
+    const moved = {
+      people: ["subject/person", "subject/knight", "subject/krea2-actors"],
+      helper: [
+        "subject/portrait",
+        "subject/entity-name",
+        "subject/living-entity",
+        "fragment/neon",
+        "style/krea2-style-library",
+      ],
+      "styled-subject": direct("styled-subject").map((n) => `style/${n}`),
+    };
+    const settings = { autoAddFx: false, autoAddArtists: false, includeArtist: false };
+    for (const [folder, paths] of Object.entries(moved))
+      for (const old of paths) {
+        expect(blocks).toContain(`${folder}/${path.posix.basename(old)}`);
+        const texts = outputs(`{#${old}}`, settings, 25);
+        expect([old, texts.some(Boolean)]).toEqual([old, true]);
+      }
+    expect(outputs("{#subject/no-such-block}", settings, 5).filter(Boolean)).toEqual([]);
+  });
+
   it("offer only human subjects under {#people}", () => {
     expect(direct("people").sort()).toEqual([
       "everyday-person",

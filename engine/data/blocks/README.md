@@ -37,6 +37,9 @@ User-typed duplicates always render. A generator that legitimately repeats (deco
 `color`/`glow`) opts out with `stacking: true` front-matter. See
 [`layering`](../../../notes/reference/layering-design.md).
 
+A path whose folder no longer holds that block falls back to its name, so `{#subject/person}` still finds
+`people/person` after a move.
+
 Special forms:
 
 - **`{#user-name}`** → back-compat alias for a community generator under `user/`.

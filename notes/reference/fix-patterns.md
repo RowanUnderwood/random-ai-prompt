@@ -35,6 +35,10 @@ parameter sees `50`. Compare strictly (`=== true`). `contentQuality.test.js` cov
 **The engine hangs on an `N of` choice with decks:** its loop ran until it had N different cards, so a deck
 returning a repeat spun forever. The real deck never did, but the loop is now bounded; `decks.test.js`.
 
+**A full block path such as `{#subject/person}` produces nothing after the block moved folder:** unresolved
+references silently render empty. The block stage now retries a failed path by its last segment.
+Every moved path is covered in `contentQuality.test.js`.
+
 Quick table of errors hit and how they were resolved. Add a row whenever you fix something reusable.
 
 **Single-view arrows navigate while editing a prompt, or Escape leaves Single before closing a modal:**

@@ -169,7 +169,16 @@ export function makeBlockStage(loader) {
         return pickFrom(deck, names, m ? m[1].toLowerCase() : null, intensity, focus, dedup);
       }
 
-      const canonical = resolveName(name, resolvePool);
+      let canonical = resolveName(name, resolvePool);
+      // A path whose folder is wrong (the block has moved, as {#subject/person} did) still finds it by name.
+      if (
+        !resolvePool.includes(canonical) &&
+        name.includes("/") &&
+        !loader.readBlockGroup?.(name)
+      ) {
+        const byName = resolveName(name.slice(name.lastIndexOf("/") + 1), names);
+        if (names.includes(byName)) canonical = byName;
+      }
 
       // Implied folder group ({#scene}) — pick one random member generator.
       if (groups.includes(canonical))
