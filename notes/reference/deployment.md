@@ -170,8 +170,8 @@ silent — cosmetic, deferred.
 ### The version gate
 
 Trigger: **push to `main`** (in this fork a direct fast-forward of locally verified work — see
-[`git-workflow.md`](git-workflow.md); workflows are registered here but none has run yet, so no
-release has been cut). Gate: the tag **`v<VERSION>` must not already exist** — i.e.
+[`git-workflow.md`](git-workflow.md); GitHub Actions is disabled here and the owner wants no
+releases). Gate: the tag **`v<VERSION>` must not already exist** — i.e.
 `VERSION` was bumped since the last release. So:
 
 - Bump `VERSION` (+ `package.json`, same commit; see [`versioning.md`](versioning.md)) → the next time

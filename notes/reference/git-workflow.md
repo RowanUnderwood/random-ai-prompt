@@ -56,10 +56,9 @@ CI to gate on, and verified work is pushed directly. What still holds:
 - The owner explicitly asks for each push to `main`.
 - `npm test` is green and `npm run check:committed` passes.
 - The push is a fast-forward. Never force it.
-- Pushing is not releasing. GitHub registered this fork's nine workflows as active on its first push to
-  `main` (2026-11-25), though none ran. If they start running, an untagged `VERSION` would publish a
-  public release (see "Who creates the tag" below). Unless the owner asked for one, put `[skip ci]` in
-  the tip commit's message.
+- Pushing is not releasing. This fork is a personal project with no releases, and the owner disabled
+  GitHub Actions (2026-11-25). If Actions is ever re-enabled, an untagged `VERSION` would publish a
+  public release on push (see "Who creates the tag" below), so ask first.
 
 This is a recorded local divergence from the hub git-workflow standard. Contributing back to upstream
 still means a pull request there.
@@ -107,7 +106,7 @@ find the tag present and **skip itself — a silent no-op release.** The rule fo
 
 - **The push to `main` is the release act; CI applies the tag.** Never run `git tag` / `git push
   --tags` for a release here.
-- No workflow has run on this fork yet, so its pushes are currently untagged.
+- GitHub Actions is disabled on this fork, so its pushes are untagged. Nothing here tags by hand either.
 
 (This is a deliberate, recorded divergence from the hub's hand-tag example commands, which assume a
 project whose `release.yml` does *not* tag. The hub documents exactly this CI-vs-hand fork.)

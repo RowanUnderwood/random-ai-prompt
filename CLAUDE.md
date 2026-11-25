@@ -388,10 +388,10 @@ After making changes, run this loop without being asked:
    `git merge-base --is-ancestor origin/main HEAD`, then `git push origin HEAD:main`. If `main` has
    commits the branch lacks, merge them in and re-test; never force. Push the working branch too.
    **Do not tag by hand.** `release.yml` derives `v<VERSION>` and creates the tag itself, gated on that
-   tag not already existing. GitHub lists this fork's workflows as active, but none
-   had ever run as of 2026-11-25. If they start running, a push to `main` with an untagged `VERSION`
-   publishes a public GitHub Release and deploys Pages. Unless the owner asked for a release, put
-   `[skip ci]` in the tip commit's message. The local gate is the only check until CI runs. If the fork keeps a `dev` branch, it must contain `main` after each push.
+   tag not already existing. **This fork makes no releases**: it is a personal
+   project and the owner disabled GitHub Actions (2026-11-25). Do not cut releases, re-enable Actions,
+   or wait on CI; the local gate is the only check. If Actions is ever re-enabled, a push to `main`
+   with an untagged `VERSION` would publish a public release, so ask first. If the fork keeps a `dev` branch, it must contain `main` after each push.
    See `reference/git-workflow.md` and `reference/deployment.md`.
 6. **Regenerate the docs after shipping (by default).** After releasing to `main`, run `npm run docs` so
    the generated `docs/jsdoc/` (git-ignored) tracks `main`; CI also rebuilds + deploys it to Pages.
