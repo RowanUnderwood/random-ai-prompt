@@ -4,10 +4,24 @@ description: Flowers, trees, and greenery
 
 Start
 ===
-- 50% repeat 1 to 3 times: {#color} {flower}
-- 50% repeat 1 to 3 times: {tree}
-- vines
-- {#color} plants
-- $intensity-word foliage
-- lush greenery
-- 25% oasis
+4 to 7 of:
+    - {#color} {flower}
+    - {flower}
+    - {tree}
+    - vines
+    - {#color} plants
+    - $intensity-word foliage
+    - lush greenery
+    - moss
+    - ferns
+    - wildflowers
+    - ivy
+    - tall grass
+    - mushrooms
+    - fallen leaves
+    - tangled roots
+    - bamboo
+    - reeds
+    - lichen-covered stones
+    - blossoming branches
+    - dewdrops on leaves

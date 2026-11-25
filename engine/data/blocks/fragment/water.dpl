@@ -4,10 +4,8 @@ description: Bodies of water
 
 Start
 ===
-- water
-- 50% one of (25% nothing):
-    - lake
-    - pond
-    - ocean
-- stream
-- river
+{nature/water}
+- {weather}
+- reflections on the surface
+- ripples
+- mist over the water

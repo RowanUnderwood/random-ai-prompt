@@ -31,4 +31,4 @@ ship, {scene/ship}
 - 25% {#mystical}
 - {style/construct}
 
-{#weather}
+80% {#weather}

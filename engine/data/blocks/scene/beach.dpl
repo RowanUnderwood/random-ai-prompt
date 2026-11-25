@@ -44,4 +44,4 @@ beach
 [f<70%] {#nature}
 [f<55%] {#eerie}
 [f<35%] {#mystical}
-[f<70%] {#weather}
+[f<70%] 80% {#weather}

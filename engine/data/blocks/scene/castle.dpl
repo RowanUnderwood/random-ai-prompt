@@ -29,8 +29,10 @@ castle, {view}
 
 ; atmosphere garnish
 [f<65%] {#nature}
-[f<50%] {#water}
-[f<45%] {#wildlife}
+[f<50%] one of (35% nothing):
+    - {#water}
+[f<45%] one of (43% nothing):
+    - {#wildlife}
 [f<45%] {#eerie}
 [f<35%] {#mystical}
-[f<70%] {#weather}
+[f<70%] 80% {#weather}

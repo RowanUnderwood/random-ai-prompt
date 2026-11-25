@@ -4,12 +4,28 @@ description: A great bridge over an ocean of clouds
 
 Start
 ===
-((a beautiful $intensity-word +30% bridge over a vast ocean of clouds)), clouds beneath the bridge, wide angle, closeup
+one of:
+    - beautiful bridge over a vast ocean of clouds
+    - ancient stone viaduct across a bottomless gorge
+    - living bridge woven from tree roots
+    - ruined bridge ending in mid-air
+    - covered wooden bridge above a torrent
+    - crystal bridge between two peaks
+    - rope bridge strung between cliffs
+    - monumental suspension bridge rising from sea fog
+    - bridge lined with houses and shops
+    - aqueduct striding across a flooded valley
+{view}
+- clouds beneath the bridge
 - exotic
 - fog
+- lanterns along the railings
+- statues at the gate
+- a lone figure crossing
 - 25% winter, snow landscape, {#ice}
+- {style/building}
 - {#eerie}
 - {#mystical}
 - {#glow}
 
-{#weather}
+80% {#weather}

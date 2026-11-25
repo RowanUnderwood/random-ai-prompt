@@ -28,8 +28,10 @@ Start
 
 ; atmosphere garnish
 [f<70%] {#nature}
-[f<55%] {#wildlife}
-[f<50%] {#water}
+[f<55%] one of (43% nothing):
+    - {#wildlife}
+[f<50%] one of (35% nothing):
+    - {#water}
 [f<45%] {#eerie}
 [f<35%] {#mystical}
-[f<70%] {#weather}
+[f<70%] 80% {#weather}

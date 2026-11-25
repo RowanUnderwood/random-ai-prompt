@@ -128,6 +128,26 @@ describe("block — NSFW gating", () => {
 });
 
 describe("block — auto-append", () => {
+  it("draws a group from included folders, skipping blocks whose required setting is off", () => {
+    const stage = makeBlockStage(
+      loader({
+        modules: {
+          "a/one": { default: () => "ONE" },
+          "a/needs": { default: () => "NEEDS" },
+          "b/two": { default: () => "TWO" },
+          "c/three": { default: () => "THREE" },
+        },
+        groupDirs: ["a"],
+        meta: { a: { include: ["b"] }, "a/needs": { requires: "flag" } },
+      }),
+    );
+    const seen = (extra) =>
+      new Set(Array.from({ length: 200 }, () => run(stage, "{#a}", S(extra)).trim()));
+    expect([...seen({})].sort()).toEqual(["ONE", "TWO"]);
+    expect([...seen({ flag: true })].sort()).toEqual(["NEEDS", "ONE", "TWO"]);
+    expect(run(stage, "{#needs}", S({})).trim()).toBe("NEEDS"); // by name is always honored
+  });
+
   it("appends {#fx} once when autoAddFx is on, resolving nested tokens", () => {
     const stage = makeBlockStage(
       loader({

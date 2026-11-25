@@ -52,7 +52,7 @@ const prompts = [
   "{#scene}",
   "{#style/anime-realism}",
   "a {look/color} {nature/flower} in {place/city}",
-  "{#subject/person}, {#fragment/glow}",
+  "{#people/person}, {#helper/glow}",
   baseSettings.prompt,
 ];
 

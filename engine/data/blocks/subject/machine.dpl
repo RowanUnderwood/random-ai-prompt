@@ -1,0 +1,11 @@
+---
+description: A machine, robot or device
+---
+
+Start
+===
+{thing/machine}
+60% {style/construct}
+- {#general-state}
+- {#neon} lighting
+- {time}

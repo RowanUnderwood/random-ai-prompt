@@ -1,0 +1,4 @@
+{
+  "description": "Building pieces used inside other blocks. Usable by name; never picked at random by a group.",
+  "priority": 650
+}

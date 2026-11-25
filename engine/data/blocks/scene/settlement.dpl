@@ -4,10 +4,28 @@ description: A small settlement — houses, a village, worn paths
 
 Start
 ===
+one of:
+    - hillside village
+    - fishing village
+    - forest hamlet
+    - desert settlement
+    - river town
+    - mountain village
+    - frontier outpost
+    - farming village
+    - stilt village over water
+    - cliffside settlement
+    - snowbound village
+    - marshland hamlet
 - [[houses]]
 - [[village]]
 - [[dirt path]]
 - worn weathered buildings
+- market stalls
+- a stone well
+- laundry on lines
+- gardens and livestock
 - 50% smoke rising from chimneys
 - fences
+- {style/building}
 - {time}

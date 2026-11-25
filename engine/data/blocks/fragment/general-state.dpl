@@ -4,14 +4,17 @@ description: General condition — clean/reflective or dirty/broken
 
 Start
 ===
-- {mood} atmosphere
+{mood} atmosphere
 - maybe:
     - reflective surface
     - polished
     - pristine
+    - freshly painted
 - otherwise:
     - weathered
     - grunge
     - cracked
     - broken
+    - sun-bleached
+    - overgrown
 - $intensity-word wear

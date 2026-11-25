@@ -1,4 +1,5 @@
 ---
+suggestions: off
 description: Optional color (or multi-color)
 stacking: true
 ---

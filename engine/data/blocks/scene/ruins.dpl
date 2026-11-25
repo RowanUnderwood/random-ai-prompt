@@ -34,8 +34,9 @@ Start
 
 ; atmosphere garnish
 [f<70%] {#nature}
-[f<55%] {#wildlife}
+[f<55%] one of (43% nothing):
+    - {#wildlife}
 [f<50%] {#eerie}
 [f<40%] {#mystical}
 [f<35%] {#ice}
-[f<70%] {#weather}
+[f<70%] 80% {#weather}

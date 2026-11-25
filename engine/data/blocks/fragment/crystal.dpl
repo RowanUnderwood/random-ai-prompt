@@ -5,12 +5,24 @@ stacking: true
 
 Start
 ===
-- {#glow} crystals
-- {#glow} crystal walls
-- $intensity-word crystal formations
-- glowing
-- ruby
-- diamond
-- emerald
-- amethyst
-- quartz
+3 to 5 of:
+    - {#glow} crystals
+    - {#glow} crystal walls
+    - $intensity-word crystal formations
+    - glowing
+    - ruby
+    - diamond
+    - emerald
+    - amethyst
+    - quartz
+    - sapphire
+    - opal
+    - obsidian shards
+    - geode hollows
+    - prismatic refractions
+    - crystal spires
+    - faceted reflections
+    - selenite columns
+    - tourmaline
+    - citrine
+    - moonstone

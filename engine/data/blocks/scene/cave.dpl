@@ -38,8 +38,10 @@ cavern
 
 ; atmosphere garnish
 [f<70%] {#nature}
-[f<60%] {#water}
-[f<45%] {#wildlife}
+[f<60%] one of (35% nothing):
+    - {#water}
+[f<45%] one of (43% nothing):
+    - {#wildlife}
 [f<45%] {#eerie}
 [f<35%] {#mystical}
-[f<70%] {#weather}
+[f<70%] 80% {#weather}

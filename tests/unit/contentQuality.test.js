@@ -6,6 +6,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { nodeLoader } from "../../engine/core/nodeLoader.js";
+import { createEngine } from "../../engine/core/engine.js";
 import { metroLoader } from "../../engine/core/metroLoader.js";
 import { classifyRemoval } from "../../engine/contentSafety.js";
 import { resolveListLines, resolveName } from "../../engine/listManifest.js";
@@ -99,6 +100,69 @@ describe("blocks", () => {
         if (!runtimeTokens.has(ref) && !lists.includes(resolveName(ref, lists)))
           missing.push(`${file}: {${ref}}`);
     expect(missing).toEqual([]);
+  });
+
+  const direct = (dir) =>
+    blocks.filter((n) => path.posix.dirname(n) === dir).map((n) => path.posix.basename(n));
+  const outputs = (token, settings = {}, rolls = 120) => {
+    const engine = createEngine(nodeLoader);
+    const base = { provider: "comfy-local", includeAdult: true, randomSeed: true, ...settings };
+    return Array.from({ length: rolls }, () =>
+      engine.generate({ ...base, keywordEmphasis: false, prompt: token }).trim(),
+    );
+  };
+
+  it("keep helpers out of every random group but usable by name", () => {
+    const groups = nodeLoader.blockGroupDirsAll();
+    expect(groups).toEqual(expect.arrayContaining(["subject", "people", "style", "fragment"]));
+    expect(groups).not.toContain("helper");
+    for (const name of ["color", "glow", "neon", "portrait", "entity-name", "living-entity"])
+      expect(resolveName(name, blocks)).toBe(`helper/${name}`);
+  });
+
+  it("offer only human subjects under {#people}", () => {
+    expect(direct("people").sort()).toEqual([
+      "everyday-person",
+      "fantasy-role",
+      "group",
+      "historical-figure",
+      "knight",
+      "krea2-actors",
+      "krea2-bands",
+      "occupation",
+      "pair",
+      "person",
+      "scifi-role",
+    ]);
+    expect(nodeLoader.readBlockMeta("subject").include).toEqual(["people"]);
+  });
+
+  it.each(["weather", "water", "wildlife", "expressive", "fx", "camera", "settlement"])(
+    "{#%s} is never empty",
+    (name) => expect(outputs(`{#${name}}`).filter((t) => !t)).toEqual([]),
+  );
+
+  it.each(["subject", "people", "scene", "style", "fragment", "prompt"])(
+    "the {#%s} group is rarely empty",
+    (name) => {
+      const texts = outputs(`{#${name}}`, { includeArtist: false }, 300);
+      expect(texts.filter((t) => !t).length).toBeLessThanOrEqual(15);
+    },
+  );
+
+  it("never describe people as children", () => {
+    const young = /\b(girl|boy|child|children|kid|teen|teenage|toddler|baby|schoolgirl|loli)\b/i;
+    for (const name of lists.filter((n) => n.startsWith("people/")))
+      expect(nodeLoader.readListLines(name, true).filter((l) => young.test(l))).toEqual([]);
+    expect(outputs("{#portrait-princess}").filter((t) => /\bgirl\b/.test(t))).toEqual([]);
+  });
+
+  it("dress anime characters from the SFW clothes only", () => {
+    const nsfw = new Set(nodeLoader.readListLines("clothes-nsfw", true));
+    for (const line of nodeLoader.readListLines("clothes-sfw", true)) nsfw.delete(line);
+    const source = fs.readFileSync(path.join(BLOCKS, "subject/entity.js"), "utf8");
+    expect(nsfw.size).toBeGreaterThan(0);
+    expect(source).toMatch(/d\/character\}`;\s+clothes = "\{clothes-sfw\}"/);
   });
 
   it("reference only blocks and groups that exist", () => {

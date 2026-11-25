@@ -133,6 +133,18 @@ export function makeBlockStage(loader) {
     // Built once per stage call (was rebuilt for every `{#…}` token on every pass).
     const resolvePool = [...names, ...groups];
 
+    // A sidecar's `requires` names a setting its block needs to produce anything (artists need
+    // `includeArtist`), so a random pick never lands on a block that would come out empty.
+    const usable = (key) => {
+      const needs = loader.readBlockMeta?.(key)?.requires;
+      return !needs || !!settings[needs];
+    };
+    // A group's members: its folder's own blocks, plus those of any folder its sidecar `include`s.
+    const groupMembers = (dir) => [
+      ...dynGroupMembers(dir, names),
+      ...(loader.readBlockMeta?.(dir)?.include || []).flatMap((d) => dynGroupMembers(d, names)),
+    ];
+
     // Pick ONE generator from a pool (a group's members, or the whole catalog for {#any}),
     // honoring an explicit sfw/nsfw variant or the adult-mode default.
     function pickFrom(deck, pool, variant, intensity, focus, dedup) {
@@ -141,6 +153,7 @@ export function makeBlockStage(loader) {
       else if (variant === "nsfw")
         ok = includeAdult ? pool : []; // -nsfw is nothing when adult off
       else ok = includeAdult ? pool : pool.filter((n) => !isNsfw(n));
+      ok = ok.filter(usable);
       const key = ok.length ? pickOption(`blocks:${deck}`, ok) : null;
       return key ? run(key, settings, imageSettings, upscaleSettings, intensity, focus, dedup) : "";
     }
@@ -160,14 +173,7 @@ export function makeBlockStage(loader) {
 
       // Implied folder group ({#scene}) — pick one random member generator.
       if (groups.includes(canonical))
-        return pickFrom(
-          canonical,
-          dynGroupMembers(canonical, names),
-          null,
-          intensity,
-          focus,
-          dedup,
-        );
+        return pickFrom(canonical, groupMembers(canonical), null, intensity, focus, dedup);
 
       // Explicit `<name>.group` file — pick one random member.
       const groupFile = loader.readBlockGroup ? loader.readBlockGroup(canonical) : null;

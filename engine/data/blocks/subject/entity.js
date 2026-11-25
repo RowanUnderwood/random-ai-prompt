@@ -21,8 +21,19 @@ const livingEntity = [0, 1, 4, 6];
  * @param {boolean} [nameOnly] Emit just the subject token (no emotion/hair/clothes).
  * @returns {string} The generated prompt fragment.
  */
+// A described adult, instead of the bare word "person".
+function describedAdult() {
+  let out = "{people/age} {people/heritage} {people/noun}";
+  if (randomFloat() < 0.4) out += ", {people/build}";
+  if (randomFloat() < 0.6) out += ", with {people/feature}";
+  if (randomFloat() < 0.6) out += ", wearing {people/outfit}";
+  if (randomFloat() < 0.4) out += ", {emotion}";
+  return out;
+}
+
 export default function (settings, imageSettings, upscaleSettings, specificEntity, nameOnly) {
   let prompt = "";
+  let clothes = "{clothes}";
   if (nameOnly == undefined) nameOnly = false;
 
   let emotion = false;
@@ -39,6 +50,7 @@ export default function (settings, imageSettings, upscaleSettings, specificEntit
       break;
     case 1:
       prompt += `{d/character}`;
+      clothes = "{clothes-sfw}"; // many of these characters are not adults
       emotion = true;
       human = true;
       break;
@@ -55,17 +67,15 @@ export default function (settings, imageSettings, upscaleSettings, specificEntit
       prompt += `{tree}`;
       break;
     case 6:
-      prompt += `person`;
-      emotion = true;
-      human = true;
-      break;
+      if (nameOnly) return "{people/occupation}";
+      return describedAdult();
   }
 
   if (randomFloat() < 0.5 && emotion && !nameOnly) prompt += ", {emotion}";
   if (randomFloat() < 0.5 && human && !nameOnly) prompt += `, {#color} {hair}`;
 
   const clothingCount = randomFloat() < 0.5 && human && !nameOnly ? randomInt(0, 5) : 0;
-  for (let i = 0; i < clothingCount; i++) prompt += `, {#color} {clothes}`;
+  for (let i = 0; i < clothingCount; i++) prompt += `, {#color} ${clothes}`;
 
   return prompt;
 }

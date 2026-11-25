@@ -45,6 +45,9 @@ Special forms:
 - **`{#any}`** / **`{#any-sfw}`** / **`{#any-nsfw}`** → pick one random generator from the WHOLE catalog
   (`{#any}` = SFW, +NSFW when adult mode is on; `-sfw` always SFW; `-nsfw` only in adult mode).
 
+A folder's sidecar may `include` other folders in its group, and a block's sidecar may name a setting it
+`requires` (the `artists` block needs `includeArtist`); a group skips a block whose setting is off.
+
 The "pick one" always selects a single generator and runs it — it is not a union of many (the
 generator-level analog of the lists' pick-one folder group, where the unit is one word).
 
@@ -57,8 +60,10 @@ generator from it:
 | Folder | What's in it |
 |--------|--------------|
 | `scene/` | Full standalone scenes & places — `city`, `castle`, `beach`, `landscape`, `room`, `space`, `ship`, … |
-| `subject/` | Subjects — the `entity` polymorphism, `person`, `animal`, the `portrait-*` family, … |
-| `fragment/` | Partial modifiers / garnishes composed into fulls — `color`, `glow`, `weather`, `nature`, … |
+| `subject/` | Subjects — the `entity` polymorphism, `animal`, `animal-scene`, `still-life`, `food`, `machine`, the `portrait-*` family, … Its sidecar includes `people/`, so `{#subject}` draws from both |
+| `people/` | Adults only — `person`, `everyday-person`, `occupation`, `historical-figure`, `fantasy-role`, `scifi-role`, `pair`, `group`, … Use `{#people}` with `{#action}` |
+| `helper/` | Pieces used inside other blocks (`color`, `glow`, `neon`, `portrait`, `entity-name`, `living-entity`); usable by name, never picked by a group |
+| `fragment/` | Partial modifiers / garnishes composed into fulls — `weather`, `water`, `nature`, `camera`, … |
 | `style/` | Art-style & product-render templates (mostly publicprompts.art) — the `3d-*` set, `comic`, `sticker`, `funko-3d-print`, … |
 | `prompt/` | Whole-prompt builders & tag streams (force-prefixed → `{#prompt/…}`) — `random` (composite), `random-words`, `simple-random`, `extra-random`, `artists`, `fx`, `d` (danbooru) |
 | `expansion/` | Reusable lighting / detail accents referenced from other generators (`{#rays}`, `{#dap}`, …); not listed as pickable chips |
@@ -70,7 +75,7 @@ It draws one complete activity with a matching pose/prop from the six Kinetics-d
 some social actions explicitly include another person. `{action}` remains the original
 poses/activities list. See [action content](../../../notes/systems/action-content.md).
 
-`{#krea2-actors}` under Subject emits one identity without the source's portrait framing;
+`{#krea2-actors}` under People emits one identity without the source's portrait framing;
 bands are separate in `{krea2/bands}`. `{#krea2-style-library}` under Style emits one full
 descriptor. Both participate in normal category groups, and Krea-specific names are excluded
 when Stable Diffusion is selected. See [Krea content](../../../notes/systems/krea2-content.md).

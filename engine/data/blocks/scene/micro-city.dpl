@@ -4,8 +4,32 @@ description: Isometric floating-island micro city
 
 Start
 ===
-100mm photo of an isometric floating island in the sky, surreal, tiny city, microworld, centered, macro, behance
+one of:
+    - isometric floating island in the sky, tiny city
+    - miniature city inside a glass dome
+    - tiny city growing on a floating rock
+    - miniature city on a turtle's back
+    - tiny terraced city spiraling up a spire
+    - miniature harbor city on a floating slab
+    - tiny walled city on a drifting cloud
+    - miniature city folded inside an open book
+one of:
+    - 100mm macro photo
+    - tilt-shift photo
+    - isometric render
+    - handmade diorama
+    - paper-craft model
+    - matte painting
+- surreal
+- microworld
 - tiny rooftops
 - bustling streets
+- canals and little bridges
+- glowing windows
+- market squares
+- cable cars
+- {style/building}
+- {style/construct}
 - {#nature}
-- {#weather}
+- {time}
+- 80% {weather}

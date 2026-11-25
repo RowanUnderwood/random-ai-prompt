@@ -29,5 +29,6 @@ house
 
 ; atmosphere garnish
 [f<70%] {#nature}
-[f<45%] {#wildlife}
-[f<70%] {#weather}
+[f<45%] one of (43% nothing):
+    - {#wildlife}
+[f<70%] 80% {#weather}

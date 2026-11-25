@@ -1,4 +1,5 @@
 {
   "description": "Subjects to depict — people, animals, creatures, and portraits.",
-  "priority": 400
+  "priority": 400,
+  "include": ["people"]
 }

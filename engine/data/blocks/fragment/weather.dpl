@@ -4,5 +4,5 @@ description: Time-of-day and weather garnish
 
 Start
 ===
+{weather}
 - {time}
-- {weather}

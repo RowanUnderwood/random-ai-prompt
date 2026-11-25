@@ -28,4 +28,4 @@ vehicle, {scene/vehicle}
 - 25% {#mystical}
 - {style/construct}
 
-{#weather}
+80% {#weather}

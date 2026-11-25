@@ -67,7 +67,14 @@ backed by six curated Kinetics-700 lists under `engine/data/lists/activity/`. It
 with human subjects and does not infer subject compatibility. The existing `{action}` list remains
 separate. Source attribution, regeneration and usage: [action content](notes/systems/action-content.md).
 
-Krea-specific content: Subject `{#krea2-actors}` (identity only; bands separate) and Style
+Content layout: `{#subject}` draws from `subject/` and `people/` (folder sidecar `include`); `{#people}` holds
+adult humans only and suits `{#action}`; `helper/` pieces work by name but never in random groups; a
+block's sidecar `requires` names a setting it needs. Blocks people ask for by name must not come out
+empty: lead with an unconditional line, since a bare `- ` bullet shows about 25% of the time at default
+intensity. People lists are adults only, and anime characters wear `{clothes-sfw}`. Measure changes
+with `node scripts/variety-report.mjs`; `tests/unit/contentQuality.test.js` enforces the rules.
+
+Krea-specific content: People `{#krea2-actors}` (identity only; bands separate) and Style
 `{#krea2-style-library}` (one complete descriptor). `engine/modelContent.js` hides `krea2`-named
 content for selected Stable Diffusion providers/models, including local checkpoint workflow,
 across palettes/completions and generation/group/wildcard pools. Image model context is separate

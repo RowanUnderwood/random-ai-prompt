@@ -1,3 +1,4 @@
 {
-  "description": "Auto-appended artist tags."
+  "description": "Auto-appended artist tags.",
+  "requires": "includeArtist"
 }

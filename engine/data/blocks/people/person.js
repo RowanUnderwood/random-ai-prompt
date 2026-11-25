@@ -3,7 +3,7 @@
  * @brief JS sidecar for person.dpl — entity() restricted to the human pool.
  */
 
-import entity from "./entity.js";
+import entity from "../subject/entity.js";
 
 /**
  * Generate a person subject.
