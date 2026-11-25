@@ -2,7 +2,7 @@
 
 `{#action}` is a reusable DPL fragment under `engine/data/blocks/fragment/action.dpl`.
 It expands to **one complete human activity with a matching pose or prop**, selected from
-72 curated Kinetics-700-2020 action labels. Examples:
+180 curated Kinetics-700-2020 action labels. Examples:
 
 ```text
 a person, {#action}
@@ -14,7 +14,7 @@ The music family can select any of its instruments. To specify violin, write the
 activity explicitly rather than pairing a fixed instrument with a random music activity.
 
 Six family lists live under `engine/data/lists/activity/`: `everyday`, `crafts`, `music`,
-`sports`, `outdoor`, and `social`. Each has 12 entries. `_force-prefix` keeps inserted tokens
+`sports`, `outdoor`, and `social`. Each has 30 entries. `_force-prefix` keeps inserted tokens
 explicit, e.g. `{activity/outdoor}`. The implied folder union `{activity}` supplies the block;
 each curated activity has equal selection weight. Family sizes may be expanded; the union
 is entry-weighted, not a separate family lottery.

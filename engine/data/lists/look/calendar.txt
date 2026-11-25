@@ -1,0 +1,25 @@
+january
+february
+march
+april
+may
+june
+july
+august
+september
+october
+november
+december
+monday
+tuesday
+wednesday
+thursday
+friday
+saturday
+sunday
+christmastime
+new year's eve
+halloween
+midsummer festival
+lantern festival
+harvest festival

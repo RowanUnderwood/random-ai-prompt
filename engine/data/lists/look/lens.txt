@@ -1,0 +1,44 @@
+14mm ultra-wide lens
+20mm wide lens
+24mm lens
+28mm lens
+35mm lens
+40mm pancake lens
+50mm lens
+85mm lens
+100mm macro lens
+135mm lens
+200mm telephoto lens
+400mm telephoto lens
+anamorphic lens
+fisheye lens
+tilt-shift lens
+vintage swirly-bokeh lens
+soft-focus lens
+pinhole camera
+shallow depth of field
+deep focus
+creamy bokeh
+hexagonal bokeh highlights
+long exposure
+light trails
+frozen at 1/8000 second
+slow-shutter motion blur
+double exposure
+intentional camera movement
+lens flare
+anamorphic flare
+prism refraction
+chromatic fringing
+heavy vignette
+film halation
+high-key exposure
+low-key exposure
+backlit rim light
+direct flash
+bounced flash
+infrared capture
+macro detail
+diffusion filter glow
+polarized reflections
+split-diopter focus

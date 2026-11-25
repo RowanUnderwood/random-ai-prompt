@@ -146,8 +146,10 @@ Slurs, minor-sexualizing, and extreme shock/gore content are removed by
 | `name/` | given, person, demonym, anime (implied group `{name}`) |
 | `place/` | city, place (countries/regions/landmarks) |
 | `lore/` | mythology, astronomy, religion, history, work, people-group |
-| `nature/` | animal, flower, tree, planet, mythological-creature |
-| `look/` | color, size, hair, clothes, weather, time, mood, emotion, view, image-effect, instrument, expression (faces), action (poses/activities); `clothes-nsfw` (gated lingerie/fetish) |
+| `people/` | Adults: occupation, historical, fantasy, scifi, pair, group, plus age, noun, heritage, build, feature, outfit. Force-prefixed; no union (the parts do not mix). Not raw `name/` or `lore/` words. |
+| `thing/` | still-life, food, machine, setting. Force-prefixed; no union. |
+| `nature/` | animal, animal-behavior, flower, tree, planet, water, mythological-creature |
+| `look/` | color, size, hair, clothes, weather, time, mood, emotion, view, image-effect, instrument, action (poses/activities), shot (framing), lens, calendar (months, weekdays, holidays), focus (vocabulary of the focus dial, not camera focus); expression is an SFW/NSFW pair; `clothes-nsfw` (gated lingerie/fetish) |
 | `style/` | art-movement, art-technique, general, construct, building (folder is `_force-prefix` → `{style/building}` etc.) |
 | `scene/` | room, school-room, shed, ship, store, vehicle (folder is `_force-prefix` → `{scene/ship}` etc.) |
 | `brand/` | organization |

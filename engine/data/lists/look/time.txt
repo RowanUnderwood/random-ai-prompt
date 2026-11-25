@@ -1,33 +1,42 @@
-afternoon
-christmastime
 dawn
-day light
-daytime
-december
-dusk
-early evening
+first light
+sunrise
 early morning
-evening
-february
-friday
-january
-july
-late afternoon
-late evening
+morning
 late morning
 midday
-middle of the night
-midnight
-monday
-morning
-night
 noon
-november
-october
-saturday
-september
-sunday
-thursday
-tuesday
+early afternoon
+afternoon
+late afternoon
+golden hour
+sunset
+afterglow
+dusk
+blue hour
 twilight
-wednesday
+nautical twilight
+early evening
+evening
+late evening
+nightfall
+night
+moonlit night
+starlit night
+full moon night
+new moon darkness
+midnight
+middle of the night
+the hour before dawn
+high noon
+polar night
+midnight sun
+spring morning
+summer afternoon
+autumn evening
+winter night
+early spring
+midsummer
+harvest season
+deep winter
+daylight

@@ -25,12 +25,15 @@ The SeedVR2 upscaler runs **SeedVR2** (ByteDance Seed) through
 user's own ComfyUI. The workflow was supplied by the fork's owner; integration implemented with
 Claude (Anthropic).
 
+The `people/*`, `thing/*`, `look/shot`, `look/lens`, `nature/water` and `nature/animal-behavior` lists, and
+the expanded look/style lists, were written for this fork by Claude (Anthropic).
+
 The `activity/*` lists backing `{#action}` are adapted from **Kinetics-700-2020**,
 created by the Google DeepMind Kinetics team and distributed by the
 [Common Visual Data Foundation](https://github.com/cvdfoundation/kinetics-dataset).
 Kinetics annotations and these adapted activity lists are attributed under
 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
-Changes: select 72 action labels, group into six families, normalize wording and add
+Changes: select 180 action labels, group into six families, normalize wording and add
 manually authored pose/prop details. Curation and phrasing by OpenAI Codex for Rowan's fork.
 No video material is included. Exact source URL, hashes, mappings and regeneration are in
 [the source readme](engine/data/sources/kinetics/README.md).

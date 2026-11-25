@@ -1,86 +1,734 @@
 {
   "everyday": [
-    { "label": "reading book", "text": "reading an open book, eyes lowered toward the pages" },
-    { "label": "making tea", "text": "making tea, pouring hot water into a teacup" },
-    { "label": "folding clothes", "text": "folding clothes, smoothing a shirt with both hands" },
-    { "label": "washing dishes", "text": "washing dishes, holding a plate over a sink of soapy water" },
-    { "label": "preparing salad", "text": "preparing a salad, arranging fresh vegetables in a bowl" },
-    { "label": "baking cookies", "text": "baking cookies, placing rounds of dough on a baking tray" },
-    { "label": "flipping pancake", "text": "flipping a pancake, holding a spatula beneath its lifted edge" },
-    { "label": "writing", "text": "writing in a notebook, pen poised against the paper" },
-    { "label": "watering plants", "text": "watering plants, tilting a watering can over a pot" },
-    { "label": "tying shoe laces", "text": "tying shoelaces, bending down with both hands near one shoe" },
-    { "label": "sweeping floor", "text": "sweeping the floor, guiding a broom toward a small pile of dust" },
-    { "label": "packing", "text": "packing a suitcase, arranging folded clothes inside the open case" }
+    {
+      "label": "reading book",
+      "text": "reading an open book, eyes lowered toward the pages"
+    },
+    {
+      "label": "making tea",
+      "text": "making tea, pouring hot water into a teacup"
+    },
+    {
+      "label": "folding clothes",
+      "text": "folding clothes, smoothing a shirt with both hands"
+    },
+    {
+      "label": "washing dishes",
+      "text": "washing dishes, holding a plate over a sink of soapy water"
+    },
+    {
+      "label": "preparing salad",
+      "text": "preparing a salad, arranging fresh vegetables in a bowl"
+    },
+    {
+      "label": "baking cookies",
+      "text": "baking cookies, placing rounds of dough on a baking tray"
+    },
+    {
+      "label": "flipping pancake",
+      "text": "flipping a pancake, holding a spatula beneath its lifted edge"
+    },
+    {
+      "label": "writing",
+      "text": "writing in a notebook, pen poised against the paper"
+    },
+    {
+      "label": "watering plants",
+      "text": "watering plants, tilting a watering can over a pot"
+    },
+    {
+      "label": "tying shoe laces",
+      "text": "tying shoelaces, bending down with both hands near one shoe"
+    },
+    {
+      "label": "sweeping floor",
+      "text": "sweeping the floor, guiding a broom toward a small pile of dust"
+    },
+    {
+      "label": "packing",
+      "text": "packing a suitcase, arranging folded clothes inside the open case"
+    },
+    {
+      "label": "doing laundry",
+      "text": "doing laundry, lifting damp clothes from a wicker basket"
+    },
+    {
+      "label": "ironing",
+      "text": "ironing a shirt, steam rising around the iron"
+    },
+    {
+      "label": "hand washing clothes",
+      "text": "washing clothes by hand, sleeves rolled up over a soapy tub"
+    },
+    {
+      "label": "making the bed",
+      "text": "making a bed, snapping a fresh sheet into the air"
+    },
+    {
+      "label": "setting table",
+      "text": "setting a table, laying cutlery beside a plate"
+    },
+    {
+      "label": "lighting candle",
+      "text": "lighting a candle, one hand cupped around the match flame"
+    },
+    {
+      "label": "reading newspaper",
+      "text": "reading a newspaper held wide open with both hands"
+    },
+    {
+      "label": "brushing hair",
+      "text": "brushing their own hair, head tilted toward the brush"
+    },
+    {
+      "label": "tying bow tie",
+      "text": "tying a bow tie, chin raised and fingers at the collar"
+    },
+    {
+      "label": "pouring wine",
+      "text": "pouring red wine, tilting the bottle over a glass"
+    },
+    {
+      "label": "making pizza",
+      "text": "making pizza, stretching dough over both fists"
+    },
+    {
+      "label": "shaping bread dough",
+      "text": "shaping bread dough on a floured board with both palms"
+    },
+    {
+      "label": "tossing salad",
+      "text": "tossing a salad, lifting leaves with two wooden servers"
+    },
+    {
+      "label": "picking blueberries",
+      "text": "picking blueberries, a half-full pail hooked over one arm"
+    },
+    {
+      "label": "petting cat",
+      "text": "petting a cat curled on their lap"
+    },
+    {
+      "label": "listening with headphones",
+      "text": "listening through large headphones, eyes closed and one hand on an earcup"
+    },
+    {
+      "label": "shopping",
+      "text": "shopping, inspecting an item with bags hung from one arm"
+    },
+    {
+      "label": "doing jigsaw puzzle",
+      "text": "doing a jigsaw puzzle, holding one piece above a half-finished picture"
+    }
   ],
   "crafts": [
-    { "label": "arranging flowers", "text": "arranging flowers, positioning stems in a vase" },
-    { "label": "clay pottery making", "text": "shaping clay pottery, cupping wet clay on a potter's wheel" },
-    { "label": "knitting", "text": "knitting, holding two needles above a partly finished piece of fabric" },
-    { "label": "embroidering", "text": "embroidering fabric, guiding a needle through cloth in an embroidery hoop" },
-    { "label": "weaving basket", "text": "weaving a basket, threading a reed between the upright stakes" },
-    { "label": "bookbinding", "text": "binding a book, stitching folded pages along the spine" },
-    { "label": "calligraphy", "text": "writing calligraphy, drawing an ink stroke with a brush" },
-    { "label": "drawing", "text": "drawing, shading a sketch with a pencil" },
-    { "label": "brush painting", "text": "painting with a brush, applying a stroke of paint to a canvas" },
-    { "label": "making jewelry", "text": "making jewelry, shaping a wire loop with small pliers" },
-    { "label": "carving pumpkin", "text": "carving a pumpkin, cutting a shape into its hollow shell" },
-    { "label": "building sandcastle", "text": "building a sandcastle, patting damp sand into a small tower" }
+    {
+      "label": "arranging flowers",
+      "text": "arranging flowers, positioning stems in a vase"
+    },
+    {
+      "label": "clay pottery making",
+      "text": "shaping clay pottery, cupping wet clay on a potter's wheel"
+    },
+    {
+      "label": "knitting",
+      "text": "knitting, holding two needles above a partly finished piece of fabric"
+    },
+    {
+      "label": "embroidering",
+      "text": "embroidering fabric, guiding a needle through cloth in an embroidery hoop"
+    },
+    {
+      "label": "weaving basket",
+      "text": "weaving a basket, threading a reed between the upright stakes"
+    },
+    {
+      "label": "bookbinding",
+      "text": "binding a book, stitching folded pages along the spine"
+    },
+    {
+      "label": "calligraphy",
+      "text": "writing calligraphy, drawing an ink stroke with a brush"
+    },
+    {
+      "label": "drawing",
+      "text": "drawing, shading a sketch with a pencil"
+    },
+    {
+      "label": "brush painting",
+      "text": "painting with a brush, applying a stroke of paint to a canvas"
+    },
+    {
+      "label": "making jewelry",
+      "text": "making jewelry, shaping a wire loop with small pliers"
+    },
+    {
+      "label": "carving pumpkin",
+      "text": "carving a pumpkin, cutting a shape into its hollow shell"
+    },
+    {
+      "label": "building sandcastle",
+      "text": "building a sandcastle, patting damp sand into a small tower"
+    },
+    {
+      "label": "blowing glass",
+      "text": "blowing glass, cheeks full, turning a glowing bubble on a long pipe"
+    },
+    {
+      "label": "chiseling stone",
+      "text": "chiseling stone, mallet raised over a carved block"
+    },
+    {
+      "label": "weaving fabric",
+      "text": "weaving fabric on a loom, passing a shuttle between taut threads"
+    },
+    {
+      "label": "welding",
+      "text": "welding metal, mask down behind a shower of sparks"
+    },
+    {
+      "label": "leatherworking",
+      "text": "working leather, pressing an awl into a marked strap"
+    },
+    {
+      "label": "sewing",
+      "text": "sewing at a machine, guiding fabric under the needle"
+    },
+    {
+      "label": "crocheting",
+      "text": "crocheting, a hook looping yarn from a ball in their lap"
+    },
+    {
+      "label": "spray painting",
+      "text": "spray painting a wall, arm extended with a can in hand"
+    },
+    {
+      "label": "needle felting",
+      "text": "needle felting a small figure, poking wool with a fine needle"
+    },
+    {
+      "label": "wood burning (art)",
+      "text": "burning a design into wood with a hot-tipped pen, thin smoke curling up"
+    },
+    {
+      "label": "sawing wood",
+      "text": "sawing wood, one knee braced on the plank"
+    },
+    {
+      "label": "yarn spinning",
+      "text": "spinning yarn at a wheel, drawing out fiber between two hands"
+    },
+    {
+      "label": "carving ice",
+      "text": "carving ice with a long chisel, chips scattering from the block"
+    },
+    {
+      "label": "making paper aeroplanes",
+      "text": "folding a paper airplane, creasing a wing along the table"
+    },
+    {
+      "label": "tie dying",
+      "text": "tie-dyeing cloth, squeezing bright dye over a twisted bundle"
+    },
+    {
+      "label": "scrapbooking",
+      "text": "making a scrapbook, pasting photographs onto an open page"
+    },
+    {
+      "label": "making horseshoes",
+      "text": "forging a horseshoe, hammer raised above glowing iron on an anvil"
+    },
+    {
+      "label": "planing wood",
+      "text": "planing wood, long curls rising from the blade"
+    }
   ],
   "music": [
-    { "label": "playing violin", "text": "playing a violin, drawing the bow across its strings" },
-    { "label": "playing guitar", "text": "playing a guitar, fretting the neck while strumming the strings" },
-    { "label": "playing piano", "text": "playing a piano, both hands spread across the keys" },
-    { "label": "playing cello", "text": "playing a cello, seated with the instrument between the knees and bow against the strings" },
-    { "label": "playing flute", "text": "playing a flute, holding it sideways to the lips with fingers over the keys" },
-    { "label": "playing trumpet", "text": "playing a trumpet, lips against the mouthpiece and fingers pressing the valves" },
-    { "label": "playing drums", "text": "playing drums, holding drumsticks above the drumheads" },
-    { "label": "playing harp", "text": "playing a harp, plucking the strings with both hands" },
-    { "label": "playing accordion", "text": "playing an accordion, opening the bellows while pressing the keys" },
-    { "label": "playing saxophone", "text": "playing a saxophone, fingers resting on the keys and mouth on the mouthpiece" },
-    { "label": "playing ukulele", "text": "playing a ukulele, cradling the small instrument while strumming" },
-    { "label": "playing xylophone", "text": "playing a xylophone, holding mallets above the wooden bars" }
+    {
+      "label": "playing violin",
+      "text": "playing a violin, drawing the bow across its strings"
+    },
+    {
+      "label": "playing guitar",
+      "text": "playing a guitar, fretting the neck while strumming the strings"
+    },
+    {
+      "label": "playing piano",
+      "text": "playing a piano, both hands spread across the keys"
+    },
+    {
+      "label": "playing cello",
+      "text": "playing a cello, seated with the instrument between the knees and bow against the strings"
+    },
+    {
+      "label": "playing flute",
+      "text": "playing a flute, holding it sideways to the lips with fingers over the keys"
+    },
+    {
+      "label": "playing trumpet",
+      "text": "playing a trumpet, lips against the mouthpiece and fingers pressing the valves"
+    },
+    {
+      "label": "playing drums",
+      "text": "playing drums, holding drumsticks above the drumheads"
+    },
+    {
+      "label": "playing harp",
+      "text": "playing a harp, plucking the strings with both hands"
+    },
+    {
+      "label": "playing accordion",
+      "text": "playing an accordion, opening the bellows while pressing the keys"
+    },
+    {
+      "label": "playing saxophone",
+      "text": "playing a saxophone, fingers resting on the keys and mouth on the mouthpiece"
+    },
+    {
+      "label": "playing ukulele",
+      "text": "playing a ukulele, cradling the small instrument while strumming"
+    },
+    {
+      "label": "playing xylophone",
+      "text": "playing a xylophone, holding mallets above the wooden bars"
+    },
+    {
+      "label": "playing clarinet",
+      "text": "playing a clarinet, fingers spread over the keys"
+    },
+    {
+      "label": "playing trombone",
+      "text": "playing a trombone, slide extended forward"
+    },
+    {
+      "label": "playing harmonica",
+      "text": "playing a harmonica cupped in both hands"
+    },
+    {
+      "label": "playing bagpipes",
+      "text": "playing bagpipes, the bag tucked under one elbow"
+    },
+    {
+      "label": "playing bass guitar",
+      "text": "playing a bass guitar slung low, plucking with two fingers"
+    },
+    {
+      "label": "playing keyboard",
+      "text": "playing an electronic keyboard, hands spread across the keys"
+    },
+    {
+      "label": "playing lute",
+      "text": "playing a lute, plucking its strings against the chest"
+    },
+    {
+      "label": "playing oboe",
+      "text": "playing an oboe, lips pursed at the thin reed"
+    },
+    {
+      "label": "playing organ",
+      "text": "playing a pipe organ, hands and feet on keys and pedals"
+    },
+    {
+      "label": "playing pan pipes",
+      "text": "playing pan pipes held sideways at the lips"
+    },
+    {
+      "label": "playing piccolo",
+      "text": "playing a piccolo, elbows raised to one side"
+    },
+    {
+      "label": "playing cymbals",
+      "text": "crashing a pair of cymbals together at chest height"
+    },
+    {
+      "label": "playing didgeridoo",
+      "text": "playing a didgeridoo, its long end resting on the ground"
+    },
+    {
+      "label": "playing recorder",
+      "text": "playing a recorder, fingers lifted from the holes"
+    },
+    {
+      "label": "playing maracas",
+      "text": "shaking a pair of maracas at shoulder height"
+    },
+    {
+      "label": "playing gong",
+      "text": "striking a great gong with a padded mallet"
+    },
+    {
+      "label": "beatboxing",
+      "text": "beatboxing into a microphone cupped in both hands"
+    },
+    {
+      "label": "singing",
+      "text": "singing into a standing microphone, one arm outstretched"
+    }
   ],
   "sports": [
-    { "label": "archery", "text": "practicing archery, drawing a bow with an arrow aimed at a target" },
-    { "label": "dribbling basketball", "text": "dribbling a basketball, knees bent with one hand above the bouncing ball" },
-    { "label": "kicking soccer ball", "text": "kicking a soccer ball, one foot planted and the other extended toward the ball" },
-    { "label": "playing tennis", "text": "playing tennis, reaching forward with a racket toward the ball" },
-    { "label": "bowling", "text": "bowling, leaning into the release of a ball down the lane" },
-    { "label": "juggling balls", "text": "juggling balls, hands raised beneath several balls in the air" },
-    { "label": "jumping jacks", "text": "doing jumping jacks, arms raised overhead and feet spread apart" },
-    { "label": "yoga", "text": "practicing yoga, balancing on one leg with palms together" },
-    { "label": "tai chi", "text": "practicing tai chi, knees softly bent and arms extended in a flowing pose" },
-    { "label": "dancing ballet", "text": "dancing ballet, poised on tiptoe with arms curved overhead" },
-    { "label": "ice skating", "text": "ice skating, gliding on one blade with arms extended for balance" },
-    { "label": "punching bag", "text": "training with a punching bag, extending a gloved fist toward the bag" }
+    {
+      "label": "archery",
+      "text": "practicing archery, drawing a bow with an arrow aimed at a target"
+    },
+    {
+      "label": "dribbling basketball",
+      "text": "dribbling a basketball, knees bent with one hand above the bouncing ball"
+    },
+    {
+      "label": "kicking soccer ball",
+      "text": "kicking a soccer ball, one foot planted and the other extended toward the ball"
+    },
+    {
+      "label": "playing tennis",
+      "text": "playing tennis, reaching forward with a racket toward the ball"
+    },
+    {
+      "label": "bowling",
+      "text": "bowling, leaning into the release of a ball down the lane"
+    },
+    {
+      "label": "juggling balls",
+      "text": "juggling balls, hands raised beneath several balls in the air"
+    },
+    {
+      "label": "jumping jacks",
+      "text": "doing jumping jacks, arms raised overhead and feet spread apart"
+    },
+    {
+      "label": "yoga",
+      "text": "practicing yoga, balancing on one leg with palms together"
+    },
+    {
+      "label": "tai chi",
+      "text": "practicing tai chi, knees softly bent and arms extended in a flowing pose"
+    },
+    {
+      "label": "dancing ballet",
+      "text": "dancing ballet, poised on tiptoe with arms curved overhead"
+    },
+    {
+      "label": "ice skating",
+      "text": "ice skating, gliding on one blade with arms extended for balance"
+    },
+    {
+      "label": "punching bag",
+      "text": "training with a punching bag, extending a gloved fist toward the bag"
+    },
+    {
+      "label": "fencing (sport)",
+      "text": "fencing in a mask and whites, lunging with a foil extended"
+    },
+    {
+      "label": "javelin throw",
+      "text": "throwing a javelin, arm drawn back in mid-stride"
+    },
+    {
+      "label": "high jump",
+      "text": "clearing a high-jump bar, back arched in mid-air"
+    },
+    {
+      "label": "playing badminton",
+      "text": "playing badminton, racket raised beneath a falling shuttlecock"
+    },
+    {
+      "label": "playing volleyball",
+      "text": "playing volleyball, leaping at the net with arms raised"
+    },
+    {
+      "label": "playing ping pong",
+      "text": "playing table tennis, paddle low beside the table edge"
+    },
+    {
+      "label": "skateboarding",
+      "text": "skateboarding, knees bent with the board lifting off the ground"
+    },
+    {
+      "label": "snowboarding",
+      "text": "snowboarding, carving a turn in a spray of snow"
+    },
+    {
+      "label": "ski jumping",
+      "text": "ski jumping, body stretched flat above parallel skis"
+    },
+    {
+      "label": "pole vault",
+      "text": "pole vaulting, rising feet first on a bending pole"
+    },
+    {
+      "label": "shot put",
+      "text": "putting the shot, the ball tucked against the neck"
+    },
+    {
+      "label": "hurdling",
+      "text": "hurdling, one leg extended over the barrier"
+    },
+    {
+      "label": "breakdancing",
+      "text": "breakdancing, balanced on one hand with legs in the air"
+    },
+    {
+      "label": "playing ice hockey",
+      "text": "playing ice hockey in full pads, stick sweeping toward the puck"
+    },
+    {
+      "label": "swimming butterfly stroke",
+      "text": "swimming butterfly, both arms breaking the surface"
+    },
+    {
+      "label": "bench pressing",
+      "text": "bench pressing a loaded barbell at arm's length"
+    },
+    {
+      "label": "roller skating",
+      "text": "roller skating, gliding on one foot with arms out for balance"
+    },
+    {
+      "label": "parkour",
+      "text": "practicing parkour, vaulting over a wall on one hand"
+    }
   ],
   "outdoor": [
-    { "label": "rock climbing", "text": "rock climbing, reaching for a handhold with feet braced against the rock" },
-    { "label": "canoeing or kayaking", "text": "paddling a kayak, holding a double-bladed paddle above the water" },
-    { "label": "casting fishing line", "text": "casting a fishing line, sweeping the rod forward over the water" },
-    { "label": "flying kite", "text": "flying a kite, holding a taut line that rises into the sky" },
-    { "label": "planting trees", "text": "planting a tree, kneeling beside a sapling with hands pressing soil around its roots" },
-    { "label": "picking apples", "text": "picking apples, reaching into a tree branch with a basket nearby" },
-    { "label": "walking the dog", "text": "walking a dog, holding a leash with the dog alongside" },
-    { "label": "riding a bike", "text": "riding a bicycle, hands on the handlebars and feet on the pedals" },
-    { "label": "sailing", "text": "sailing a boat, holding the tiller beneath a wind-filled sail" },
-    { "label": "surfing water", "text": "surfing a wave, crouching on a surfboard with arms out for balance" },
-    { "label": "making snowman", "text": "making a snowman, pressing snow onto a rounded snow figure" },
-    { "label": "walking through snow", "text": "walking through snow, lifting a boot out of a deep footprint" }
+    {
+      "label": "rock climbing",
+      "text": "rock climbing, reaching for a handhold with feet braced against the rock"
+    },
+    {
+      "label": "canoeing or kayaking",
+      "text": "paddling a kayak, holding a double-bladed paddle above the water"
+    },
+    {
+      "label": "casting fishing line",
+      "text": "casting a fishing line, sweeping the rod forward over the water"
+    },
+    {
+      "label": "flying kite",
+      "text": "flying a kite, holding a taut line that rises into the sky"
+    },
+    {
+      "label": "planting trees",
+      "text": "planting a tree, kneeling beside a sapling with hands pressing soil around its roots"
+    },
+    {
+      "label": "picking apples",
+      "text": "picking apples, reaching into a tree branch with a basket nearby"
+    },
+    {
+      "label": "walking the dog",
+      "text": "walking a dog, holding a leash with the dog alongside"
+    },
+    {
+      "label": "riding a bike",
+      "text": "riding a bicycle, hands on the handlebars and feet on the pedals"
+    },
+    {
+      "label": "sailing",
+      "text": "sailing a boat, holding the tiller beneath a wind-filled sail"
+    },
+    {
+      "label": "surfing water",
+      "text": "surfing a wave, crouching on a surfboard with arms out for balance"
+    },
+    {
+      "label": "making snowman",
+      "text": "making a snowman, pressing snow onto a rounded snow figure"
+    },
+    {
+      "label": "walking through snow",
+      "text": "walking through snow, lifting a boot out of a deep footprint"
+    },
+    {
+      "label": "paragliding",
+      "text": "paragliding, seated in a harness beneath a bright canopy"
+    },
+    {
+      "label": "windsurfing",
+      "text": "windsurfing, leaning back against the boom of a taut sail"
+    },
+    {
+      "label": "kitesurfing",
+      "text": "kitesurfing, lifted off the water by a distant kite"
+    },
+    {
+      "label": "ice climbing",
+      "text": "ice climbing, axes sunk into a frozen wall"
+    },
+    {
+      "label": "snorkeling",
+      "text": "snorkeling, masked face just below the surface"
+    },
+    {
+      "label": "scuba diving",
+      "text": "scuba diving, bubbles streaming from the regulator"
+    },
+    {
+      "label": "cooking on campfire",
+      "text": "cooking over a campfire, stirring a blackened pot"
+    },
+    {
+      "label": "chopping wood",
+      "text": "chopping wood, axe raised above a split log"
+    },
+    {
+      "label": "herding cattle",
+      "text": "herding cattle, walking behind the animals with a staff"
+    },
+    {
+      "label": "riding camel",
+      "text": "riding a camel, swaying high in a decorated saddle"
+    },
+    {
+      "label": "skipping stone",
+      "text": "skipping a stone, arm swept low toward the water"
+    },
+    {
+      "label": "slacklining",
+      "text": "slacklining, arms raised for balance on a taut strap"
+    },
+    {
+      "label": "mushroom foraging",
+      "text": "foraging for mushrooms, kneeling with a basket on the forest floor"
+    },
+    {
+      "label": "sled dog racing",
+      "text": "driving a dog sled, gripping the handlebar behind the team"
+    },
+    {
+      "label": "roasting marshmallows",
+      "text": "roasting a marshmallow on a stick over glowing embers"
+    },
+    {
+      "label": "gold panning",
+      "text": "panning for gold, swirling a shallow pan in a stream"
+    },
+    {
+      "label": "spelunking",
+      "text": "exploring a cave, headlamp beam on wet rock"
+    },
+    {
+      "label": "trimming shrubs",
+      "text": "trimming a hedge with long-handled shears"
+    }
   ],
   "social": [
-    { "label": "shaking hands", "text": "shaking hands with another person, their clasped hands between them" },
-    { "label": "high fiving", "text": "exchanging a high five with another person, raised palms meeting overhead" },
-    { "label": "hugging (not baby)", "text": "hugging another person, arms wrapped around each other's shoulders" },
-    { "label": "waving hand", "text": "waving a greeting, one open hand raised beside the head" },
-    { "label": "clapping", "text": "clapping, palms meeting in front of the chest" },
-    { "label": "laughing", "text": "laughing, mouth open in a smile and shoulders relaxed" },
-    { "label": "talking on cell phone", "text": "talking on a phone, holding it to one ear" },
-    { "label": "taking photo", "text": "taking a photograph, holding a camera up to one eye" },
-    { "label": "playing chess", "text": "playing chess with another person, reaching toward a piece on the board between them" },
-    { "label": "opening present", "text": "opening a present, lifting wrapping paper away from a gift box" },
-    { "label": "wrapping present", "text": "wrapping a present, folding paper around a box and holding a ribbon" },
-    { "label": "blowing out candles", "text": "blowing out candles on a cake, leaning toward the small flames" }
+    {
+      "label": "shaking hands",
+      "text": "shaking hands with another person, their clasped hands between them"
+    },
+    {
+      "label": "high fiving",
+      "text": "exchanging a high five with another person, raised palms meeting overhead"
+    },
+    {
+      "label": "hugging (not baby)",
+      "text": "hugging another person, arms wrapped around each other's shoulders"
+    },
+    {
+      "label": "waving hand",
+      "text": "waving a greeting, one open hand raised beside the head"
+    },
+    {
+      "label": "clapping",
+      "text": "clapping, palms meeting in front of the chest"
+    },
+    {
+      "label": "laughing",
+      "text": "laughing, mouth open in a smile and shoulders relaxed"
+    },
+    {
+      "label": "talking on cell phone",
+      "text": "talking on a phone, holding it to one ear"
+    },
+    {
+      "label": "taking photo",
+      "text": "taking a photograph, holding a camera up to one eye"
+    },
+    {
+      "label": "playing chess",
+      "text": "playing chess with another person, reaching toward a piece on the board between them"
+    },
+    {
+      "label": "opening present",
+      "text": "opening a present, lifting wrapping paper away from a gift box"
+    },
+    {
+      "label": "wrapping present",
+      "text": "wrapping a present, folding paper around a box and holding a ribbon"
+    },
+    {
+      "label": "blowing out candles",
+      "text": "blowing out candles on a cake, leaning toward the small flames"
+    },
+    {
+      "label": "arm wrestling",
+      "text": "arm wrestling another person, hands locked over a table"
+    },
+    {
+      "label": "salsa dancing",
+      "text": "salsa dancing with a partner, one arm raised in a turn"
+    },
+    {
+      "label": "tango dancing",
+      "text": "dancing the tango in close embrace with a partner"
+    },
+    {
+      "label": "swing dancing",
+      "text": "swing dancing, flung outward at arm's length from a partner"
+    },
+    {
+      "label": "square dancing",
+      "text": "square dancing, linking arms with a partner"
+    },
+    {
+      "label": "playing cards",
+      "text": "playing cards, studying a fanned hand across from an opponent"
+    },
+    {
+      "label": "playing poker",
+      "text": "playing poker, pushing a stack of chips toward the center"
+    },
+    {
+      "label": "playing checkers",
+      "text": "playing checkers, jumping a piece across the board from an opponent"
+    },
+    {
+      "label": "giving or receiving award",
+      "text": "receiving an award, one hand on the trophy and one shaking hands"
+    },
+    {
+      "label": "grooming dog",
+      "text": "grooming a dog, brushing its coat as it stands still"
+    },
+    {
+      "label": "getting a haircut",
+      "text": "getting a haircut, caped in a barber's chair beneath the scissors"
+    },
+    {
+      "label": "getting a tattoo",
+      "text": "getting a tattoo, forearm resting under an artist's needle"
+    },
+    {
+      "label": "marriage proposal",
+      "text": "proposing on one knee, holding up a ring to a partner"
+    },
+    {
+      "label": "pillow fight",
+      "text": "having a pillow fight with a friend, feathers in the air"
+    },
+    {
+      "label": "applauding",
+      "text": "applauding, hands raised mid-clap among others"
+    },
+    {
+      "label": "busking",
+      "text": "busking on a street corner with an open case at their feet"
+    },
+    {
+      "label": "celebrating",
+      "text": "celebrating with both fists raised among cheering friends"
+    },
+    {
+      "label": "rock scissors paper",
+      "text": "playing rock paper scissors, fist thrown toward a friend"
+    }
   ]
 }

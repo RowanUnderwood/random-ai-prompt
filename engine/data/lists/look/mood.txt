@@ -1,40 +1,89 @@
-Amused Mood
-Blissful Mood
-Calm Mood
-Cheerful Mood
-Content Mood
-Dreamy Mood
-Ecstatic Mood
-Energetic Mood
-Excited Mood
-Flirty Mood
-Giddy Mood
-Good Mood
-Happy Mood
-Joyful Mood
-Loving Mood
-Mellow Mood
-Optimistic Mood
-Peaceful Mood
-Silly Mood
-Sympathetic Mood
-Angry Mood
-Annoyed Mood
-Apathetic Mood
-Bad Mood
-Cranky Mood
-Depressed Mood
-Envious Mood
-Frustrated Mood
-Gloomy Mood
-Grumpy Mood
-Guilty Mood
-Indifferent Mood
-Irritated Mood
-Melancholy Mood
-Pessimistic Mood
-Rejected Mood
-Restless Mood
-Sad Mood
-Stressed Mood
-Weird Mood
+amused
+blissful
+calm
+cheerful
+content
+dreamy
+ecstatic
+energetic
+excited
+flirty
+giddy
+joyful
+loving
+mellow
+optimistic
+peaceful
+playful
+silly
+sympathetic
+angry
+annoyed
+apathetic
+cranky
+depressed
+envious
+frustrated
+gloomy
+grumpy
+guilty
+indifferent
+irritated
+melancholy
+pessimistic
+rejected
+restless
+sad
+stressed
+weird
+serene
+tranquil
+hopeful
+nostalgic
+wistful
+bittersweet
+romantic
+tender
+intimate
+cozy
+welcoming
+festive
+triumphant
+heroic
+majestic
+reverent
+solemn
+contemplative
+meditative
+lonely
+desolate
+bleak
+tense
+suspenseful
+foreboding
+ominous
+menacing
+eerie
+uncanny
+surreal
+hypnotic
+feverish
+chaotic
+rebellious
+defiant
+mischievous
+whimsical
+quirky
+deadpan
+stoic
+austere
+sultry
+languid
+drowsy
+hushed
+electric
+frenetic
+awestruck
+curious
+adventurous
+carefree

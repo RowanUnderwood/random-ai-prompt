@@ -1,4 +1,4 @@
-clear weather
+clear skies
 overcast
 partly cloudy
 cloudy
@@ -6,13 +6,45 @@ rainy
 stormy
 foggy
 hazy
-myst
+misty
 snowy
 blizzard
 windy
 sunny
 drizzle
-tornadoes
-thundersnows
-hurricanes
-sandstorms
+tornado on the horizon
+thundersnow
+hurricane winds
+sandstorm
+light breeze
+crisp cold air
+humid summer haze
+sun shower
+rainbow after rain
+low rolling fog
+sea fog
+ground frost
+hoarfrost
+freezing rain
+sleet
+hailstorm
+gentle snowfall
+first snow
+melting snow
+heat shimmer
+dust devil
+dry lightning
+distant thunderheads
+towering cumulus clouds
+mackerel sky
+wispy cirrus clouds
+lenticular clouds
+mammatus clouds
+downpour
+monsoon rain
+clearing storm
+sunbeams through clouds
+petals on the wind
+falling autumn leaves in the wind
+ash drifting in the air
+aurora overhead

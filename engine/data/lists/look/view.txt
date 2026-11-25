@@ -1,8 +1,42 @@
 aerial view
-bird view
-groundview
-Head shot
+bird's-eye view
+ground-level view
 helicopter view
-roadview
+roadside view
 street view
 telescope view
+drone view looking straight down
+view from a cliff edge
+view from a hilltop
+view from the valley floor
+view across still water
+view from a boat
+view through an archway
+view through a window
+view from a balcony
+view from a rooftop
+view through foliage
+view from under a bridge
+view down a long path
+view from inside a doorway
+low view through tall grass
+view over a stone wall
+view from a moving train
+view from a mountain pass
+distant panoramic view
+compressed telephoto view
+wide establishing view
+view framed by trees
+reflected view in a puddle
+view from the shoreline
+view from a tower
+isometric view
+symmetrical head-on view
+three-quarter view
+view along a winding road
+view from a cave mouth
+view from a hot air balloon
+view through morning mist
+view between two buildings
+worm's-eye view looking up
+view from a garden gate

@@ -7,6 +7,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { nodeLoader } from "../../engine/core/nodeLoader.js";
 import { metroLoader } from "../../engine/core/metroLoader.js";
+import { classifyRemoval } from "../../engine/contentSafety.js";
 import { resolveListLines, resolveName } from "../../engine/listManifest.js";
 
 const BLOCKS = path.resolve("engine/data/blocks");
@@ -37,7 +38,41 @@ describe("lists", () => {
     expect(resolveListLines("none", readers)).toBeNull();
   });
 
-  const curated = ["look/color", "style/general", "artist/secondary"];
+  const curated = [
+    "look/color",
+    "style/general",
+    "artist/secondary",
+    "style/construct",
+    "nature/water",
+    "nature/animal-behavior",
+    ...["view", "weather", "time", "calendar", "mood", "expression", "shot", "lens"].map(
+      (n) => `look/${n}`,
+    ),
+    ...lists.filter((n) => /^(people|thing|activity)\//.test(n)),
+  ];
+  it("offer enough variety in the curated lists", () => {
+    const short = ["people/noun", "people/age", "people/build"];
+    for (const name of curated.filter((n) => !short.includes(n)))
+      expect([name, nodeLoader.readListLines(name, true).length >= 25]).toEqual([name, true]);
+  });
+
+  it("keep suggestive expressions out while NSFW is off", () => {
+    const read = (adult) => nodeLoader.readListLines("expression", adult);
+    expect(read(false)).toContain("soft smile");
+    expect(read(false)).not.toContain("seductive smile");
+    expect(read(true)).toEqual(expect.arrayContaining(["soft smile", "seductive smile"]));
+  });
+
+  it("contain nothing the content-safety filter would remove", () => {
+    for (const name of curated)
+      for (const line of nodeLoader.readListLines(name, false))
+        expect([name, line, classifyRemoval(line, { listType: "content" })]).toEqual([
+          name,
+          line,
+          null,
+        ]);
+  });
+
   it.each(curated)("%s has no repeated entries", (name) => {
     const lines = nodeLoader.readListLines(name, true).map((l) => l.trim().toLowerCase());
     expect(lines.filter((l, i) => lines.indexOf(l) !== i)).toEqual([]);

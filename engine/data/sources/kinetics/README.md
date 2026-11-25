@@ -25,12 +25,12 @@ and review the curated mappings before rebuilding.
 
 ## Curation and modifications
 
-`curated-actions.json` maps **72 selected source labels** to six families of 12 phrases:
+`curated-actions.json` maps **180 selected source labels** to six families of 30 phrases:
 everyday tasks, crafts, music, sports, outdoor activities, and social interactions.
 Each record preserves the exact source label; its `text` is a manually authored adaptation
 with a concrete pose or matching prop. These details are authored prompt content, not
 annotations inferred from or verified against individual videos. Curation and phrasing:
-OpenAI Codex, for Rowan's random-ai-prompt fork. The adapted activity lists retain CC BY 4.0 attribution.
+OpenAI Codex (first 72) and Claude (108 more), for Rowan's random-ai-prompt fork. The adapted activity lists retain CC BY 4.0 attribution.
 
 Selection favors recognizable still-image activities, avoids ambiguous recognition-only classes,
 and is intentionally a subset, not an exhaustive import. Combined labels are narrowed explicitly:
