@@ -159,6 +159,9 @@ from prompt dialect. See [Krea content](notes/systems/krea2-content.md) for sour
 
 ## Start Here — the notes are the system of record (READ THEM FIRST, EVERY SESSION)
 
+For external integrations, see the consolidated [local HTTP API reference](notes/systems/api.md):
+connection/port discovery, prompt-only generation, Random + Auto-fix, and all backend routes.
+
 **This is a hard rule, not a suggestion** (owner, 2026-07-12: *"look in the notes please — use them by
 default and grow accustomed to them by default"*). Before touching code, on **every** task, in **this**
 order:

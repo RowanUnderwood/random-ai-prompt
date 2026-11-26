@@ -18,6 +18,7 @@ Read in this order:
 
 | Doc | Scope |
 |-----|-------|
+| [api.md](api.md) | Consolidated local HTTP API reference: connection details, prompt generation and Auto-fix examples, images, GPU jobs, content management, storage, and errors. |
 | [overview.md](overview.md) | **Start here.** The macro picture: the surfaces (the SPA + the local `/api` + the engine under Node), one engine / two loaders, the prompt pipeline, image generation via provider adapters, and settings as the spine. |
 | [core-engine.md](core-engine.md) | The isomorphic `core/` engine — `engine.js`, the `stages/` (block / prompt-salt / list / emphasis / cleanup), `listStore`, and the `node`/`browser` loaders that let the same prompt logic run under Node and in the browser. |
 | [gui.md](gui.md) | The standalone React + Vite SPA in `targets/web/` — the ~40-provider BYOK model, the browser prompt engine, the in-app Manager, and the two editions (local + online). |
