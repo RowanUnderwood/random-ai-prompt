@@ -136,6 +136,13 @@ export function readJson(req) {
 }
 
 /**
+ * The Content-Type for every JSON response. The explicit charset matters: without it, Windows
+ * PowerShell 5.1's Invoke-RestMethod decodes the body as Latin-1 and garbles non-ASCII text
+ * ("André" → "AndrÃ©").
+ */
+export const JSON_TYPE = "application/json; charset=utf-8";
+
+/**
  * Send a JSON response.
  * @param {import("node:http").ServerResponse} res The response.
  * @param {number} status HTTP status.
@@ -144,7 +151,7 @@ export function readJson(req) {
  */
 export function send(res, status, obj) {
   res.statusCode = status;
-  res.setHeader("Content-Type", "application/json");
+  res.setHeader("Content-Type", JSON_TYPE);
   res.end(JSON.stringify(obj));
 }
 

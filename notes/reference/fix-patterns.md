@@ -1,5 +1,11 @@
 # Fix Patterns — error → fix lookup
 
+**Accented text from the API comes back as "AndrÃ©" in PowerShell:** JSON responses said
+`application/json` with no charset, and Windows PowerShell 5.1's `Invoke-RestMethod` then decodes as
+Latin-1. All JSON responses now use `JSON_TYPE` (`application/json; charset=utf-8`) from
+`targets/web/backend/vite-api-helpers.js`; `promptApi.test.js` checks the header and the bytes.
+Confirmed live against a fixed server vs the old running app (2026-11-26).
+
 **`contentQuality.test.js` fails intermittently with `ENOENT … scandir …\blocks\zz-manage-test`:**
 `manageFs.test.js` writes and deletes transient fixtures in the real `engine/data/blocks` folder while
 other suites run, and `readdirSync(…, { recursive: true })` throws when a folder vanishes mid-walk. Scan

@@ -15,6 +15,7 @@ import path from "node:path";
 import { exec } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { createApiHandler, runStartupMigrations } from "./apiHandler.js";
+import { JSON_TYPE } from "./vite-api-helpers.js";
 
 const distDir = fileURLToPath(new URL("../dist/", import.meta.url));
 const PORT = Number(process.env.PORT) || 4173;
@@ -67,7 +68,7 @@ function serveStatic(req, res) {
   const pathname = decodeURIComponent(new URL(req.url, "http://localhost").pathname);
   if (pathname.startsWith("/api/")) {
     res.statusCode = 404;
-    res.setHeader("Content-Type", "application/json");
+    res.setHeader("Content-Type", JSON_TYPE);
     return res.end(JSON.stringify({ error: "Not found" }));
   }
   if (req.method !== "GET" && req.method !== "HEAD") {
@@ -121,7 +122,7 @@ function main() {
     Promise.resolve(apiHandler(req, res, () => serveStatic(req, res))).catch((e) => {
       if (res.headersSent) return;
       res.statusCode = 500;
-      res.setHeader("Content-Type", "application/json");
+      res.setHeader("Content-Type", JSON_TYPE);
       res.end(JSON.stringify({ error: e?.message || "Server error" }));
     });
   });

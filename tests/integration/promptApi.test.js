@@ -45,6 +45,15 @@ describe("POST /api/prompt", () => {
     expect(json.prompts[0].length).toBeGreaterThan(0);
   });
 
+  it("declares UTF-8 and returns non-ASCII text intact", async () => {
+    // Without the charset, Windows PowerShell 5.1 decoded "André" as "AndrÃ©".
+    const res = await postPrompt({ template: "by André Biéler, naïve", count: 1 });
+    expect(res.headers.get("content-type")).toBe("application/json; charset=utf-8");
+    const bytes = Buffer.from(await res.arrayBuffer());
+    expect(JSON.parse(bytes.toString("utf8")).prompts[0]).toContain("André Biéler");
+    expect(bytes.toString("latin1")).not.toContain("André"); // really UTF-8 on the wire
+  });
+
   it("is reproducible for a pinned seed and re-rolls without one", async () => {
     const body = { template: "{keyword}, {keyword}, {keyword}", seed: "7", count: 4 };
     const a = await (await postPrompt(body)).json();

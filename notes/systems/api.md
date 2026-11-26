@@ -22,11 +22,16 @@ Append each route below to the origin; do not add `/api` twice. A useful connect
 `GET /api/manage/ping`, which returns `{"ok":true}`.
 
 Send JSON bodies with `Content-Type: application/json`. Most responses are JSON, except image
-downloads and the SSE stream. Check HTTP status before parsing a successful response shape.
+downloads and the SSE stream. JSON responses are UTF-8 and say so (`application/json;
+charset=utf-8`, 2.60.4-local.19 and later). Earlier builds omitted the charset, so Windows
+PowerShell 5.1 decoded accented text as Latin-1 ("André" → "AndrÃ©"); with those builds, read the
+raw bytes as UTF-8 or use PowerShell 7. Check HTTP status before parsing a successful response shape.
 Typical errors are `{"error":"message"}` with status 400 (invalid input), 403 (restricted action),
 404 (missing resource), 409 (upscale target already met), 502 (provider/file operation failure),
-or 503 (ImageMagick unavailable). Prompt engine failures use 500. Unknown routes or unsupported
-methods can fall through to the SPA/static handler rather than producing a JSON 404/405.
+or 503 (ImageMagick unavailable). Prompt engine failures use 500. In the desktop app and `npm start`,
+an unknown `/api/...` route or a known route called with the wrong method returns a JSON 404
+(`/api/local-services` and `/api/local-upscale` return 405 for wrong methods). Only the dev server
+may fall through to the app page instead.
 Malformed JSON currently becomes an empty object; clients should send valid JSON explicitly.
 
 There is no general API login, bearer token, or API-key authentication layer. Provider keys are
@@ -81,17 +86,55 @@ Response shape (prompt text is illustrative):
 Read `prompts[0]` for one prompt string. There is no plain-text response option. A pinned seed
 reproduces a batch given the same settings and content; content changes can change the result.
 
+### Matching the app's output
+
+`/api/prompt` starts from the **engine** defaults, not the app's, and knows nothing about the
+selected image model. Called with only `includeAdult`, its output differs from the app's in four ways:
+
+| Difference | Engine default (API) | App with the Local GPUs / Krea provider | Setting to send |
+|---|---|---|---|
+| Krea content (`krea2-*` styles, actors, bands) | **Hidden**: no `provider` means the default `mode` `StableDiffusion` counts as an SD model | Shown | `provider: "comfy-local"`, `providerParams: {"comfy-local": {"comfyWorkflow": "krea2"}}` |
+| Emphasis syntax | SD weights such as `(light:1.4)`, `[term:4]` | Plain words (the provider's dialect) | `mode: "Plain"` |
+| Auto-added FX and artists | On (`god rays`, `by …`) | Off by default | `autoAddFx: false`, `autoAddArtists: false` |
+| Prompt wrapper and block auto-sections | Not applied | The active wrapper frames each prompt | Put the wrapper's text in `template` yourself |
+
+Both the API and the app keep `keywordAlternating` on, which can produce `a|b` pairs; send
+`keywordAlternating: false` to drop them. With a hidden list and SD syntax, empty brackets such as
+`[:4]` can also appear; the settings above avoid that. Settings saved in the app are never read.
+
+App-like request for the Krea workflow:
+
+```json
+{
+  "template": "{#suggestion}",
+  "count": 1,
+  "settings": {
+    "includeAdult": false,
+    "mode": "Plain",
+    "provider": "comfy-local",
+    "providerParams": { "comfy-local": { "comfyWorkflow": "krea2" } },
+    "autoAddFx": false,
+    "autoAddArtists": false
+  }
+}
+```
+
+For a Stable Diffusion checkpoint, use `"comfyWorkflow": "checkpoint"` and `"mode": "StableDiffusion"`;
+Krea content is then hidden, as in the app.
+
 ### Random toggle and Auto-fix
 
 These UI behaviors are orchestrated outside `/api/prompt`. Sending `autoRandom: true` or
 `autoFix: true` in its settings does not perform those actions.
 
 For **Random**, explicitly use `"template":"{#suggestion}"`. With typed text, use
-`"template":"a red fox, {#suggestion}"`. Each prompt expands its own suggestion. This matches
-the composition in [suggestion.js](../../engine/suggestion.js), including the empty-box fallback.
+`"template":"a red fox, {#suggestion}"`. Each prompt expands its own suggestion. This is the same
+text the app sends ([suggestion.js](../../engine/suggestion.js), including the empty-box fallback).
+The suggestion only includes Krea content when the request carries the Krea provider context
+(see [Matching the app's output](#matching-the-apps-output)); without it, none does.
 
 For **Auto-fix**, make a second call to `/api/rewrite` with the generated text. A complete
-PowerShell example, returning only the final text:
+PowerShell example for the Krea workflow, returning only the final text:
 
 ```powershell
 $baseUrl = "http://127.0.0.1:4173" # Default; if taken, copy Providers → App API address.
@@ -101,7 +144,14 @@ $generated = Invoke-RestMethod "$baseUrl/api/prompt" `
     -Body (@{
         template = "{#suggestion}"
         count = 1
-        settings = @{ includeAdult = $false }
+        settings = @{
+            includeAdult = $false
+            mode = "Plain"
+            provider = "comfy-local"
+            providerParams = @{ "comfy-local" = @{ comfyWorkflow = "krea2" } }
+            autoAddFx = $false
+            autoAddArtists = $false
+        }
     } | ConvertTo-Json -Depth 10)
 
 $fixed = Invoke-RestMethod "$baseUrl/api/rewrite" `
@@ -135,7 +185,7 @@ context (for example, content safety and model-specific filtering).
 |---|---|
 | `providerId` | Text provider ID (see list below). |
 | `prompt` | Required nonempty text to rewrite. |
-| `mode` | `fix` (or omitted): prose Auto-fix; `keyword`: tag translation; `expand`: expansion. The `dpl-*` modes in the shared rewrite systems also select Manage AI tasks. |
+| `mode` | `fix` (or omitted): prose Auto-fix; `keyword`: tag translation. The rest are Manage tasks, not prompt modes: `expand` treats `prompt` as sample entries of a word list (one per line) and returns 25 new entries for that list; it does not elaborate a prompt. The `dpl-*` modes edit DPL block templates. |
 | `system` | Optional custom Auto-fix system instructions; blank/null uses the built-in instructions. Specialized keyword/expand/DPL modes select their own instructions. |
 | `key` | Required provider API key, except for `ninfer`. |
 
@@ -288,5 +338,7 @@ see [ComfyUI system notes](comfyui.md). GPU job details are in
 [localUpscale.js](../../targets/web/backend/localUpscale.js) and
 [local inference notes](local-inference.md).
 
-Maintain this reference alongside route, payload, provider, or connection changes. Examples here
-were checked against source; this documentation task does not claim a live generation/rewrite run.
+Maintain this reference alongside route, payload, provider, or connection changes. Reviewed
+2026-11-26 against source and the running desktop app: the PowerShell generate-then-Auto-fix example
+ran end to end through NInfer, and the app-matching settings were checked over 100 suggestions (Krea
+content present; no SD weights, auto FX or artists).

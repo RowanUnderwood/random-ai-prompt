@@ -46,7 +46,8 @@ describe("send", () => {
     const res = { setHeader: vi.fn(), end: vi.fn() };
     send(res, 201, { ok: true });
     expect(res.statusCode).toBe(201);
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "application/json");
+    // An explicit UTF-8 charset, or Windows PowerShell 5.1 garbles non-ASCII text.
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "application/json; charset=utf-8");
     expect(res.end).toHaveBeenCalledWith(JSON.stringify({ ok: true }));
   });
 });

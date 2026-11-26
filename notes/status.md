@@ -3,7 +3,10 @@
 _Current state only._ For the chronological history of what changed each session and why, see
 [`sessions/`](sessions/README.md). For the commit-by-commit changelog see [`version.md`](version.md).
 
-## Local fork (2026-11-26, 2.60.4-local.18)
+## Local fork (2026-11-26, 2.60.4-local.19)
+
+API JSON replies declare UTF-8 (PowerShell 5.1 no longer garbles accents). The API reference explains how
+to get app-like `/api/prompt` output (Krea context, Plain mode, no auto FX/artists).
 
 Providers dropdown shows the **App API address** with a Copy button (local edition only). The desktop
 app now serves on port 4173 (falling back to a free port when 4173 is taken), so ComfyUI finds it.

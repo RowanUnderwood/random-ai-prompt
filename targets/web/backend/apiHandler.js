@@ -40,6 +40,7 @@ import {
   resolveOutputFile,
   readJson,
   send,
+  JSON_TYPE,
   readNs,
   writeNs,
   removeNs,
@@ -441,7 +442,7 @@ export function createApiHandler() {
           data = { error: text || `Upstream returned ${upstream.status}` };
         }
         res.statusCode = upstream.ok ? 200 : upstream.status;
-        res.setHeader("Content-Type", "application/json");
+        res.setHeader("Content-Type", JSON_TYPE);
         return res.end(JSON.stringify(data));
       } catch (e) {
         return send(res, 502, { error: `Could not reach ${target}: ${e.message}` });
