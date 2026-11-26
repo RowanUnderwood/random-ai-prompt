@@ -10,6 +10,7 @@ routes, not a versioned public API or an OpenAPI specification.
   4173, such as `npm start` or a second copy of the app, the shell falls back to a free port chosen at
   launch. The local Providers menu's **App API address** entry shows and copies the address in use.
   Earlier builds always chose a random port.
+  If 4173 is occupied, use the address shown by this app rather than calling the other service on 4173.
 - **Standalone release server:** `npm start` builds and serves the app; default origin is
   `http://localhost:4173`. The `PORT` environment variable overrides it; `NO_OPEN=1` suppresses
   opening a browser. This is an alternative to running the desktop app.
@@ -93,7 +94,7 @@ For **Auto-fix**, make a second call to `/api/rewrite` with the generated text. 
 PowerShell example, returning only the final text:
 
 ```powershell
-$baseUrl = "http://localhost:4173" # Replace with the running app's origin.
+$baseUrl = "http://127.0.0.1:4173" # Default; if taken, copy Providers → App API address.
 
 $generated = Invoke-RestMethod "$baseUrl/api/prompt" `
     -Method Post -ContentType "application/json" `
