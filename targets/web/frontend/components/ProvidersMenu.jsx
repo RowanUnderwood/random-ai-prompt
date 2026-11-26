@@ -18,6 +18,7 @@ import { providerMode } from "../lib/useProvider.js";
 import { metaFor } from "../lib/providerMeta.js";
 import ProviderPicker from "./ProviderPicker.jsx";
 import ApiKeyField from "./ApiKeyField.jsx";
+import AppApiAddress from "./AppApiAddress.jsx";
 
 const msgs = defineMessages({
   reasonProxy: {
@@ -248,6 +249,9 @@ export default function ProvidersMenu({ settings, setSettings }) {
                   )
                 ))}
             </div>
+
+            {/* This app's own API address (local edition only — the online build has no backend). */}
+            {!ONLINE && <AppApiAddress />}
           </div>
         </>
       )}

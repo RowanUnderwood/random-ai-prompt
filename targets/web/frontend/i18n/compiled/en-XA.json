@@ -695,6 +695,104 @@
       "value": "]"
     }
   ],
+  "appApiAddress.copied": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "✓ Ƈǿǿƥīḗḗḓ"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "appApiAddress.copy": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ƈǿǿƥẏ"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "appApiAddress.copyAria": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ƈǿǿƥẏ ŧħḗḗ ȦƤĪ ȧȧḓḓřḗḗşş"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "appApiAddress.copyFailed": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ƈǿǿŭŭŀḓƞ'ŧ řḗḗȧȧƈħ ŧħḗḗ ƈŀīƥƀǿǿȧȧřḓ. Ŧħḗḗ ȧȧḓḓřḗḗşş īş şḗḗŀḗḗƈŧḗḗḓ: ƥřḗḗşş Ƈŧřŀ+Ƈ."
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "appApiAddress.hint": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ƥǿǿīƞŧ ŧħḗḗ ƇǿǿḿƒẏŬĪ ƞǿǿḓḗḗş ǿǿř ẏǿǿŭŭř şƈřīƥŧş ħḗḗřḗḗ; ḗḗƞḓƥǿǿīƞŧş ȧȧřḗḗ ŭŭƞḓḗḗř /ȧȧƥī. Ŧħḗḗ ḓḗḗşķŧǿǿƥ ȧȧƥƥ ƥīƈķş ȧȧ ƞḗḗẇ ƥǿǿřŧ ḗḗȧȧƈħ ŀȧȧŭŭƞƈħ."
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "appApiAddress.inputAria": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ŧħīş ȧȧƥƥ'ş ȦƤĪ ȧȧḓḓřḗḗşş"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "appApiAddress.label": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ȧƥƥ ȦƤĪ ȧȧḓḓřḗḗşş"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
   "blockEd.ariaDpl": [
     {
       "type": 0,

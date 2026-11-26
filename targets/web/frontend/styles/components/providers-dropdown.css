@@ -70,6 +70,53 @@
   color: var(--muted);
 }
 
+/* This app's API address + copy, set off from the provider rows by a hairline. */
+.pm-api {
+  margin-top: 0.15rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--border);
+}
+
+/* Wraps on a phone: the label moves above, the address and Copy keep one line. */
+.pm-api-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pm-api-row .pm-api-input {
+  flex: 1 1 12rem;
+}
+
+.pm-api-label {
+  flex: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--fg-soft);
+}
+
+.pm-api-input {
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+
+.pm-api-row button {
+  flex: none;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.85rem;
+}
+
+/* Phone: the label takes its own line so the address and Copy stay side by side. */
+@media (width <= 480px) {
+  .pm-api-label {
+    flex-basis: 100%;
+  }
+
+  .pm-api-row .pm-api-input {
+    flex-basis: 0;
+  }
+}
+
 /* Sits in the key column (same width as the key box) so the rows stay aligned. */
 .pm-shared {
   font-size: 0.72rem;

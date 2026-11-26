@@ -4,8 +4,9 @@
  * the provider's own controls render in the ProviderBox; and the BYOK key has moved out to the
  * header's ApiKeyField (one place per provider, swaps with the selection).
  */
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { useState } from "react";
+import { act } from "@testing-library/react";
 import { render, screen, fireEvent } from "./testUtils.jsx";
 import Settings from "../frontend/components/Settings.jsx";
 import ProviderBox from "../frontend/components/ProviderBox.jsx";
@@ -99,5 +100,43 @@ describe("ProvidersMenu — image + text providers in one dropdown", () => {
     render(<Harness Comp={ProvidersMenu} overrides={{ provider: "comfyui" }} />);
     fireEvent.click(screen.getByRole("button", { name: /Providers/i }));
     expect(screen.queryByPlaceholderText(/API key/i)).toBeNull();
+  });
+});
+
+describe("ProvidersMenu — this app's API address", () => {
+  const open = () => {
+    render(<Harness Comp={ProvidersMenu} overrides={{ provider: "plain" }} />);
+    fireEvent.click(screen.getByRole("button", { name: /Providers/i }));
+  };
+  const setClipboard = (writeText) =>
+    Object.defineProperty(navigator, "clipboard", { value: { writeText }, configurable: true });
+
+  it("shows the page origin, read-only", () => {
+    open();
+    const input = screen.getByLabelText("This app's API address");
+    expect(input).toHaveValue(window.location.origin);
+    expect(input).toHaveAttribute("readonly");
+  });
+
+  it("copies the address to the clipboard and confirms", async () => {
+    const writeText = vi.fn(() => Promise.resolve());
+    setClipboard(writeText);
+    open();
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: "Copy the API address" }));
+    });
+    expect(writeText).toHaveBeenCalledWith(window.location.origin);
+    expect(screen.getByRole("button", { name: "Copy the API address" })).toHaveTextContent("✓ Copied");
+  });
+
+  it("says so, and selects the address, when the clipboard is unavailable", async () => {
+    setClipboard(vi.fn(() => Promise.reject(new Error("denied"))));
+    open();
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: "Copy the API address" }));
+    });
+    expect(screen.getByRole("alert")).toHaveTextContent(/press Ctrl\+C/);
+    const input = screen.getByLabelText("This app's API address");
+    expect(input.selectionEnd - input.selectionStart).toBe(window.location.origin.length);
   });
 });

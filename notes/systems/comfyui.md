@@ -27,7 +27,10 @@ ComfyUI (Python nodes) ──HTTP──▶ app backend (/api/prompt, /api/prompt
   `npm start` backend) by default; override via `RANDOM_AI_PROMPT_URL`, the ComfyUI **Settings** entry, or
   a single Settings-persisted config (no per-node URL widget — Settings is the one Comfy-native config
   point). The app need not be running when ComfyUI starts — dropdowns fill in and generation works once
-  it's reachable.
+  it's reachable. **Caveat:** the desktop shell starts its backend on a free port chosen at each launch
+  (`targets/web-shell/src/lib.rs`), so auto-detection on 4173/5173 finds `npm start` or the dev server
+  but not the desktop app. Copy the current address from **Providers → App API address** (2.60.4-local.17)
+  into the ComfyUI setting; it changes when the desktop app restarts.
 - **No new engine code, no duplication.** The backend routes this target needs
   (`/api/prompt`, `/api/prompt/catalog`) were added to `apiHandler.js` reusing the extracted
   `engine/promptRun.js` (seed/reroll), `engine/nodeEngine.js` (the Node engine boot), and

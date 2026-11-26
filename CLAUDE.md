@@ -138,6 +138,10 @@ from prompt dialect. See [Krea content](notes/systems/krea2-content.md) for sour
   Job Object terminates only its backend and launched descendants on exit; external instances
   stay running. Managed NInfer launch requires `BACKEND=windows`; manually started compatible
   WSL instances may be reused. Never accept executable paths or commands from HTTP clients.
+  The desktop backend gets a new free port each launch; Providers → App API address
+  (`AppApiAddress.jsx`) shows and copies it for ComfyUI/scripts (4173 auto-detect misses it).
+- **Ship visibly:** after any user-visible change, rebuild with `npm run desktop:build:local`;
+  the owner runs the packaged app, not the dev server.
 - **Readiness:** probe ComfyUI's lightweight `/queue`, not synchronous GPU memory statistics.
   A busy queue is ready. Share concurrent probes; keep verified workers ready during admitted
   renders while their TCP listener remains open. A recent successful check covers transient

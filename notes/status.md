@@ -3,7 +3,10 @@
 _Current state only._ For the chronological history of what changed each session and why, see
 [`sessions/`](sessions/README.md). For the commit-by-commit changelog see [`version.md`](version.md).
 
-## Local fork (2026-11-26, 2.60.4-local.16)
+## Local fork (2026-11-26, 2.60.4-local.17)
+
+Providers dropdown shows the **App API address** with a Copy button (local edition only). The desktop
+port changes each launch, so ComfyUI's auto-detection misses the desktop app; copy the address instead.
 
 The prompt box's shuffle is now a **Random** toggle: a new `{#suggestion}` in every prompt, Krea-aware.
 Web, mobile and CLI. See [the plan](plans/random-suggestion-toggle.md). Known, predates this: the CLI's
