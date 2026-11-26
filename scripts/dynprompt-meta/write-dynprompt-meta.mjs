@@ -130,6 +130,8 @@ const D = {
   "prompt/random": "A composite random prompt — full scenes in AND-weighted blends.",
   "prompt/random-words": "A pile of completely random keywords (maximum chaos).",
   "prompt/simple-random": "A single, lighter random prompt suggestion.",
+  "prompt/suggestion":
+    "A random prompt suggestion: a subject, a style and two keywords. Uses Krea content when a Krea model is selected.",
   "prompt/extra-random": "A total-random prompt drawing from every list.",
   "prompt/artists": "Auto-appended artist tags.",
   "prompt/fx": "Auto-appended visual-effect / quality tags.",

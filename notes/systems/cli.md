@@ -75,7 +75,8 @@ unmodified. (Under Vitest the transform handles JSON, so tests don't need the ho
 - `prompt [prompt]` / `prompt generate` — generate prompts; `--images -p <id>` to also generate images. Every
   `engine/settings.js` field is a flag (`prompt generate --help`); plus `--provider`, `--preset`, `--seed`,
   `--random`, `--nsfw`, image knobs (`--width/--height/--steps/--cfg/--sampler/--model/--size/--negative`),
-  and `--rewrite-provider/--auto-fix/--auto-keyword`. `--json` for machine output.
+  `--rewrite-provider/--auto-fix/--auto-keyword`, and `--random-suggestion` (the GUI's Random toggle:
+  appends `{#suggestion}`, rolled per prompt). `--json` for machine output.
 - `prompt list <blocks|lists|providers|presets|dialects|samplers|settings> [filter]` — browse the catalog.
 - `prompt config <get|set|unset|list|path>` — persisted CLI defaults (`cli` namespace).
 - `prompt keys <set|get|remove|list>` — BYOK keys (on-device; `--shared` to also write the GUI store).

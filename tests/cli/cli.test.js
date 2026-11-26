@@ -152,4 +152,21 @@ describe("prompt generation (engine parity)", () => {
     expect(a.prompts).toHaveLength(3);
     expect(a.prompts).toEqual(b.prompts);
   });
+
+  it("--random-suggestion maps to autoRandom, and the token rolls a new suggestion per prompt", () => {
+    const cmd = {
+      getOptionValueSource: (name) => (name === "randomSuggestion" ? "cli" : undefined),
+    };
+    expect(overridesFromOptions(cmd, { randomSuggestion: "true" })).toEqual({ autoRandom: true });
+    expect(APP_DEFAULTS.autoRandom).toBe(false);
+    const { prompts } = generatePrompts({
+      ...engineDefaults(),
+      prompt: "a red fox, {#suggestion}",
+      promptCount: 4,
+      randomSeed: false,
+      promptSeed: "7",
+    });
+    expect(prompts.every((p) => p.startsWith("a red fox, "))).toBe(true);
+    expect(new Set(prompts).size).toBe(4);
+  });
 });

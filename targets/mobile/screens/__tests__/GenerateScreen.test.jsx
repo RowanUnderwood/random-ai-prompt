@@ -188,24 +188,30 @@ describe("GenerateScreen (mounted)", () => {
 /**
  * Regression: the toolbar's 5th slot used to be a SECOND building-blocks button — an exact duplicate
  * of the green FAB (same icon, same `setPaletteOpen(true)` handler) — which meant the web's SHUFFLE
- * control (drop the rotating random suggestion into the box) was missing from mobile entirely.
+ * control (now the Random toggle) was missing from mobile entirely.
  *
  * Nothing automated caught it: the surface-parity check greps for /suggestions/, which matched the
  * DPL *completion strip* (a different feature that happens to share the word), and a render-only test
  * sees a perfectly fine button. It was found by LOOKING at a screenshot. See working-agreements §B3.
  */
 describe("GenerateScreen — random suggestion (shuffle)", () => {
-  it("exposes a shuffle control that appends the rotating suggestion to the prompt", async () => {
+  it("the shuffle toggles Random, which adds the unexpanded suggestion to every roll", async () => {
     const { getByLabelText, getByDisplayValue } = await setup();
+    const roll = async () => {
+      fireEvent.press(getByLabelText("Generate prompts"));
+      await act(async () => {});
+      return engine.run.generatePrompts.mock.calls.at(-1)[0].prompt;
+    };
 
-    const shuffle = getByLabelText("Random suggestion");
-    expect(shuffle.props.accessibilityState.disabled).toBe(false);
+    expect(await roll()).toBe("{#random-words}");
 
-    fireEvent.press(shuffle);
+    fireEvent.press(getByLabelText("Random suggestion for every prompt"));
+    // The typed text stays put; the token is added at roll time so each prompt expands its own.
+    expect(getByDisplayValue("{#random-words}")).toBeTruthy();
+    expect(await roll()).toBe("{#random-words}, {#suggestion}");
 
-    // The engine mock's expandOnce() -> "a live preview line" is the suggestion; pressing shuffle
-    // appends it to the existing prompt (comma-separated), exactly like the web's insert().
-    expect(getByDisplayValue("{#random-words}, a live preview line")).toBeTruthy();
+    fireEvent.press(getByLabelText("Random suggestion for every prompt (on)"));
+    expect(await roll()).toBe("{#random-words}");
   });
 
   it("advertises the suggestion in the placeholder (web parity: 'Try: …')", async () => {

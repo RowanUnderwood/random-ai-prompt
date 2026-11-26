@@ -124,7 +124,18 @@ function checkSurfaces() {
     ["Generate", "completion strip (caret autocomplete)", "generate", /activeToken\(/],
     // Match the WIRING, not the import. `/ShuffleIcon/` alone is satisfied by the import line even
     // when the button is gone — which is precisely the mistake this whole block exists to fix.
-    ["Generate", "random suggestion + shuffle", "generate", /onPress=\{useSuggestion\}/],
+    [
+      "Generate",
+      "random toggle (shuffle) adds a suggestion to every prompt",
+      "generate",
+      /onPress=\{\(\) => setAutoRandom\(/,
+    ],
+    [
+      "Generate",
+      "random toggle feeds the roll",
+      "generate",
+      /promptWithSuggestion\(prompt, autoRandom\)/,
+    ],
     ["Generate", "suggestion advertised in placeholder", "generate", /Try: \$\{suggestion\}/],
     ["Generate", "generate button", "generate", /SparkleIcon/],
     ["Generate", "negative prompt tab", "generate", /composeMode|Negative/],
@@ -261,7 +272,8 @@ function checkGating() {
       "generate",
       /disabled=\{!canRewrite\}/,
     ],
-    ["shuffle locked until a suggestion exists", "generate", /disabled=\{!suggestion\}/],
+    // (The shuffle used to be locked until a suggestion existed. It is now the Random toggle, which
+    // needs no provider or pre-rolled text, so it is deliberately never locked.)
     ["inline image batch gated on the image provider", "generate", /canImages/],
     [
       "gallery compose gated on the image provider",

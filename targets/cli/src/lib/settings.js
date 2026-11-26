@@ -37,6 +37,9 @@ export const APP_DEFAULTS = {
   autoKeyword: false,
   rewriteSystem: null,
 
+  // The Random toggle: add a new `{#suggestion}` to every prompt.
+  autoRandom: false,
+
   // Image params (read by the provider adapters).
   sampler: "Euler",
   imageSteps: 32,

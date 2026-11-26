@@ -16,6 +16,9 @@ The lists live in `engine/data/lists/krea2/`, force-prefixed to avoid ambiguous 
 `_disable-group-list` prevents an incoherent union of people, bands and style paragraphs.
 The two blocks participate normally in `{#subject}`, `{#style}`, `{#any}` and random suggestions
 whenever the selected image model permits them. No automatic model/workflow change is made.
+The prompt box's suggestion and Random toggle use `{#suggestion}` (`{#subject}`, `{#style}`, two
+`{keyword-sfw}`), so about 30% of suggestions carry Krea content under Krea and none under SD. The
+older `{#random-words}` reached it only through the keyword wildcard, about 10% of the time.
 
 ## Source and quality
 

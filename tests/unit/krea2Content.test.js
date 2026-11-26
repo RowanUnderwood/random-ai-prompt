@@ -153,6 +153,30 @@ describe("model-aware Krea visibility", () => {
     }
   });
 
+  it("{#suggestion} reaches Krea styles and actors for Krea, never for SD, and is never empty", () => {
+    const node = createEngine(nodeLoader);
+    // Only entries unique to Krea count: some identities ("Powell") are also ordinary vocabulary.
+    const ordinary = new Set(nodeLoader.readListLines("keyword", false, sd));
+    const styles = nodeLoader.readListLines("krea2/styles").filter((s) => !ordinary.has(s));
+    const people = nodeLoader.readListLines("krea2/people").filter((p) => !ordinary.has(p));
+    // Styles are long descriptors (substring is safe); identities must match a whole entry, since
+    // one-word names also occur inside ordinary words.
+    const kreaHit = (text) =>
+      styles.some((s) => text.includes(s)) ||
+      text.split(", ").some((part) => people.includes(part.trim()));
+    let hits = 0;
+    for (let seed = 0; seed < 120; seed++) {
+      const forKrea = node.generate({ ...krea, prompt: "{#suggestion}", seed });
+      const forSd = node.generate({ ...sd, prompt: "{#suggestion}", seed });
+      expect(forKrea.trim().length).toBeGreaterThan(0);
+      expect(forSd.trim().length).toBeGreaterThan(0);
+      expect(kreaHit(forSd)).toBe(false);
+      if (kreaHit(forKrea)) hits++;
+    }
+    // Measured ~30% on 2026-11-26; {#random-words} reached Krea in about 10%.
+    expect(hits).toBeGreaterThan(12);
+  });
+
   it("excludes Krea blocks from group/any picks and list wildcards rather than picking an empty item", () => {
     const loader = {
       ...makeFakeLoader({

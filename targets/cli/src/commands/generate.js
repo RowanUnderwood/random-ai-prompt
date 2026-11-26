@@ -13,6 +13,7 @@ import { generatePrompts } from "../lib/promptRun.js";
 import { getProvider, engineModeFor } from "../lib/providers.js";
 import { runProvider } from "../lib/imagegen.js";
 import { startBackend, stopBackend } from "../lib/backend.js";
+import { promptWithSuggestion } from "../../../../engine/suggestion.js";
 
 /**
  * Register the `generate` command (default) on the program.
@@ -71,6 +72,9 @@ export default function registerGenerate(program) {
     }
     if (overrides.mode === undefined) settings.mode = engineModeFor(provider.dialect);
     settings.provider = provider.id;
+
+    // The GUI's Random toggle: add the unexpanded suggestion so each prompt rolls its own.
+    if (settings.autoRandom) settings.prompt = promptWithSuggestion(settings.prompt, true);
 
     // Generate the prompt batch.
     const { seed, prompts } = generatePrompts(settings);

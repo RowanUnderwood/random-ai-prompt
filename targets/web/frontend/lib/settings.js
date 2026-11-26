@@ -112,6 +112,8 @@ export const defaultSettings = {
   rewriteProvider: "none",
   autoFix: false,
   autoKeyword: false,
+  // Random toggle (prompt box shuffle): add a fresh `{#suggestion}` roll to every generated prompt.
+  autoRandom: false,
   // Custom auto-fix instructions; null follows the built-in ones (shared/_shared/rewriteSystem.js).
   rewriteSystem: null,
 

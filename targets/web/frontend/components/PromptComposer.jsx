@@ -3,7 +3,8 @@
  * insert toolbar, the Prompt/Negative switch (when the provider supports negatives), the editor with
  * its corner cluster (live DPL status, clear, live preview, and a prompt-settings gear), and the
  * action bar (prompts-per-run, inline image controls, auto-fix, keyword-translate, wrapper, share,
- * random, and generate). It also carries a rotating random suggestion and an inline share panel.
+ * the Random toggle, and generate). It also carries a rotating random suggestion and an inline share
+ * panel.
  *
  * It is deliberately provider- and view-agnostic: it reads/writes only `settings` and calls back an
  * `onGenerate(text)` supplied by the parent. That lets it serve BOTH the Home composer (which turns a
@@ -15,6 +16,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { useIntl, defineMessages } from "react-intl";
 import { expandPrompt } from "../lib/promptEngine.js";
+import { SUGGESTION_TOKEN, promptWithSuggestion } from "../../../../engine/suggestion.js";
 import { shareUrl } from "../lib/share.js";
 import { getProvider } from "../lib/providers/index.js";
 import WrapperButton from "./WrapperFab.jsx";
@@ -79,8 +81,19 @@ const msgs = defineMessages({
   },
   keywordAria: { id: "home.keywordAria", defaultMessage: "Keyword-translate prompt" },
   shareLink: { id: "home.shareLink", defaultMessage: "Share link" },
-  randomTitle: { id: "home.randomTitle", defaultMessage: "Random — drop a suggestion in" },
-  randomAria: { id: "home.randomAria", defaultMessage: "Random suggestion" },
+  randomOnTitle: {
+    id: "home.randomOnTitle",
+    defaultMessage: "Random is on — every prompt gets a new random suggestion. Click to turn off",
+  },
+  randomOffTitle: {
+    id: "home.randomOffTitle",
+    defaultMessage: "Random — add a new random suggestion to every prompt",
+  },
+  randomAria: { id: "home.randomAria", defaultMessage: "Random suggestion for every prompt" },
+  phRandom: {
+    id: "home.phRandom",
+    defaultMessage: "Random is on — each prompt gets its own suggestion, e.g. {suggestion}",
+  },
   generateTitle: {
     id: "home.generateTitle",
     defaultMessage: "{count, plural, one {Generate prompt} other {Generate prompts}}",
@@ -101,7 +114,8 @@ const msgs = defineMessages({
  * @param {object} props.settings The current settings.
  * @param {Function} props.setSettings Update the settings.
  * @param {Function} props.onGenerate `(text) => Promise|void` — run a generation for the effective
- *   prompt text (the typed prompt, or the current random suggestion when the box is empty).
+ *   prompt DPL (the typed prompt, plus the unexpanded `{#suggestion}` token when Random is on or
+ *   the box is empty — each prompt in the batch expands it separately).
  * @param {boolean} [props.compact] Render the narrower variant (used atop the Gallery).
  * @param {import('react').Ref} ref Exposes `insert(token)` (append a building block to the active
  *   editor) and `focus()`.
@@ -162,7 +176,7 @@ function PromptComposer({ settings, setSettings, onGenerate, compact = false }, 
       try {
         // Auto-added extras are applied when generating; baking them in here would add them twice.
         setSuggestion(
-          expandPrompt("{#random-words}", {
+          expandPrompt(SUGGESTION_TOKEN, {
             ...settingsRef.current,
             autoAddFx: false,
             autoAddArtists: false,
@@ -193,16 +207,18 @@ function PromptComposer({ settings, setSettings, onGenerate, compact = false }, 
     focus: () => promptEditorRef.current?.focus?.(),
   }));
 
-  // Random drops the currently-shown suggestion into the prompt box.
-  function useSuggestion() {
-    if (suggestion) setPrompt(suggestion);
+  // The Random toggle: while on, every prompt in every batch gets its own suggestion.
+  const randomOn = !!settings.autoRandom;
+  function toggleRandom() {
+    setSettings((s) => ({ ...s, autoRandom: !s.autoRandom }));
   }
 
-  // Generate from whatever is typed; if the box is empty, fall back to the current suggestion (or a
-  // fresh random roll) so it's never a no-op. Errors surface inline; success announces politely.
+  // Generate from whatever is typed. The suggestion goes in as an UNEXPANDED token, so each prompt
+  // in the batch rolls its own; an empty box uses the token alone, so it's never a no-op. Errors
+  // surface inline; success announces politely.
   async function generate() {
     setError("");
-    const text = prompt && prompt.trim() ? prompt : suggestion || "{#random-words}";
+    const text = promptWithSuggestion(prompt, randomOn);
     try {
       setStatus(intl.formatMessage(msgs.generating));
       await onGenerate?.(text);
@@ -274,7 +290,7 @@ function PromptComposer({ settings, setSettings, onGenerate, compact = false }, 
             editMode === "negative"
               ? intl.formatMessage(msgs.phNegative)
               : suggestion
-                ? intl.formatMessage(msgs.phTry, { suggestion })
+                ? intl.formatMessage(randomOn ? msgs.phRandom : msgs.phTry, { suggestion })
                 : intl.formatMessage(msgs.phPrompt)
           }
         />
@@ -297,9 +313,7 @@ function PromptComposer({ settings, setSettings, onGenerate, compact = false }, 
             getDpl={() =>
               editMode === "negative"
                 ? activeValue || ""
-                : activeValue && activeValue.trim()
-                  ? activeValue
-                  : suggestion || "{#random-words}"
+                : promptWithSuggestion(activeValue, randomOn)
             }
             settings={settings}
             label={intl.formatMessage(editMode === "negative" ? msgs.negativePreview : msgs.promptPreview)}
@@ -405,10 +419,10 @@ function PromptComposer({ settings, setSettings, onGenerate, compact = false }, 
             <ShareIcon />
           </button>
           <button
-            className="field-act"
-            onClick={useSuggestion}
-            disabled={!suggestion}
-            title={intl.formatMessage(msgs.randomTitle)}
+            className={`field-act${randomOn ? " on" : ""}`}
+            onClick={toggleRandom}
+            title={intl.formatMessage(randomOn ? msgs.randomOnTitle : msgs.randomOffTitle)}
+            aria-pressed={randomOn}
             aria-label={intl.formatMessage(msgs.randomAria)}
           >
             <ShuffleIcon />

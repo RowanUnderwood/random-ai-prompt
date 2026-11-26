@@ -509,6 +509,192 @@
       "value": "]"
     }
   ],
+  "app.upscaleAction": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ŭƥşƈȧȧŀḗḗ"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "app.upscaleFailed": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 1,
+      "value": "file"
+    },
+    {
+      "type": 0,
+      "value": ": "
+    },
+    {
+      "type": 1,
+      "value": "error"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "app.upscaleManyConfirm": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ŭƥşƈȧȧŀḗḗ "
+    },
+    {
+      "type": 6,
+      "value": "count",
+      "options": {
+        "one": {
+          "value": [
+            {
+              "type": 7
+            },
+            {
+              "type": 0,
+              "value": " īḿȧȧɠḗḗ"
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 7
+            },
+            {
+              "type": 0,
+              "value": " īḿȧȧɠḗḗş"
+            }
+          ]
+        }
+      },
+      "offset": 0,
+      "pluralType": "cardinal"
+    },
+    {
+      "type": 0,
+      "value": " ŧǿǿ "
+    },
+    {
+      "type": 1,
+      "value": "target"
+    },
+    {
+      "type": 0,
+      "value": "ƥẋ ẇīŧħ "
+    },
+    {
+      "type": 1,
+      "value": "provider"
+    },
+    {
+      "type": 0,
+      "value": "? Ŧħḗḗẏ řŭŭƞ ǿǿƞḗḗ ȧȧŧ ȧȧ ŧīḿḗḗ, ȧȧŀǿǿƞɠşīḓḗḗ ẏǿǿŭŭř řḗḗƞḓḗḗřş."
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "app.upscaleManySkipped": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 6,
+      "value": "queued",
+      "options": {
+        "=0": {
+          "value": [
+            {
+              "type": 0,
+              "value": "Ƞǿǿ īḿȧȧɠḗḗş ɋŭŭḗḗŭŭḗḗḓ"
+            }
+          ]
+        },
+        "one": {
+          "value": [
+            {
+              "type": 7
+            },
+            {
+              "type": 0,
+              "value": " īḿȧȧɠḗḗ ɋŭŭḗḗŭŭḗḗḓ"
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 7
+            },
+            {
+              "type": 0,
+              "value": " īḿȧȧɠḗḗş ɋŭŭḗḗŭŭḗḗḓ"
+            }
+          ]
+        }
+      },
+      "offset": 0,
+      "pluralType": "cardinal"
+    },
+    {
+      "type": 0,
+      "value": ". "
+    },
+    {
+      "type": 6,
+      "value": "skipped",
+      "options": {
+        "one": {
+          "value": [
+            {
+              "type": 7
+            },
+            {
+              "type": 0,
+              "value": " şķīƥƥḗḗḓ"
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 7
+            },
+            {
+              "type": 0,
+              "value": " şķīƥƥḗḗḓ"
+            }
+          ]
+        }
+      },
+      "offset": 0,
+      "pluralType": "cardinal"
+    },
+    {
+      "type": 0,
+      "value": ":"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
   "blockEd.ariaDpl": [
     {
       "type": 0,
@@ -4141,6 +4327,20 @@
       "value": "]"
     }
   ],
+  "gallery.cancelUpscales": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ƈȧȧƞƈḗḗŀ ȧȧŀŀ"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
   "gallery.clearSelection": [
     {
       "type": 0,
@@ -4572,7 +4772,7 @@
     },
     {
       "type": 0,
-      "value": "Şḗḗŀḗḗƈŧ ḿŭŭŀŧīƥŀḗḗ īḿȧȧɠḗḗş ŧǿǿ ḓḗḗŀḗḗŧḗḗ"
+      "value": "Şḗḗŀḗḗƈŧ ḿŭŭŀŧīƥŀḗḗ īḿȧȧɠḗḗş ŧǿǿ ŭŭƥşƈȧȧŀḗḗ ǿǿř ḓḗḗŀḗḗŧḗḗ"
     },
     {
       "type": 0,
@@ -4649,6 +4849,94 @@
     {
       "type": 0,
       "value": "Ƥħǿǿŧǿǿ ɠȧȧŀŀḗḗřẏ"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "gallery.upscaleSelected": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 6,
+      "value": "count",
+      "options": {
+        "one": {
+          "value": [
+            {
+              "type": 0,
+              "value": "Ŭƥşƈȧȧŀḗḗ "
+            },
+            {
+              "type": 7
+            },
+            {
+              "type": 0,
+              "value": " īḿȧȧɠḗḗ"
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 0,
+              "value": "Ŭƥşƈȧȧŀḗḗ "
+            },
+            {
+              "type": 7
+            },
+            {
+              "type": 0,
+              "value": " īḿȧȧɠḗḗş"
+            }
+          ]
+        }
+      },
+      "offset": 0,
+      "pluralType": "cardinal"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "gallery.upscalesActive": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 6,
+      "value": "count",
+      "options": {
+        "one": {
+          "value": [
+            {
+              "type": 7
+            },
+            {
+              "type": 0,
+              "value": " ŭŭƥşƈȧȧŀḗḗ īƞ ƥřǿǿɠřḗḗşş"
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 7
+            },
+            {
+              "type": 0,
+              "value": " ŭŭƥşƈȧȧŀḗḗş īƞ ƥřǿǿɠřḗḗşş"
+            }
+          ]
+        }
+      },
+      "offset": 0,
+      "pluralType": "cardinal"
     },
     {
       "type": 0,
@@ -5275,6 +5563,24 @@
       "value": "]"
     }
   ],
+  "home.phRandom": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Řȧȧƞḓǿǿḿ īş ǿǿƞ — ḗḗȧȧƈħ ƥřǿǿḿƥŧ ɠḗḗŧş īŧş ǿǿẇƞ şŭŭɠɠḗḗşŧīǿǿƞ, ḗḗ.ɠ. "
+    },
+    {
+      "type": 1,
+      "value": "suggestion"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
   "home.phTry": [
     {
       "type": 0,
@@ -5384,21 +5690,35 @@
     },
     {
       "type": 0,
-      "value": "Řȧȧƞḓǿǿḿ şŭŭɠɠḗḗşŧīǿǿƞ"
+      "value": "Řȧȧƞḓǿǿḿ şŭŭɠɠḗḗşŧīǿǿƞ ƒǿǿř ḗḗṽḗḗřẏ ƥřǿǿḿƥŧ"
     },
     {
       "type": 0,
       "value": "]"
     }
   ],
-  "home.randomTitle": [
+  "home.randomOffTitle": [
     {
       "type": 0,
       "value": "["
     },
     {
       "type": 0,
-      "value": "Řȧȧƞḓǿǿḿ — ḓřǿǿƥ ȧȧ şŭŭɠɠḗḗşŧīǿǿƞ īƞ"
+      "value": "Řȧȧƞḓǿǿḿ — ȧȧḓḓ ȧȧ ƞḗḗẇ řȧȧƞḓǿǿḿ şŭŭɠɠḗḗşŧīǿǿƞ ŧǿǿ ḗḗṽḗḗřẏ ƥřǿǿḿƥŧ"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "home.randomOnTitle": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Řȧȧƞḓǿǿḿ īş ǿǿƞ — ḗḗṽḗḗřẏ ƥřǿǿḿƥŧ ɠḗḗŧş ȧȧ ƞḗḗẇ řȧȧƞḓǿǿḿ şŭŭɠɠḗḗşŧīǿǿƞ. Ƈŀīƈķ ŧǿǿ ŧŭŭřƞ ǿǿƒƒ"
     },
     {
       "type": 0,
@@ -8736,6 +9056,42 @@
       "value": "]"
     }
   ],
+  "settings.autoAddFx": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ȧŭŭŧǿǿ-ȧȧḓḓ ƑẊ (ȧȧřŧ şŧẏŀḗḗş & īḿȧȧɠḗḗ ḗḗƒƒḗḗƈŧş)"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "settings.autoAddFxWrapped": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ŧħḗḗ ȧȧƈŧīṽḗḗ ẇřȧȧƥƥḗḗř ȧȧŀřḗḗȧȧḓẏ ȧȧḓḓş "
+    },
+    {
+      "type": 1,
+      "value": "token"
+    },
+    {
+      "type": 0,
+      "value": ", şǿǿ ḗḗƒƒḗḗƈŧş ȧȧƥƥḗḗȧȧř ḗḗīŧħḗḗř ẇȧȧẏ. Ḗḓīŧ ǿǿř şẇīŧƈħ ŧħḗḗ ẇřȧȧƥƥḗḗř ŧǿǿ ƈǿǿƞŧřǿǿŀ ŧħḗḗḿ ħḗḗřḗḗ."
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
   "settings.deEmphasisChance": [
     {
       "type": 0,
@@ -8828,6 +9184,20 @@
     {
       "type": 0,
       "value": "Ḗḿƥħȧȧşīş"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "settings.group.rewrite": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "ȦĪ řḗḗẇřīŧḗḗ"
     },
     {
       "type": 0,
@@ -9002,20 +9372,6 @@
       "value": "]"
     }
   ],
-  "settings.reloadLists": [
-    {
-      "type": 0,
-      "value": "["
-    },
-    {
-      "type": 0,
-      "value": "Řḗḗŀǿǿȧȧḓ ŀīşŧş ḗḗȧȧƈħ ƥřǿǿḿƥŧ"
-    },
-    {
-      "type": 0,
-      "value": "]"
-    }
-  ],
   "settings.reset": [
     {
       "type": 0,
@@ -9038,6 +9394,62 @@
     {
       "type": 0,
       "value": "Řḗḗşḗḗŧ ȧȧŀŀ şḗḗŧŧīƞɠş ŧǿǿ ḓḗḗƒȧȧŭŭŀŧş?"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "settings.reshuffle": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Řḗḗşħŭŭƒƒŀḗḗ ƞǿǿẇ"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "settings.rewriteHint": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Īƞşŧřŭŭƈŧīǿǿƞş ƒǿǿř ŧħḗḗ ȧȧŭŭŧǿǿ-ƒīẋ ẇȧȧƞḓ. Ȧƥƥŀīḗḗş ŧǿǿ ƞḗḗẇ ƥřǿǿḿƥŧş; ƞḗḗɠȧȧŧīṽḗḗ ƥřǿǿḿƥŧş ȧȧƞḓ ķḗḗẏẇǿǿřḓ ŧřȧȧƞşŀȧȧŧīǿǿƞ ķḗḗḗḗƥ ŧħḗḗīř ǿǿẇƞ īƞşŧřŭŭƈŧīǿǿƞş. Ɓŀȧȧƞķ ŭŭşḗḗş ŧħḗḗ ḓḗḗƒȧȧŭŭŀŧ."
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "settings.rewriteReset": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Řḗḗşḗḗŧ ŧǿǿ ḓḗḗƒȧȧŭŭŀŧ"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "settings.rewriteSystem": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ȧŭŭŧǿǿ-ƒīẋ şẏşŧḗḗḿ ƥřǿǿḿƥŧ"
     },
     {
       "type": 0,
@@ -9114,6 +9526,48 @@
       "value": "]"
     }
   ],
+  "settings.shuffleDeck": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ḓřȧȧẇ ƒřǿǿḿ şħŭŭƒƒŀḗḗḓ ḓḗḗƈķş"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "settings.shuffleDeckHint": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ƞǿǿ ŀīşŧ ḗḗƞŧřẏ, řȧȧƞḓǿǿḿ ƀŀǿǿƈķ ǿǿř ŭŭƞẇḗḗīɠħŧḗḗḓ ƈħǿǿīƈḗḗ řḗḗƥḗḗȧȧŧş ŭŭƞŧīŀ ḗḗṽḗḗřẏ ǿǿƥŧīǿǿƞ ħȧȧş ƀḗḗḗḗƞ ŭŭşḗḗḓ. Ḓḗḗƈķş ƈȧȧřřẏ ǿǿṽḗḗř ƀḗḗŧẇḗḗḗḗƞ ƀȧȧŧƈħḗḗş ȧȧƞḓ şŧȧȧřŧ ǿǿṽḗḗř ẇħḗḗƞ ŧħḗḗ ȧȧƥƥ ḓǿǿḗḗş. Ẇħīŀḗḗ ǿǿƞ, ŧħḗḗ şħǿǿẇƞ şḗḗḗḗḓ ƈȧȧƞ'ŧ řḗḗƥřǿǿḓŭŭƈḗḗ ȧȧ řǿǿŀŀ."
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "settings.shuffleDeckPaused": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ƥȧȧŭŭşḗḗḓ ẇħīŀḗḗ ȧȧ şḗḗḗḗḓ īş ƥīƞƞḗḗḓ, şǿǿ ŧħȧȧŧ şḗḗḗḗḓ ķḗḗḗḗƥş ɠīṽīƞɠ ŧħḗḗ şȧȧḿḗḗ ƥřǿǿḿƥŧ."
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
   "settings.usedOnce": [
     {
       "type": 0,
@@ -9150,6 +9604,110 @@
     {
       "type": 0,
       "value": "Şḗḗŧŧīƞɠş"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "shortEdge.custom": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ƈŭŭşŧǿǿḿ "
+    },
+    {
+      "type": 1,
+      "value": "width"
+    },
+    {
+      "type": 0,
+      "value": "×"
+    },
+    {
+      "type": 1,
+      "value": "height"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "shortEdge.label": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Şħǿǿřŧ ḗḗḓɠḗḗ"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "shortEdge.ratio": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ȧşƥḗḗƈŧ řȧȧŧīǿǿ"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "shortEdge.result": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ǿŭŭŧƥŭŭŧ şīẑḗḗ īƞ ƥīẋḗḗŀş"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "shortEdge.swap": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Şẇȧȧƥ ŀȧȧƞḓşƈȧȧƥḗḗ ȧȧƞḓ ƥǿǿřŧřȧȧīŧ"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "shortEdge.title": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ŀḗḗƞɠŧħ ǿǿƒ ŧħḗḗ şħǿǿřŧḗḗř şīḓḗḗ īƞ ƥīẋḗḗŀş (řǿǿŭŭƞḓḗḗḓ ŧǿǿ ȧȧ ḿŭŭŀŧīƥŀḗḗ ǿǿƒ "
+    },
+    {
+      "type": 1,
+      "value": "multiple"
+    },
+    {
+      "type": 0,
+      "value": ")"
     },
     {
       "type": 0,
@@ -9220,6 +9778,70 @@
       "value": "]"
     }
   ],
+  "single.aiUpscaleTarget": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "ȦĪ Ŭƥşƈȧȧŀḗḗ · "
+    },
+    {
+      "type": 1,
+      "value": "provider"
+    },
+    {
+      "type": 0,
+      "value": " · "
+    },
+    {
+      "type": 1,
+      "value": "target"
+    },
+    {
+      "type": 0,
+      "value": "ƥẋ"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "single.aiUpscaleTooLarge": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 1,
+      "value": "provider"
+    },
+    {
+      "type": 0,
+      "value": " — ȧȧŀřḗḗȧȧḓẏ "
+    },
+    {
+      "type": 1,
+      "value": "size"
+    },
+    {
+      "type": 0,
+      "value": "ƥẋ (ŧȧȧřɠḗḗŧ "
+    },
+    {
+      "type": 1,
+      "value": "target"
+    },
+    {
+      "type": 0,
+      "value": "ƥẋ)"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
   "single.allSettings": [
     {
       "type": 0,
@@ -9268,6 +9890,20 @@
     {
       "type": 0,
       "value": "Ɓȧȧƈķ (Ḗşƈ)"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "single.cancelUpscale": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ƈȧȧƞƈḗḗŀ ŭŭƥşƈȧȧŀḗḗ"
     },
     {
       "type": 0,
@@ -10682,6 +11318,116 @@
     {
       "type": 0,
       "value": "Ṽȧȧřīȧȧŧīǿǿƞ"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "single.upscaleCancelling": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ƈȧȧƞƈḗḗŀŀīƞɠ…"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "single.upscaleQueued": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ẇȧȧīŧīƞɠ ƒǿǿř ŧħḗḗ ŘŦẊ 4090"
+    },
+    {
+      "type": 6,
+      "value": "ahead",
+      "options": {
+        "=0": {
+          "value": []
+        },
+        "other": {
+          "value": [
+            {
+              "type": 0,
+              "value": " · "
+            },
+            {
+              "type": 7
+            },
+            {
+              "type": 0,
+              "value": " ȧȧħḗḗȧȧḓ"
+            }
+          ]
+        }
+      },
+      "offset": 0,
+      "pluralType": "cardinal"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "single.upscaleRunning": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ŭƥşƈȧȧŀīƞɠ…"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "single.upscaleSaving": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Şȧȧṽīƞɠ ŭŭƥşƈȧȧŀḗḗḓ īḿȧȧɠḗḗ…"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "single.upscaleStarting": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ƥřḗḗƥȧȧřīƞɠ ŭŭƥşƈȧȧŀḗḗ…"
+    },
+    {
+      "type": 0,
+      "value": "]"
+    }
+  ],
+  "single.upscaleWaiting": [
+    {
+      "type": 0,
+      "value": "["
+    },
+    {
+      "type": 0,
+      "value": "Ẇȧȧīŧīƞɠ īƞ ƇǿǿḿƒẏŬĪ…"
     },
     {
       "type": 0,

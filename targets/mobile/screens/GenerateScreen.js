@@ -28,6 +28,7 @@ import {
 } from "../lib/icons.js";
 import { run, baseSettings, expandOnce, getListNames, resetDecks } from "../lib/engine.js";
 import { REWRITE_SYSTEM } from "shared/_shared/rewriteSystem.js";
+import { SUGGESTION_TOKEN, promptWithSuggestion } from "engine/suggestion.js";
 import { getDplCompletions } from "../lib/blockCatalog.js";
 import { getImageProvider, getTextProvider, providerDefaults, systemFor } from "../lib/imageProviders.js";
 import { sizeFromSettings } from "../lib/single.js";
@@ -175,6 +176,9 @@ export default function GenerateScreen({ onGenerated, onOpenImage }) {
   const [cfg, setCfg] = useState({}); // gear overrides on top of baseSettings (seed, vocab, emphasis, …)
   const [autoFix, setAutoFix] = useState(false); // wand — rewrite prompt with the Text provider
   const [autoKeyword, setAutoKeyword] = useState(false); // tag — keyword-translate with the Text provider
+  const [autoRandom, setAutoRandom] = useState(false); // shuffle — a new suggestion in every prompt
+  const autoRandomRef = useRef(autoRandom);
+  autoRandomRef.current = autoRandom;
   const canRewrite = !!rewriteProvider && rewriteProvider !== "none";
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [gearOpen, setGearOpen] = useState(false);
@@ -257,7 +261,7 @@ export default function GenerateScreen({ onGenerated, onOpenImage }) {
   const setS = (k, v) => setCfg((c) => ({ ...c, [k]: v }));
 
   // A rotating random prompt SUGGESTION — web parity (PromptComposer): the empty box shows "Try: …"
-  // and the shuffle button drops the suggestion in. Distinct from the DPL *completion* candidates
+  // and the shuffle button toggles Random (a fresh suggestion in every prompt). Distinct from the DPL *completion* candidates
   // (caret autocomplete) — the two used to share the name "suggestions", which is exactly how the
   // surface-parity check falsely passed while this feature was missing from mobile entirely.
   //
@@ -271,7 +275,7 @@ export default function GenerateScreen({ onGenerated, onOpenImage }) {
   useEffect(() => {
     const roll = () => {
       try {
-        setSuggestion(expandOnce("{#random-words}", settingsRef.current));
+        setSuggestion(expandOnce(SUGGESTION_TOKEN, settingsRef.current));
       } catch {
         /* engine not ready — skip this tick */
       }
@@ -281,14 +285,6 @@ export default function GenerateScreen({ onGenerated, onOpenImage }) {
     return () => clearInterval(id);
   }, []);
 
-  /** Drop the current random suggestion into the active box (append, like the web's insert). */
-  const useSuggestion = useCallback(() => {
-    if (!suggestion) return;
-    setActiveValue((current = "") => {
-      const sep = current && !/\s$/.test(current) ? ", " : "";
-      return `${current}${sep}${suggestion}`;
-    });
-  }, [suggestion, setActiveValue]);
 
   // Inline image controls (Images count + Size/Ratio) surfaced next to the Prompts counter — they
   // read/write the SAME providerSettings[id] fields the ⋯ menu edits, so the two stay in lockstep.
@@ -386,7 +382,9 @@ export default function GenerateScreen({ onGenerated, onOpenImage }) {
     [settings],
   );
   const rollPrompts = useCallback(() => {
-    if (!wrapActive) return run.generatePrompts(settings);
+    // Random on (or an empty box): the unexpanded suggestion token, so every prompt rolls its own.
+    const text = promptWithSuggestion(prompt, autoRandom);
+    if (!wrapActive) return run.generatePrompts({ ...settings, prompt: text });
     const count = atLeast1(promptCount);
     const base =
       settings.randomSeed === false && String(settings.promptSeed ?? "").trim() !== ""
@@ -396,7 +394,7 @@ export default function GenerateScreen({ onGenerated, onOpenImage }) {
     const out = [];
     for (let i = 0; i < count; i++) {
       const fseed = `${base}#${i}`;
-      const wrapped = [renderPart(wrap.start, fseed), prompt, renderPart(wrap.end, fseed)]
+      const wrapped = [renderPart(wrap.start, fseed), text, renderPart(wrap.end, fseed)]
         .map((s) => (s || "").trim())
         .filter(Boolean)
         .join(", ");
@@ -408,7 +406,7 @@ export default function GenerateScreen({ onGenerated, onOpenImage }) {
       out.push(framed);
     }
     return { seed: base, prompts: out };
-  }, [wrapActive, wrap.start, wrap.end, settings, promptCount, prompt, renderPart]);
+  }, [wrapActive, wrap.start, wrap.end, settings, promptCount, prompt, autoRandom, renderPart]);
 
   const generate = useCallback(async () => {
     if (generating) return;
@@ -543,7 +541,8 @@ export default function GenerateScreen({ onGenerated, onOpenImage }) {
       setPreview("");
       return undefined;
     }
-    const roll = () => setPreview(expandOnce(promptRef.current || "{#random-words}", settingsRef.current));
+    const roll = () =>
+      setPreview(expandOnce(promptWithSuggestion(promptRef.current, autoRandomRef.current), settingsRef.current));
     roll();
     const id = setInterval(roll, 1000);
     return () => clearInterval(id);
@@ -710,8 +709,10 @@ export default function GenerateScreen({ onGenerated, onOpenImage }) {
                 editMode === "negative"
                   ? "Negative prompt — what to keep out"
                   : suggestion
-                    ? `Try: ${suggestion}`
-                    : "{#random-words}"
+                    ? autoRandom
+                      ? `Random is on — each prompt gets its own suggestion, e.g. ${suggestion}`
+                      : `Try: ${suggestion}`
+                    : SUGGESTION_TOKEN
               }
               placeholderTextColor={T.faint}
               autoCapitalize="none"
@@ -843,21 +844,19 @@ export default function GenerateScreen({ onGenerated, onOpenImage }) {
                 <ShareIcon size={17} color={T.muted} />
               </ToolBtn>
               {/*
-                Random suggestion (web parity: PromptComposer's shuffle). This slot used to hold a
-                SECOND building-blocks button — an exact duplicate of the green FAB below it, same
-                icon, same handler — which meant the shuffle feature was missing from mobile
-                altogether. Caught by LOOKING at a screenshot; no marker/render test could see it.
-                Locked (not error-on-press) while there's no suggestion yet, like every other
-                capability-gated control.
+                Random toggle (web parity: PromptComposer's shuffle). While on, every prompt gets
+                its own suggestion. This slot used to hold a SECOND building-blocks button — an
+                exact duplicate of the green FAB below it — which meant the shuffle feature was
+                missing from mobile altogether. Caught by LOOKING at a screenshot.
               */}
               <ToolBtn
-                disabled={!suggestion}
-                onPress={useSuggestion}
+                on={autoRandom}
+                onPress={() => setAutoRandom((v) => !v)}
                 accessibilityLabel={
-                  suggestion ? "Random suggestion" : "Random suggestion (locked — none yet)"
+                  autoRandom ? "Random suggestion for every prompt (on)" : "Random suggestion for every prompt"
                 }
               >
-                <ShuffleIcon size={17} color={suggestion ? T.muted : T.faint} />
+                <ShuffleIcon size={17} color={autoRandom ? T.accent : T.muted} />
               </ToolBtn>
             </View>
           </View>

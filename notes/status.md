@@ -3,7 +3,12 @@
 _Current state only._ For the chronological history of what changed each session and why, see
 [`sessions/`](sessions/README.md). For the commit-by-commit changelog see [`version.md`](version.md).
 
-## Local fork (2026-11-25, 2.60.4-local.15)
+## Local fork (2026-11-26, 2.60.4-local.16)
+
+The prompt box's shuffle is now a **Random** toggle: a new `{#suggestion}` in every prompt, Krea-aware.
+Web, mobile and CLI. See [the plan](plans/random-suggestion-toggle.md). Known, predates this: the CLI's
+own `node_modules` are not installed and its lockfile is out of sync with its `package.json`, so
+running `targets/cli/bin/prompt.js` directly fails on an old root `commander`.
 
 Block and list variety pass complete in four commits, awaiting the owner's judgment of sample prompts:
 see [the plan](plans/block-list-variety.md). Manage's Restore default no longer deletes files.

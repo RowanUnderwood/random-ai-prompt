@@ -399,6 +399,14 @@ export const REWRITE_FLAGS = [
     group: "Auto-fix",
     desc: "Keyword/tag-list rewrite before image gen",
   },
+  {
+    flag: "--random-suggestion <bool>",
+    opt: "randomSuggestion",
+    key: "autoRandom",
+    type: "bool",
+    group: "Auto-fix",
+    desc: "Add a new random {#suggestion} to every prompt (the GUI's Random toggle)",
+  },
 ];
 
 /** All generation flags (engine + image + rewrite). */

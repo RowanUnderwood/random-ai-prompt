@@ -67,6 +67,10 @@ backed by six curated Kinetics-700 lists under `engine/data/lists/activity/`. It
 with human subjects and does not infer subject compatibility. The existing `{action}` list remains
 separate. Source attribution, regeneration and usage: [action content](notes/systems/action-content.md).
 
+Random suggestions (the prompt box placeholder and its shuffle **Random** toggle, setting `autoRandom`,
+CLI `--random-suggestion`) use `{#suggestion}`; the toggle appends the unexpanded token so every prompt
+in a batch rolls its own (`engine/suggestion.js`). See [the plan](notes/plans/random-suggestion-toggle.md).
+
 Content layout: `{#style}` holds pure looks only, a third of them Krea categories; looks that bring
 their own subject are in `styled-subject/`. `{#subject}` draws from `subject/` and `people/` (folder sidecar `include`); `{#people}` holds
 adult humans only and suits `{#action}`; `helper/` pieces work by name but never in random groups; a

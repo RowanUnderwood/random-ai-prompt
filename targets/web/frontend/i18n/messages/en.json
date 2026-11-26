@@ -1038,6 +1038,9 @@
   "home.phPrompt": {
     "defaultMessage": "Type a prompt, or use the building blocks on the left…"
   },
+  "home.phRandom": {
+    "defaultMessage": "Random is on — each prompt gets its own suggestion, e.g. {suggestion}"
+  },
   "home.phTry": {
     "defaultMessage": "Try: {suggestion}"
   },
@@ -1060,10 +1063,13 @@
     "defaultMessage": "How many prompts to generate per run"
   },
   "home.randomAria": {
-    "defaultMessage": "Random suggestion"
+    "defaultMessage": "Random suggestion for every prompt"
   },
-  "home.randomTitle": {
-    "defaultMessage": "Random — drop a suggestion in"
+  "home.randomOffTitle": {
+    "defaultMessage": "Random — add a new random suggestion to every prompt"
+  },
+  "home.randomOnTitle": {
+    "defaultMessage": "Random is on — every prompt gets a new random suggestion. Click to turn off"
   },
   "home.rewriteFailed": {
     "defaultMessage": "Auto-rewrite failed: {error}"

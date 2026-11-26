@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-25T21:28:44.382Z",
+  "generatedAt": "2026-11-26T11:08:57.375Z",
   "lists": [
     "activity/crafts.txt",
     "activity/everyday.txt",
@@ -183,6 +183,7 @@
     "prompt/random.dpl",
     "prompt/simple-random.dpl",
     "prompt/styles.dpl",
+    "prompt/suggestion.dpl",
     "scene/beach.dpl",
     "scene/castle.dpl",
     "scene/cave.dpl",
