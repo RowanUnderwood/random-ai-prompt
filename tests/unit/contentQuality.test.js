@@ -13,6 +13,7 @@ import { withAmbientDecks } from "../../engine/helpers/random.js";
 import { metroLoader } from "../../engine/core/metroLoader.js";
 import { classifyRemoval } from "../../engine/contentSafety.js";
 import { resolveListLines, resolveName } from "../../engine/listManifest.js";
+import { isReservedWildcard } from "../../engine/nameOrder.js";
 
 const BLOCKS = path.resolve("engine/data/blocks");
 const lists = nodeLoader.listNames();
@@ -84,10 +85,18 @@ describe("lists", () => {
   });
 });
 
+// Walk the real catalog, skipping `zz-*` folders: manageFs.test.js writes and deletes transient
+// fixtures there in parallel, and a recursive readdir that meets a vanishing folder throws ENOENT.
+function catalogFiles(dir, rel = "") {
+  return fs.readdirSync(path.join(dir, rel), { withFileTypes: true }).flatMap((entry) => {
+    const name = path.join(rel, entry.name);
+    if (!entry.isDirectory()) return [name];
+    return entry.name.startsWith("zz-") ? [] : catalogFiles(dir, name);
+  });
+}
+
 describe("blocks", () => {
-  const sources = fs
-    .readdirSync(BLOCKS, { recursive: true })
-    .map(String)
+  const sources = catalogFiles(BLOCKS)
     .filter((f) => /\.(dpl|js)$/.test(f))
     .map((f) => [
       f,
@@ -101,7 +110,11 @@ describe("blocks", () => {
     const missing = [];
     for (const [file, text] of sources)
       for (const [, ref] of text.matchAll(/(?<!\$)\{([a-z0-9][a-z0-9/-]*)\}/g))
-        if (!runtimeTokens.has(ref) && !lists.includes(resolveName(ref, lists)))
+        if (
+          !runtimeTokens.has(ref) &&
+          !isReservedWildcard(ref) && // {keyword-sfw} / {keyword-nsfw}
+          !lists.includes(resolveName(ref, lists))
+        )
           missing.push(`${file}: {${ref}}`);
     expect(missing).toEqual([]);
   });

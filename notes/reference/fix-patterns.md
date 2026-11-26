@@ -1,5 +1,11 @@
 # Fix Patterns — error → fix lookup
 
+**`contentQuality.test.js` fails intermittently with `ENOENT … scandir …\blocks\zz-manage-test`:**
+`manageFs.test.js` writes and deletes transient fixtures in the real `engine/data/blocks` folder while
+other suites run, and `readdirSync(…, { recursive: true })` throws when a folder vanishes mid-walk. Scan
+the catalog with a walk that skips `zz-*` folders (`catalogFiles` in that test). Failed 3 of 4 runs
+before, 4 of 4 green after (2026-11-26).
+
 **Model-hidden content leaks after direct `engine.expand` calls switch models:** loaders may filter
 fresh reads while the per-engine list store still holds depleted entries from the previous model.
 Reset list-store state when the SD-visibility context changes, and separate loader read-cache keys
