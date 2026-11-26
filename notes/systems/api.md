@@ -6,9 +6,10 @@ routes, not a versioned public API or an OpenAPI specification.
 
 ## Connect to the app
 
-- **Desktop:** the shell chooses a free port each launch. Use the running app's origin, such as
-  `http://127.0.0.1:52817`. The local Providers menu's **App API address** entry displays/copies it
-  in builds containing that feature. Restarting the desktop app can change the address.
+- **Desktop:** `http://127.0.0.1:4173` (2.60.4-local.18 and later). If something else already uses
+  4173, such as `npm start` or a second copy of the app, the shell falls back to a free port chosen at
+  launch. The local Providers menu's **App API address** entry shows and copies the address in use.
+  Earlier builds always chose a random port.
 - **Standalone release server:** `npm start` builds and serves the app; default origin is
   `http://localhost:4173`. The `PORT` environment variable overrides it; `NO_OPEN=1` suppresses
   opening a browser. This is an alternative to running the desktop app.

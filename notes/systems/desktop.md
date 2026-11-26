@@ -64,7 +64,8 @@ On launch the shell:
    untouched** (`output/`, `user-settings.json`, `results.json`). This is why upgrades never wipe user
    data — the code lives in the copied files; only the user's data is external, and it is preserved.
 4. Spawns `runtime/node serve.js` with the working copy as CWD (so cwd-relative `./data/…` paths
-   resolve and writes land somewhere writable), on a **free port**, with `NO_OPEN=1` (Node never opens
+   resolve and writes land somewhere writable), on port **4173**, or a free port when something
+   already answers on or holds 4173 (`pick_port`; local fork, 2.60.4-local.18), with `NO_OPEN=1` (Node never opens
    a browser — the WebView is the window). On Windows the child gets `CREATE_NO_WINDOW`.
 5. Polls the port; once it listens, navigates the WebView from the splash to `http://127.0.0.1:<port>/`.
 6. Kills the child on `RunEvent::Exit`.

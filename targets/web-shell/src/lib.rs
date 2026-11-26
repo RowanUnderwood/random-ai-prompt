@@ -12,8 +12,9 @@
 //!      `results.json`).
 //!   2. Launches the bundled Node runtime against `serve.js` as a child process,
 //!      with the working copy as its CWD (so the engine's cwd-relative `./data/…`
-//!      paths resolve and user data is written somewhere writable), on a free port
-//!      and with `NO_OPEN=1` so Node never tries to open a browser.
+//!      paths resolve and user data is written somewhere writable), on port 4173
+//!      (or a free port when 4173 is taken) and with `NO_OPEN=1` so Node never
+//!      tries to open a browser.
 //!   3. Waits for the server to listen, then points the WebView at it.
 //!
 //! If the Node backend ever fails to start, the window shows the bundled splash
@@ -21,7 +22,7 @@
 //! unaffected, because this shell is a convenience layer over them, not a fork.
 
 use std::fs;
-use std::net::{TcpListener, TcpStream};
+use std::net::{SocketAddr, TcpListener, TcpStream};
 use std::path::Path;
 use std::process::{Child, Command};
 use std::sync::Mutex;
@@ -39,12 +40,61 @@ struct ServiceJob(Mutex<Option<process_job::ProcessJob>>);
 /// Holds the Node child process so it can be killed when the app exits.
 struct Sidecar(Mutex<Option<Child>>);
 
+/// The backend's preferred port: the address the ComfyUI nodes auto-detect and `npm start` uses,
+/// so integrations find the desktop app without copying a new address after every launch.
+const PREFERRED_PORT: u16 = 4173;
+
 /// Ask the OS for a free localhost TCP port by binding to :0 and reading it back.
 fn free_port() -> u16 {
     TcpListener::bind("127.0.0.1:0")
         .and_then(|l| l.local_addr())
         .map(|a| a.port())
         .unwrap_or(4123)
+}
+
+/// Whether nothing is using `port` on loopback. A server already answering counts as taken even
+/// when a fresh bind would succeed (Node listens on all interfaces, not only 127.0.0.1).
+fn port_available(port: u16) -> bool {
+    let addr = SocketAddr::from(([127, 0, 0, 1], port));
+    if TcpStream::connect_timeout(&addr, Duration::from_millis(200)).is_ok() {
+        return false;
+    }
+    TcpListener::bind(addr).is_ok() // released again when the listener drops
+}
+
+/// The preferred port when it's free; otherwise any free port (e.g. `npm start` or a second copy of
+/// the app already holds 4173). The address is always shown under Providers → App API address.
+fn pick_port() -> u16 {
+    if port_available(PREFERRED_PORT) {
+        PREFERRED_PORT
+    } else {
+        free_port()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn a_port_in_use_is_not_available_and_a_free_one_is() {
+        let held = TcpListener::bind("127.0.0.1:0").unwrap();
+        let port = held.local_addr().unwrap().port();
+        assert!(!port_available(port));
+        drop(held);
+        assert!(port_available(free_port()));
+    }
+
+    #[test]
+    fn falls_back_to_another_port_when_the_preferred_one_is_taken() {
+        // Hold 4173 for the test (or find it already taken by a running app); either way the
+        // pick must be a different, usable port.
+        let _held = TcpListener::bind(("127.0.0.1", PREFERRED_PORT));
+        assert!(!port_available(PREFERRED_PORT));
+        let port = pick_port();
+        assert_ne!(port, PREFERRED_PORT);
+        assert!(port > 0);
+    }
 }
 
 /// Recursively copy `from` into `to` (creating `to`). Overwrites files.
@@ -174,7 +224,7 @@ fn launch(app: &tauri::App) -> Result<(), Box<dyn std::error::Error>> {
         .join("web")
         .join("backend")
         .join("serve.js");
-    let port = free_port();
+    let port = pick_port();
 
     let mut cmd = Command::new(&node);
     cmd.arg(&serve)

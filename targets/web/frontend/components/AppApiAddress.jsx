@@ -2,7 +2,7 @@
  * The app's own API address, shown at the foot of the Providers dropdown with a copy button, so other
  * tools (the ComfyUI nodes, scripts) can be pointed at this running app. The address is the page's
  * origin: the release server and the desktop shell serve the page and `/api/*` together. The desktop
- * shell picks a free port on every launch, so the address can change between launches.
+ * shell uses port 4173 and falls back to a free port only when 4173 is taken, so this shows which.
  *
  * Local edition only: the online build has no backend, so the caller doesn't render it there.
  * Rendered only inside the open dropdown (never during the prerender), so reading `window` is safe.
@@ -24,7 +24,7 @@ const msgs = defineMessages({
   hint: {
     id: "appApiAddress.hint",
     defaultMessage:
-      "Point the ComfyUI nodes or your scripts here; endpoints are under /api. The desktop app picks a new port each launch.",
+      "Point the ComfyUI nodes or your scripts here; endpoints are under /api. The desktop app uses port 4173, or another free port when 4173 is taken.",
   },
 });
 

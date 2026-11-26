@@ -133,7 +133,7 @@
     "defaultMessage": "Couldn't reach the clipboard. The address is selected: press Ctrl+C."
   },
   "appApiAddress.hint": {
-    "defaultMessage": "Point the ComfyUI nodes or your scripts here; endpoints are under /api. The desktop app picks a new port each launch."
+    "defaultMessage": "Point the ComfyUI nodes or your scripts here; endpoints are under /api. The desktop app uses port 4173, or another free port when 4173 is taken."
   },
   "appApiAddress.inputAria": {
     "defaultMessage": "This app's API address"
